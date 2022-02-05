@@ -1,11 +1,13 @@
 <template>
-    <main :style="`backgroundImage: url(${bg})`">
+ <!-- :style="`backgroundImage: url(${bg})`" -->
+    <main>
         <img class="logo" :src="union" >
         <img class="bg-overlay" :src="bgOverlay" >
         <span class="wallet">
             <img :src="walletText" >
         </span>
         <img class="twitter" :src="twitter" >
+        <div class="fade"></div>
         <Nuxt />
     </main>
 </template>
@@ -46,6 +48,7 @@
        background-size: cover;
        display: flex;
        justify-content: center;
+       background: black;
     }
     .bg-overlay {
         mix-blend-mode: lighten;
@@ -76,4 +79,29 @@
         left: 50%;
         transform: translateX(-50%);
     }
+
+
+    .fade {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        left:0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255,0,255,1) 0%, rgba(0,255,255,1) 100%);
+        filter: hue-rotate(0deg);
+        animation: fade 6s alternate infinite;
+        mix-blend-mode: multiply;
+        opacity: 0.4;
+    }
+
+    @keyframes fade {
+        from {
+            filter: hue-rotate(0deg) brightness(70%);
+            }
+        to {
+            filter: hue-rotate(360deg)  brightness(130%);
+            }
+    }
+
 </style>
