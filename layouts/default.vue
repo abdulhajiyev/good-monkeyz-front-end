@@ -2,11 +2,10 @@
  <!-- :style="`backgroundImage: url(${bg})`" -->
     <main>
         <img class="logo" :src="union" >
-        <img class="bg-overlay" :src="bgOverlay" >
+        
         <span class="wallet">
             <img :src="walletText" >
         </span>
-        <img class="twitter" :src="twitter" >
         <div class="fade"></div>
         <Nuxt />
     </main>
@@ -15,19 +14,15 @@
 
 <script>
     import bg from "@/assets/img/bg.jpg"
-    import bgOverlay from "@/assets/img/gm-text.svg"
     import union from "@/assets/img/union.svg"
     import walletText from "@/assets/img/wallet.svg"
-    import twitter from "@/assets/img/twitter.svg"
     
     export default {
         data:  ()  =>{
             return {
                 bg,
-                bgOverlay,
                 union,
                 walletText,
-                twitter,
             }
         }
     }
@@ -50,36 +45,23 @@
        justify-content: center;
        background: black;
     }
-    .bg-overlay {
-        mix-blend-mode: lighten;
-        max-width: 100%;
-        max-height: 95vh;
-        padding-top: 5vh;
-    }
+
     .logo {
         position: absolute;
-        top: 3rem;
-        left: 3rem;
+        top: 5rem;
+        left: 2.5rem;
         transform: translateY(-25%);
     }
 
     .wallet {
         position: absolute;
-        top: 3rem;
+        top: 5rem;
         right: 3rem;
         background: #fff;
         padding: 1.1rem;
         border-radius: 1rem;
         transform: translate(1rem, -1.25rem);
     }
-    .twitter {
-        position: absolute;
-        bottom: 2rem;
-        width: 3rem;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
 
     .fade {
         z-index: 1;
@@ -88,11 +70,11 @@
         left:0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, rgba(255,0,255,1) 0%, rgba(0,255,255,1) 100%);
+        background: linear-gradient(45deg, rgba(255,0,255,1) 0%, rgba(0,255,255,1) 100%);
         filter: hue-rotate(0deg);
         animation: fade 6s alternate infinite;
         mix-blend-mode: multiply;
-        opacity: 0.4;
+        opacity: 0.25;
     }
 
     @keyframes fade {
