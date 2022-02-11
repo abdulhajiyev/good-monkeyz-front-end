@@ -56,4 +56,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  
+  // fallback for 404 pages 
+  generate: {
+    fallback: true
+  }
 }
