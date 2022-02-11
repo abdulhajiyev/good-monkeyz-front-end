@@ -218,6 +218,8 @@ a {
 
 
 .banner {
+  line-height: 1.5rem;
+  height: 2.5rem;
   width: 100%;
   padding: 0.4rem 0;
   z-index: 1;
