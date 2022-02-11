@@ -1,34 +1,52 @@
 <template>
   <div class="index">
     <div class="banner">
-      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +  Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + </span>
+      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +</span>
     </div>
 
-    <nav class="nav">
-      <a href="https://docs.google.com/spreadsheets/d/1UWjzL-hIX4_iLB7Stn8Cgv-AmFd_yCrE4qqSkg3nhwo/edit#gid=0" target="_blank"> VIEW EARLY ACCESS LIST
-        <img :src="external">
-      </a>
-    </nav>
-    
     <div class="social">
-      <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
-      <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
-      <a href="https://discord.gg/Q6eu62S5sP"><img class="discord" :src="discord"></a>
+      <img class="twitter" :src="twitter" >
+      <img class="twitter" :src="twitter" >
+      <img class="twitter" :src="twitter" >
     </div>
 
+    <!-- <span v-if="web3Account" class="user">
+      Sam
+    </span>
+    <span v-else class="wallet" @click="connectWallet">
+        <img :src="walletText" >
+    </span> -->
     <img class="bg-overlay" :src="bgOverlay" >
     
     <div class="info">
-       <div class="minted-title">
-        Minted
-      </div>
-      <div class="minted-number">
-        0 / 10,000
+      <div class="minted">
+        0 / 10,000 Minted
       </div>
     </div>
     <div class="banner banner--bottom">
-      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +  Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + </span>
+      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +</span>
     </div>
+ 
+    <article>
+      <div class="shop">
+        <div class="nft">
+          <video autoplay loop muted :src="monkey" type="video/mp4"></video>
+          <span class="mint" @click="mintNft">Mint</span>
+        </div>
+        <div class="nft">
+          <video autoplay loop muted :src="monkey" type="video/mp4"></video>
+          <span class="mint">Mint</span>
+        </div>
+              <div class="nft">
+          <video autoplay loop muted :src="monkey" type="video/mp4"></video>
+          <span class="mint">Mint</span>
+        </div>
+              <div class="nft">
+          <video autoplay loop muted :src="monkey" type="video/mp4"></video>
+          <span class="mint">Mint</span>
+        </div>
+      </div>
+    </article>
   </div>
 </template>
 
@@ -42,16 +60,13 @@ import nftShop from '@/utils/nftShop.json';
 import bgOverlay from "@/assets/img/gm-clean.svg"
 
 import twitter from "@/assets/img/twitter.svg"
-import discord from "@/assets/img/discord.svg"
-import insta from "@/assets/img/insta.svg"
 import walletText from "@/assets/img/wallet.svg"
-import external from "@/assets/img/external.png"
 import monkey from "@/assets/video/mm.mp4"
 
 
 
 export default {
-  name: 'IndexPage',
+  name: 'Shop',
   components: {
     // Menu,
   },
@@ -59,12 +74,9 @@ export default {
     return {
       bgOverlay,
       twitter,
-      discord,
-      insta,
       web3Account: '',
       walletText,
       monkey,
-      external,
     }
   },
   created() {
@@ -135,127 +147,113 @@ export default {
 
 <style >
 
-main {
-  text-align: center;
-}
-.bg-overlay {
-  
-    max-width: 80%;
-    max-height: 70vh;
-    padding-top: 22vh;
-    pointer-events: none;
+* {
+  box-sizing: border-box;
 }
 
-.nav {
-    position: absolute;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    top: 4.5rem;
-    left: 0;
+.shop {
+  display: flex;
+  justify-content: space-between;
 }
-.nav img {
-  height: 0.65rem;
+
+.nft {
+  max-width: 200px;
+  border: solid 1px #fff;
+
 }
-a {
-    font-size: 0.75rem;
-    color: #fff;
-    text-decoration: none;
+.nft video {
+  padding: 1rem;
+  max-width: 100%;
 }
+.mint {
+  width: 100%;
+  display: block;
+  font-family: Arial;
+  font-weight: 700;
+  color: #000;
+  background: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+
 .info {
+  position: absolute;
+  bottom: 4rem;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   color: #fff;
-  flex-flow: column;
-  padding: 3rem;
+  align-items: flex-end;
 }
+  .bg-overlay {
+      mix-blend-mode: lighten;
+      max-width: 100%;
+      max-height: 90vh;
+      padding-top: 10vh;
+      pointer-events: none;
+  }
 
-.minted-number,
-.minted-title {
-  text-align: center;
-  width: 100%;
+.minted {
+  padding-left: 2.5rem;
 }
-.minted-title {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-}
-.minted-number {
-  font-size: 2.5rem;
-}
-
 .social {
-  position: absolute;
-  top: 5rem;
-  right: 2rem;
-  left: auto;
-  transform: translateY(-1rem);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-@media(max-width: 600px) { 
-  .social {
-    bottom: 0rem;
-    left: 0;
-    right: auto;
-    top: auto;
-    width: 100%;
-  }
+  padding-right: 1.5rem;
+  transform: translateY(1rem);
 }
 
-  .twitter,
-  .discord,
-  .insta {
+  .twitter {
       width: 3rem;
-      margin: 0 0.25rem;
-      /* cursor: pointer; */
-  }
-  .discord {
-    transform: translateY(-0.2rem) ;
-    padding: 0.25rem
   }
 
+    .wallet {
+        position: absolute;
+        top: 5rem;
+        right: 3rem;
+        background: #fff;
+        padding: 1.1rem;
+        border-radius: 1rem;
+        transform: translate(1rem, -1.25rem);
+    }
+
+
+article {
+  min-height: 400px;
+  padding: 10rem 0;
+}
 
 .banner {
   width: 100%;
   padding: 0.4rem 0;
-  z-index: 1;
-  color: #fff;
-  background: rgba(255,255,255, 0.5);
+  color: black;
+  background: #fff;
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
   height: fit-content;
   overflow: hidden;
   white-space: nowrap;
+
   position: absolute;
   top: 0;
   left: 0;
 }
-
 .banner--bottom {
   top: auto;
   bottom: 0;
-}
-@media(max-width: 600px) { 
-  .banner--bottom {
-    display: none;
-  }
 }
 
 .marquee {
   display: block;
   will-change: transform;
-  animation: marquee 30s linear infinite;
+  animation: marquee 32s linear infinite;
 }
 
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
-
-
 
 </style>
 

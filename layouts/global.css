@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'HelveticaNowDisplayXBlk';
+    src: url('~/assets/fonts/HelveticaNowDisplayXBlk.woff2') format('woff2');
+}
+
+* {
+    box-sizing: border-box;
+  }
+
+  
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    box-sizing: border-box;
+    font-family: 'HelveticaNowDisplayXBlk', Arial, Helvetica, sans-serif;
+}
