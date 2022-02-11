@@ -228,7 +228,6 @@ a {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 1.5rem;
-  height: fit-content;
   overflow: hidden;
   white-space: nowrap;
   position: absolute;
