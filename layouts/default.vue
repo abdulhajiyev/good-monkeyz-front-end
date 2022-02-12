@@ -55,9 +55,8 @@
         height: 100%;
         background: linear-gradient(45deg, rgba(255,0,255,1) 0%, rgba(0,255,255,1) 100%);
         filter: hue-rotate(0deg);
-        animation: fade 6s alternate infinite;
-        mix-blend-mode: multiply;
-        opacity: 0.25;
+        animation: fade 8s alternate infinite;
+        opacity: 0.2;
         pointer-events: none;
     }
 

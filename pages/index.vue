@@ -18,14 +18,6 @@
 
     <img class="bg-overlay" :src="bgOverlay" >
     
-    <div class="info">
-       <div class="minted-title">
-        Minted
-      </div>
-      <div class="minted-number">
-        0 / 10,000
-      </div>
-    </div>
     <div class="banner banner--bottom">
       <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +  Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + </span>
     </div>
@@ -33,20 +25,14 @@
 </template>
 
 <script>
-import { ethers } from 'ethers';
 // import Menu from '@/components/Menu.vue';
-
-import nftShop from '@/utils/nftShop.json';
-
 
 import bgOverlay from "@/assets/img/gm-clean.svg"
 
 import twitter from "@/assets/img/twitter.svg"
 import discord from "@/assets/img/discord.svg"
 import insta from "@/assets/img/insta.svg"
-import walletText from "@/assets/img/wallet.svg"
 import external from "@/assets/img/external.png"
-import monkey from "@/assets/video/mm.mp4"
 
 
 
@@ -61,75 +47,9 @@ export default {
       twitter,
       discord,
       insta,
-      web3Account: '',
-      walletText,
-      monkey,
       external,
     }
   },
-  created() {
-    this.checkForWallet();
-
-  },
-  methods: {
-    async checkForWallet() {
-      const { ethereum } = window;
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      if (accounts.length !== 0) {
-        this.web3Account = accounts[0];
-      }
-
-      ethereum.on('accountsChanged', (accounts) => {
-        console.log('account changed')
-      });
-    },
-    async connectWallet() {
-      const { ethereum } = window;
-
-      if (!ethereum) {
-        alert("Make sure you have metamask!");
-        return;
-      }
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      // const chainId = await ethereum.request({ method: 'eth_chainId' });
-
-      if (accounts.length !== 0) {
-        this.web3Account = accounts[0];
-        console.log("Found an authorized account:", this.web3Account);
-      }
-    },
-    async mintNft() {
-      console.log('mint')
-        try {
-          const { ethereum } = window;
-
-          const CONTRACT_ADDRESS = "0x3414b08f71c05d67fc2a458881f5776d05898ec2";
-
-          if (ethereum) {
-            const provider = new ethers.providers.Web3Provider(ethereum);
-            const signer = provider.getSigner();
-            const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, nftShop.abi, signer);
-
-            console.log("Going to pop wallet now to pay gas...")
-
-            const overrides = { value: ethers.utils.parseEther('0.001')};
-            const nftTxn = await connectedContract.mint(1,1, overrides )
-            
-            await nftTxn.wait();
-            console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
-
-          } else {
-            console.log("Ethereum object doesn't exist!");
-          }
-        } catch (error) {
-          console.log(error)
-        }
-     },
-
-  },
-
-
-
 }
 </script>
 
@@ -139,10 +59,9 @@ main {
   text-align: center;
 }
 .bg-overlay {
-  
-    max-width: 80%;
-    max-height: 70vh;
-    padding-top: 22vh;
+    max-width: 90%;
+    max-height: 75vh;
+    padding-top: 25vh;
     pointer-events: none;
 }
 
