@@ -9,7 +9,7 @@
         </nav>
         <div v-if="account" class="user">
             {{account.substring(0,4)+'..'+account.substr(-4)}}
-            <img class="avatar" :src="user">
+            <nuxt-link to="/dashboard"><img class="avatar" :src="user"></nuxt-link>
         </div>
         <span v-else @click="$emit('connect')" class="connect">Connect Wallet</span>
     </div>

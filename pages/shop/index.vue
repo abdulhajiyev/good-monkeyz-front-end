@@ -11,7 +11,7 @@
         <div class="banner">
           <span class="marquee">Sale Starting <img :src="star"> Sale Starting <img :src="star"> Sale Starting <img :src="star"> Sale Starting <img :src="star"> </span>
         </div>
-        <nuxt-link to="/shop-s1" class="btn">Season 1 Drop</nuxt-link>
+        <nuxt-link to="/shop/s1" class="btn">Season 1 Drop</nuxt-link>
         <div class="gm-spinner">
             <img class="gm-in" :src="gmIn">
             <img class="gm-out" :src="gmOut">
@@ -209,6 +209,8 @@ main {
   bottom: 30%;
   transform: translate(-50%, 0);
   cursor: pointer;
+  text-decoration: none;
+  font-size: 0.75rem;
 }
 
 </style>

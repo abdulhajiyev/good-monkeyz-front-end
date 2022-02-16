@@ -5,7 +5,7 @@
       <div v-for="item in merch" :key="item.title" class="item">
         <span class="supply"> 14/77 </span>
         <video muted autoplay loop :src="item.img"></video>
-        <span class="btn">mint</span>
+        <span class="btn" @click="mintNft(item.id)">mint</span>
       </div>
     </div>
   </div>
@@ -34,22 +34,22 @@ export default {
       merch: [
         {
           title: 'Hoodie',
-          id: '0',
+          id: 0,
           img: monkey,
         },
         {
           title: 'Hat',
-          id: '1',
+          id: 1,
           img: monkey,
         },
         {
           title: 'Swag',
-          id: '2',
+          id: 2,
           img: monkey,
         },
         {
           title: 'Mint Pass',
-          id: '3',
+          id: 3,
           img: monkey,
         }
       ],
@@ -84,7 +84,7 @@ export default {
         console.log("Found an authorized account:", this.wallet);
       }
     },
-    async mintNft() {
+    async mintNft(id) {
       console.log('mint')
         try {
           const { ethereum } = window;
@@ -99,7 +99,7 @@ export default {
             console.log("Going to pop wallet now to pay gas...")
 
             const overrides = { value: ethers.utils.parseEther('0.001')};
-            const nftTxn = await connectedContract.mint(1,1, overrides )
+            const nftTxn = await connectedContract.mint(id,1, overrides )
             
             await nftTxn.wait();
             console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
