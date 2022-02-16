@@ -1,24 +1,13 @@
 <template>
   <div class="shop">
     <Menu :account="wallet" @connect="modalActive = true" />
-    <WalletModal
-      :active="modalActive"
-      @close-modal="modalActive = false"
-      @connect="connectWallet"
-    />
-    <div class="splash">
-      <div class="splash-inner" :style="`backgroundImage: url(${bg})`">
-        <div class="banner">
-          <span class="marquee">Sale Starting <img :src="star"> Sale Starting <img :src="star"> Sale Starting <img :src="star"> Sale Starting <img :src="star"> </span>
-        </div>
-        <nuxt-link to="/shop-s1" class="btn">Season 1 Drop</nuxt-link>
-        <div class="gm-spinner">
-            <img class="gm-in" :src="gmIn">
-            <img class="gm-out" :src="gmOut">
-        </div>
+    <div class="grid">
+      <div v-for="item in merch" :key="item.title" class="item">
+        <span class="supply"> 14/77 </span>
+        <video muted autoplay loop :src="item.img"></video>
+        <span class="btn">mint</span>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -26,34 +15,44 @@
 import { mapState, mapMutations } from 'vuex'
 import { ethers } from 'ethers';
 
-import WalletModal from '@/components/WalletModal.vue';
 import Menu from '@/components/Menu.vue';
 
 
 import nftShop from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm.mp4";
-import bg from "@/assets/img/hood.jpg";
-import star from "@/assets/img/star.svg";
-
-import gmOut from "@/assets/img/gm-outer.svg";
-import gmIn from "@/assets/img/gm-inner.svg";
 
 
 
 export default {
-  name: 'Shop',
+  name: 'Shop-s1',
   components: {
     Menu,
-    WalletModal,
   },
   data: () => {
     return {
       monkey,
-      bg,
-      star,
-      gmOut,
-      gmIn,
-      modalActive: false,
+      merch: [
+        {
+          title: 'Hoodie',
+          id: '0',
+          img: monkey,
+        },
+        {
+          title: 'Hat',
+          id: '1',
+          img: monkey,
+        },
+        {
+          title: 'Swag',
+          id: '2',
+          img: monkey,
+        },
+        {
+          title: 'Mint Pass',
+          id: '3',
+          img: monkey,
+        }
+      ],
     }
   },
   computed: mapState(['wallet']),
@@ -125,90 +124,42 @@ main {
   background: #fff;
 }
 
-
-.shop {
-  width: 100%;
+.grid {
+  padding-top: 8rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
-.splash {
+.item {
+  flex-basis: 22%;
   padding: 1rem;
-  min-height: 100vh;
-  width: 100%;
+  border-radius: 2rem;
+  box-shadow: 0px 34px 84px rgba(0, 0, 0, 0.09);
   position: relative;
-   overflow: hidden;
 }
 
-.splash-inner {
-  background-size: cover;
-  background-position: center center ;
-  min-height: 100%;
-  width: 100%;
-}
-
-
-
-.banner {
-  width: 100%;
-  z-index: 1;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: 900;
-  font-size: 9rem;
-  white-space: nowrap;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  pointer-events: none;
-}
-
-.marquee {
-  display: block;
-  will-change: transform;
-  animation: marquee 30s linear infinite;
-}
-
-@keyframes marquee {
-  from { transform: translate(0, -50%); }
-  to { transform: translate(-50%, -50%); }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg) }
-  to { transform: rotate(360deg) }
-}
-
-.gm-spinner {
-  position: absolute;
-  display: inline-block;
-  left: -1.5rem;
-  bottom: -1.5rem;
-  transform: scale(0.9);
-}
-.gm-out {
-    animation: spin 20s linear infinite;
-  transform-origin: 50% 50% ;
-}
-
-.gm-in {
-  position: absolute;
-  top: 50%;
-  left: 46%;
-  transform: translate(-50%, -50%); 
-}
-
-.btn {
-  padding: 1rem;
+.item video{
+  max-width: 100%;
   border-radius: 1rem;
-  text-transform: uppercase;
-  background-color: #fff;
-  color: #000;
-  position: absolute;
-  left: 50%;
-  bottom: 30%;
-  transform: translate(-50%, 0);
+  margin-bottom: 1rem;
+}
+
+.item .btn {
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  display: block;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  padding: 0.5rem;
   cursor: pointer;
+}
+.item .supply {
+  position: absolute;
+  color: #fff;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1;
 }
 
 </style>

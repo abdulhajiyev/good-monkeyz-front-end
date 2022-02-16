@@ -72,6 +72,8 @@
     .user {
         display: flex;
         align-items: center;
+        font-size: 0.725rem;
+        font-family: 'Inconsolata', 'Courier New', Courier, monospace;
     }
     .avatar {
         height: 2rem;
