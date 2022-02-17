@@ -17,5 +17,6 @@ export const mutations = {
     setWallet(state, wallet) {
         console.log('setWallet');
         state.wallet = wallet;
+        
     }
 }

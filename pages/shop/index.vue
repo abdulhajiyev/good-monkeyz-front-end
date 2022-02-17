@@ -11,7 +11,7 @@
         <div class="banner">
           <span class="marquee">Sale Starting <img :src="star"> Sale Starting <img :src="star"> Sale Starting <img :src="star"> Sale Starting <img :src="star"> </span>
         </div>
-        <nuxt-link to="/shop/s1" class="btn">Season 1 Drop</nuxt-link>
+        <nuxt-link to="/mint/merch" class="btn">Merch Pre-Sale</nuxt-link>
         <div class="gm-spinner">
             <img class="gm-in" :src="gmIn">
             <img class="gm-out" :src="gmOut">

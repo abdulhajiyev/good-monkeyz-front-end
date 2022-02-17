@@ -6,7 +6,7 @@
         <h2>You are eligible for the Good Monkeyz merch drop</h2>
     </div>
     <div class="grid">
-      <div v-if="balance" class="item">
+      <div class="item">
         <video muted autoplay loop :src="monkey"></video>
         <nuxt-link to="/merch/redeem" class="btn">Redeem Item</nuxt-link>
       </div>
@@ -37,13 +37,9 @@ export default {
   },
   computed: mapState(['wallet']),
   created() {
-    this.getBalance();
-    if (this.balance <= 0) {
-      this.$router.push('/ngmi')
-    }
   },
   methods: {
-      getBalance() {
+      async getBalance() {
 
       try {
         const { ethereum } = window;
@@ -55,7 +51,7 @@ export default {
           const signer = provider.getSigner();
           const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, nftShop.abi, signer);
 
-          this.balance = connectedContract.balanceOf(this.wallet, 0);
+          return await connectedContract.balanceOf(this.wallet, 1);
         } else {
           console.log("Ethereum object doesn't exist!");
         }
@@ -65,6 +61,15 @@ export default {
 
     },
   },
+  middleware({ redirect }) {
+    const balance = this.getBalance();
+    console.log('BALANCE: %s', balance)
+    if (balance > 0) {
+      return redirect('/ngmi');
+    }
+
+  }
+
 }
 </script>
 

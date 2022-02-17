@@ -1,215 +1,206 @@
 <template>
   <div class="index">
-    <img class="logo" :src="union" >
-    <div class="fade"></div>
-    <div class="banner">
-      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +  Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + </span>
+    <MinBanner
+      :account="wallet"
+      @connect="modalActive = true" 
+    />
+    <WalletModal
+      :active="modalActive"
+      @close-modal="modalActive = false"
+      @connect="connectWallet"
+    />
+    <div class="splash">
+      <div class="splash-inner" :style="`backgroundImage: url(${bg})`">
+
+        <div class="banner-group">
+          <h2>Minting Tokens</h2>
+          <div class="banner">
+            <span class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
+          </div>
+          <p>There are only 77 limited edition GM tokens available for mint. <br> The GM Token will give you access to the limited edition GM merch bundle. <br> There are 7 hidden GM mint passes. Good luck minting!</p>
+          <span v-if="!wallet" @click="modalActive = true" class="btn">
+            <span>CONNECT WALLET TO MINT</span>
+          </span>
+          <nuxt-link v-else to="/mint/merch" class="btn">GMTOKEN MINT</nuxt-link>
+        </div>
+
+        <div class="counter">
+          <h3>{{amountMinted}} <img :src="divider"> 77</h3>
+          <h4>Claimed</h4>
+        </div>
+
+
+        <div class="gm-spinner">
+            <img class="gm-in" :src="gmIn">
+            <img class="gm-out" :src="gmOut">
+        </div>
+      </div>
     </div>
 
-    <nav class="nav">
-      <a href="https://docs.google.com/spreadsheets/d/1UWjzL-hIX4_iLB7Stn8Cgv-AmFd_yCrE4qqSkg3nhwo/edit#gid=0" target="_blank"> VIEW EARLY ACCESS LIST
-        <img :src="external">
-      </a>
-    </nav>
-    
-    <div class="social">
-      <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
-      <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
-      <a href="https://discord.gg/Q6eu62S5sP"><img class="discord" :src="discord"></a>
-    </div>
-
-    <img class="bg-overlay" :src="bgOverlay" >
-    
-    <div class="banner banner--bottom">
-      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +  Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + </span>
-    </div>
   </div>
 </template>
 
 <script>
-// import Menu from '@/components/Menu.vue';
+import { mapState, mapMutations } from 'vuex'
+import { ethers } from 'ethers';
 
-import bgOverlay from "@/assets/img/gm-clean.svg"
+import WalletModal from '@/components/WalletModal.vue';
+import MinBanner from '@/components/MinBanner.vue';
 
-import twitter from "@/assets/img/twitter.svg"
-import discord from "@/assets/img/discord.svg"
-import insta from "@/assets/img/insta.svg"
-import external from "@/assets/img/external.png"
 
+import nftShop from '@/utils/nftShop.json';
+import monkey from "@/assets/video/mm.mp4";
+import bg from "@/assets/img/hood.jpg";
+import star from "@/assets/img/star.svg";
+
+import gmWhite from "@/assets/img/gm-white.svg";
+
+import gmOut from "@/assets/img/gm-outer.svg";
+import gmIn from "@/assets/img/gm-inner.svg";
+import divider from "@/assets/img/divider.svg"
 
 
 export default {
-  name: 'IndexPage',
+  name: 'Index',
   components: {
-    // Menu,
+    MinBanner,
+    WalletModal,
   },
   data: () => {
     return {
-      bgOverlay,
-      twitter,
-      discord,
-      insta,
-      external,
+      monkey,
+      bg,
+      star,
+      gmOut,
+      gmIn,
+      gmWhite,
+      divider,
+      modalActive: false,
+      amountMinted: '~',
     }
   },
+  computed: mapState(['wallet']),
+  created() {
+    this.checkWallet();
+    this.getAmountMinted();
+  },
+  methods: {
+    ...mapMutations(['setWallet']),
+    async checkWallet() {
+      const { ethereum } = window;
+
+      if (!ethereum) {
+        return;
+      }
+      const accounts = await ethereum.request({ method: "eth_accounts" });
+      // const chainId = await ethereum.request({ method: 'eth_chainId' });
+
+      if (accounts.length !== 0) {
+        this.setWallet(accounts[0] );
+        this.modalActive = false;
+        // this.$router.push('/mint/merch')
+      }
+    },
+    async connectWallet() {
+      const { ethereum } = window;
+
+      if (!ethereum) {
+        alert("Make sure you have metamask!");
+        return;
+      }
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      // const chainId = await ethereum.request({ method: 'eth_chainId' });
+
+      if (accounts.length !== 0) {
+        this.setWallet(accounts[0] );
+        this.modalActive = false;
+        this.$router.push('/mint/merch')
+      }
+    },
+    async getAmountMinted() {
+      try {
+        const CONTRACT_ADDRESS = "0x5958C4757564163d97941aC95Bf321232C52193D";
+          const provider = new ethers.providers.InfuraProvider('rinkeby', 'b79b2af3b60447c8b444158b3ebe21eb');
+          const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, nftShop.abi, provider);
+          const minted = await connectedContract.getMinted();
+          this.amountMinted = ethers.utils.formatUnits(minted[1], 0)
+      } catch (error) {
+        console.log(error)
+      }
+
+    },
+  },
+
+
+
 }
 </script>
 
 <style scoped>
-    .logo {
-        position: absolute;
-        top: 5rem;
-        left: 2.5rem;
-        transform: translateY(-25%);
-    }
-    @media(max-width: 600px) { 
-        .logo {
-            display: none;;
-        }
-    }
-
-    .fade {
-        z-index: 1;
-        position: absolute;
-        top: 0;
-        left:0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, rgba(255,0,255,1) 0%, rgba(0,255,255,1) 100%);
-        filter: hue-rotate(0deg);
-        animation: fade 8s alternate infinite;
-        opacity: 0.2;
-        pointer-events: none;
-    }
-
-    @keyframes fade {
-        from {
-            filter: hue-rotate(0deg) brightness(70%);
-            }
-        to {
-            filter: hue-rotate(360deg)  brightness(130%);
-            }
-    }
-
-
-    main {
-       height: 100%;
-       min-height: 100vh;
-       width: 100%;
-       background-size: cover;
-       display: flex;
-       justify-content: center;
-       text-align: center;
-    }
-.bg-overlay {
-    max-width: 90%;
-    max-height: 75vh;
-    padding-top: 25vh;
-    pointer-events: none;
+main {
+  background: #fff;
 }
 
-.nav {
-    position: absolute;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    top: 4.5rem;
-    left: 0;
-}
-.nav img {
-  height: 0.65rem;
-}
-a {
-    font-size: 0.75rem;
-    color: #fff;
-    text-decoration: none;
-}
-.info {
+
+.index {
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  color: #fff;
-  flex-flow: column;
-  padding: 3rem;
 }
 
-.minted-number,
-.minted-title {
-  text-align: center;
+.splash {
+  padding: 1rem;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+   overflow: hidden;
+}
+
+.splash-inner {
+  background-size: cover;
+  background-position: center center ;
+  min-height: 100%;
   width: 100%;
 }
-.minted-title {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-}
-.minted-number {
-  font-size: 2.5rem;
-}
 
-.social {
+
+.banner-group {
+  width: 100%;
   position: absolute;
-  top: 5rem;
-  right: 2rem;
-  left: auto;
-  transform: translateY(-1rem);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  color: #fff;
+  text-align: center;
 }
-@media(max-width: 600px) { 
-  .social {
-    bottom: 0rem;
-    left: 0;
-    right: auto;
-    top: auto;
-    width: 100%;
-  }
+.banner-group h2 {
+  text-align: center;
+  font-size: 0.625rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
 }
-
-  .twitter,
-  .discord,
-  .insta {
-      width: 3rem;
-      margin: 0 0.25rem;
-      /* cursor: pointer; */
-  }
-  .discord {
-    transform: translateY(-0.2rem) ;
-    padding: 0.25rem
-  }
-
+.banner-group p {
+  line-height: 2;
+  font-family: Helvetica, sans-serif;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
 
 .banner {
-  line-height: 1.5rem;
-  height: 2.5rem;
   width: 100%;
-  padding: 0.4rem 0;
   z-index: 1;
   color: #fff;
-  background: rgba(255,255,255, 0.5);
   text-transform: uppercase;
-  font-weight: 700;
-  font-size: 1.5rem;
-  overflow: hidden;
+  font-weight: 900;
+  font-size: 9rem;
   white-space: nowrap;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.banner--bottom {
-  top: auto;
-  bottom: 0;
-}
-@media(max-width: 600px) { 
-  .banner--bottom {
-    display: none;
-  }
+  pointer-events: none;
 }
 
 .marquee {
   display: block;
   will-change: transform;
+  line-height: 1;
   animation: marquee 30s linear infinite;
 }
 
@@ -218,7 +209,100 @@ a {
   to { transform: translateX(-50%); }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg) }
+  to { transform: rotate(360deg) }
+}
 
+.gm-spinner {
+  position: absolute;
+  display: inline-block;
+  left: -1.5rem;
+  bottom: -1.5rem;
+  transform: scale(0.9);
+}
+.gm-out {
+    animation: spin 20s linear infinite;
+  transform-origin: 50% 50% ;
+}
+
+.gm-in {
+  position: absolute;
+  top: 50%;
+  left: 46%;
+  transform: translate(-50%, -50%); 
+}
+
+.btn {
+  padding: 1rem;
+  border-radius: 1rem;
+  text-transform: uppercase;
+  background-color: #fff;
+  color: #000;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.75rem;
+  overflow: hidden;
+  display: inline-block ;
+}
+.btn span {
+  position: relative;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 400px;
+  height: 300px;
+  z-index: 0;
+  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+  animation: go 3.8s infinite alternate;
+  opacity: 0.9;
+  filter: blur(24px);
+}
+
+
+@keyframes go {
+  0% {
+    transform: translate(-300px, 100px);
+  }
+  20% {
+    transform: translate(-300px, 100px);
+  }
+  50% {
+    transform: translate(-300px, 100px);
+  }
+  90% {
+    transform: translate(0px, -300px);
+  }
+  100% {
+    transform: translate(0px, -300px);
+  }
+}
+
+  .counter {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    color: #fff;
+  }
+  .counter h3 {
+    font-size: 2.6rem;
+    margin: 0;
+    
+  }
+  .counter h3 img {
+    height: 3.3rem;
+    transform: translateY(0.8rem);
+  }
+    .counter h4 {
+      text-align: center;
+      font-size: 0.625rem;
+     letter-spacing: 0.4em;
+     text-transform: uppercase;
+  }
 
 </style>
 

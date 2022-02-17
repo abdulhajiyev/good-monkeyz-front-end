@@ -3,19 +3,20 @@
     <video class="video-bg" autoplay muted loop :src="monkey"></video>
     <div class="fade-bg"></div>
 
-    <div class="banner">
-      <img class="gm-white" :src="gmWhite" >
-        <div class="social">
-          <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
-          <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
-          <a href="https://discord.gg/Q6eu62S5sP"><img class="discord" :src="discord"></a>
-        </div>
-    </div>
-    <div class="mint">
+    <MinBanner
+      :account="wallet"
+      @connect="modalActive = true" 
+    />
+    <div v-if="!minted" class="mint" >
       <h2>Current Price Ξ {{price}}</h2>
-      <h3>{{minted}} <img :src="divider"> 77</h3>
+      <h3>{{amountMinted}} <img :src="divider"> 77</h3>
       <h4>Minted</h4>
-      <span class="btn" @click="mintNft(0)">Mint Merch Token</span>
+      <span class="btn" @click="mintNft(2)">Mint Merch Token</span>
+    </div>
+    <div v-else class="congrats">
+      <h1>CONGRATULATIONS!</h1>
+      <h2>#77 GM TOKEN MINTED</h2>
+      <span class="btn">Share On Twitter</span>
     </div>
   </div>
 </template>
@@ -24,6 +25,7 @@
 import { mapState, mapMutations } from 'vuex'
 import { ethers } from 'ethers';
 
+import MinBanner from '@/components/MinBanner.vue';
 
 import nftShop from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm.mp4";
@@ -36,8 +38,14 @@ import divider from "@/assets/img/divider.svg"
 
 
 export default {
+  transition: 'mint',
+  middleware({ redirect }) {
+    // if dont have NFT / 
+    // return redirect('/dashboard');
+  },
   name: 'pre-merch',
   components: {
+    MinBanner,
   },
   data: () => {
     return {
@@ -47,13 +55,14 @@ export default {
       insta,
       gmWhite,
       divider,
-      minted: '~',
+      amountMinted: '~',
       price: 0.05,
+      minted: false,
     }
   },
   computed: mapState(['wallet']),
   created() {
-    this.getSupply();
+    this.getAmountMinted();
     // check for wallet
     // check supply
     // check price
@@ -64,45 +73,43 @@ export default {
   },
   methods: {
     ...mapMutations(['setWallet']),
-    async checkForWallet() {
-      const { ethereum } = window;
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      if (accounts.length !== 0) {
-        this.setWallet(accounts[0] );
-      }
-    },
+    // async checkForWallet() {
+    //   const { ethereum } = window;
+    //   const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    //   if (accounts.length !== 0) {
+    //     this.setWallet(accounts[0] );
+    //   }
+    // },
 
-    async connectWallet() {
-      const { ethereum } = window;
+    // async connectWallet() {
+    //   const { ethereum } = window;
 
-      if (!ethereum) {
-        alert("Make sure you have metamask!");
-        return;
-      }
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      // const chainId = await ethereum.request({ method: 'eth_chainId' });
+    //   if (!ethereum) {
+    //     alert("Make sure you have metamask!");
+    //     return;
+    //   }
+    //   const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    //   // const chainId = await ethereum.request({ method: 'eth_chainId' });
 
-      if (accounts.length !== 0) {
-        this.setWallet(accounts[0] );
-        this.modalActive = false;
-        console.log("Found an authorized account:", this.wallet);
-      }
-    },
-    async getSupply() {
-
+    //   if (accounts.length !== 0) {
+    //     this.setWallet(accounts[0] );
+    //     this.modalActive = false;
+    //     console.log("Found an authorized account:", this.wallet);
+    //   }
+    // },
+    async getAmountMinted() {
         try {
           const { ethereum } = window;
 
           const CONTRACT_ADDRESS = "0x5958C4757564163d97941aC95Bf321232C52193D";
 
           if (ethereum) {
-            const provider = new ethers.providers.Web3Provider(ethereum);
-            const signer = provider.getSigner();
-            const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, nftShop.abi, signer);
+            const provider = new ethers.providers.InfuraProvider('rinkeby', 'b79b2af3b60447c8b444158b3ebe21eb');
 
-            console.log("Going to pop wallet now to pay gas...")
+            const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, nftShop.abi, provider);
+
             const supply = await connectedContract.getMinted();
-            this.minted = ethers.utils.formatUnits(supply[0], 0)
+            this.amountMinted = ethers.utils.formatUnits(supply[2], 0)
 
           } else {
             console.log("Ethereum object doesn't exist!");
@@ -126,12 +133,16 @@ export default {
 
             console.log("Going to pop wallet now to pay gas...")
 
-            const overrides = { value: ethers.utils.parseEther('0.001')};
-            const nftTxn = await connectedContract.mint(id, overrides )
-            
-            await nftTxn.wait();
-            console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
-            this.$router.push('/dashboard')
+            try {
+              const overrides = { value: ethers.utils.parseEther('0.001')};
+              const nftTxn = await connectedContract.mint(id, overrides)
+              await nftTxn.wait();
+              console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
+              this.minted = true;
+            } catch (error) {
+              console.log("Error MINTINIG");
+              console.log(error)
+            }
 
           } else {
             console.log("Ethereum object doesn't exist!");
@@ -149,6 +160,15 @@ export default {
 </script>
 
 <style scoped>
+  .mint-enter-active, .mint-leave-active { 
+    transition: opacity .7s, transform .7s; 
+  }
+  .mint-enter, .mint-leave-active { 
+    opacity: 0;
+    transform: scale(1.2);
+  }
+
+
 .pre-merch {
   background: #000;
   width: 100%;
@@ -209,7 +229,8 @@ export default {
     transform: translateY(-0.2rem) ;
     padding: 0.25rem
   }
-  .mint {
+  .mint,
+  .congrats {
     color: #fff;
     z-index: 1;
     text-align: center;
@@ -219,7 +240,8 @@ export default {
     font-size: 1rem;
     letter-spacing: 0.4em;
   }
-  .mint h3 {
+  .mint h3,
+  .congrats h1 {
     font-size: 5.4rem;
     margin: 0;
   }
@@ -231,7 +253,8 @@ export default {
      letter-spacing: 0.4em;
      margin-bottom: 3.5rem;
   }
-  .mint .btn {
+  
+  .congrats .btn {
     background-color: #fff;
     color: black;
     padding: 1rem 1.5rem;
