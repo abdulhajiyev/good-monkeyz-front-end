@@ -1,14 +1,6 @@
 <template>
   <div class="index">
-    <MinBanner
-      :account="wallet"
-      @connect="modalActive = true" 
-    />
-    <WalletModal
-      :active="modalActive"
-      @close-modal="modalActive = false"
-      @connect="connectWallet"
-    />
+    <MinBanner :account="wallet" />
     <div class="splash">
       <div class="splash-inner" :style="`backgroundImage: url(${bg})`">
 
@@ -18,7 +10,7 @@
             <span class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
           </div>
           <p>There are only 77 limited edition GM tokens available for mint. <br> The GM Token will give you access to the limited edition GM merch bundle. <br> There are 7 hidden GM mint passes. Good luck minting!</p>
-          <span v-if="!wallet" @click="modalActive = true" class="btn">
+          <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
             <span>CONNECT WALLET TO MINT</span>
           </span>
           <nuxt-link v-else to="/mint/merch" class="btn">GMTOKEN MINT</nuxt-link>
@@ -41,14 +33,19 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import { ethers } from 'ethers';
 
-import WalletModal from '@/components/WalletModal.vue';
 import MinBanner from '@/components/MinBanner.vue';
 
+import { 
+  MERCH_DROP_CONTRACT,
+  INFURA_PROJECT_ID,
+  NETWORK_NAME,
+  TOKEN_ID_MERCH_BUNDLE 
+} from '@/utils/constants';
 
-import nftShop from '@/utils/nftShop.json';
+import GMSHOPJSON from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm.mp4";
 import bg from "@/assets/img/hood.jpg";
 import star from "@/assets/img/star.svg";
@@ -64,7 +61,6 @@ export default {
   name: 'Index',
   components: {
     MinBanner,
-    WalletModal,
   },
   data: () => {
     return {
@@ -75,64 +71,25 @@ export default {
       gmIn,
       gmWhite,
       divider,
-      modalActive: false,
       amountMinted: '~',
     }
   },
   computed: mapState(['wallet']),
   created() {
-    this.checkWallet();
     this.getAmountMinted();
   },
   methods: {
-    ...mapMutations(['setWallet']),
-    async checkWallet() {
-      const { ethereum } = window;
-
-      if (!ethereum) {
-        return;
-      }
-      const accounts = await ethereum.request({ method: "eth_accounts" });
-      // const chainId = await ethereum.request({ method: 'eth_chainId' });
-
-      if (accounts.length !== 0) {
-        this.setWallet(accounts[0] );
-        this.modalActive = false;
-        // this.$router.push('/mint/merch')
-      }
-    },
-    async connectWallet() {
-      const { ethereum } = window;
-
-      if (!ethereum) {
-        alert("Make sure you have metamask!");
-        return;
-      }
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      // const chainId = await ethereum.request({ method: 'eth_chainId' });
-
-      if (accounts.length !== 0) {
-        this.setWallet(accounts[0] );
-        this.modalActive = false;
-        this.$router.push('/mint/merch')
-      }
-    },
     async getAmountMinted() {
       try {
-        const CONTRACT_ADDRESS = "0x5958C4757564163d97941aC95Bf321232C52193D";
-          const provider = new ethers.providers.InfuraProvider('rinkeby', 'b79b2af3b60447c8b444158b3ebe21eb');
-          const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, nftShop.abi, provider);
-          const minted = await connectedContract.getMinted();
-          this.amountMinted = ethers.utils.formatUnits(minted[1], 0)
+        const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
+        const minted = await connectedContract.getMinted();
+        this.amountMinted = ethers.utils.formatUnits(minted[TOKEN_ID_MERCH_BUNDLE], 0)
       } catch (error) {
         console.log(error)
       }
-
     },
   },
-
-
-
 }
 </script>
 

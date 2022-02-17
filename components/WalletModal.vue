@@ -1,28 +1,58 @@
 <template>
-    <div class="backdrop" :class="{ active: active }">
-        <img class="close" :src="closeIcon" @click="$emit('close-modal')">
-        <div class="modal">
+    <div class="backdrop" :class="{ active: active }" @click="active = false" >
+        <img class="close" :src="closeIcon" @click="active = false">
+        <div class="modal" @click.stop>
             <h1>Select Wallet</h1>
             <h2>To access the merch drop, please connect your wallet.</h2>
-            <span class="btn metamask" @click="$emit('connect', 'metamask')">Metamask <img :src="mmIcon"></span>
-            <span class="btn wallet-connect" @click="$emit('connect', 'wallet-connect')">Wallet Connect <img :src="wcIcon"></span>
+            <span class="btn metamask" @click="connectWallet()">Metamask <img :src="mmIcon"></span>
+            <!-- <span class="btn wallet-connect" @click="$emit('connect', 'wallet-connect')">Wallet Connect <img :src="wcIcon"></span> -->
         </div>
     </div>
 </template>
 
 <script>
+    import { mapMutations } from 'vuex'
+
     import wcIcon from "@/assets/img/wc-icon.svg";
     import mmIcon from "@/assets/img/mm-icon.svg";
     import closeIcon from "@/assets/img/close.svg";
 
     export default {
-        props: ['active'],
         data:  () => {
             return {
                 wcIcon,
                 mmIcon,
                 closeIcon,
+                active: false
             }
+        },
+        created() {
+            this.$nuxt.$on('connect', () => {
+                this.active = true
+            })
+        },
+        methods: {
+            ...mapMutations(['setWallet']),
+            async connectWallet() {
+
+                try {
+                    const { ethereum } = window;
+
+                    if (!ethereum) {
+                        return;
+                    }
+                    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+                    // const chainId = await ethereum.request({ method: 'eth_chainId' });
+
+                    if (accounts.length !== 0) {
+                        this.setWallet(accounts[0] );
+                        this.active = false
+                        this.$router.push('/mint/merch')
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            },
         }
     }
 </script>
@@ -41,12 +71,12 @@
         opacity: 0;
         pointer-events: none;
         will-change: opacity;
+        transition: opacity 200ms ease-in;
     }
 
     .active {
         opacity: 1;
         pointer-events: initial;
-        transition: opacity 200ms ease-in;
     }
     .close {
         position: absolute;

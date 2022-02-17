@@ -1,0 +1,4 @@
+export const MERCH_DROP_CONTRACT = '0x5958C4757564163d97941aC95Bf321232C52193D';
+export const INFURA_PROJECT_ID = 'b79b2af3b60447c8b444158b3ebe21eb';
+export const NETWORK_NAME = 'rinkeby';
+export const TOKEN_ID_MERCH_BUNDLE = 0;

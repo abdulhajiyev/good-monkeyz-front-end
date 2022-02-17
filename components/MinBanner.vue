@@ -82,16 +82,6 @@
         padding: 0.25rem;
     }
 
-    .connect {
-        color: #fff;
-        background: #000;
-        padding: 1rem;
-        font-size: 0.825rem;
-        border-radius: 1rem;
-        text-transform: uppercase;
-            align-self: center;
-    }
-
     .user {
         background: #fff;
         border-radius: 1.25rem;
