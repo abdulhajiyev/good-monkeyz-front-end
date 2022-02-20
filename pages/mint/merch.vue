@@ -8,15 +8,15 @@
       @connect="modalActive = true" 
     />
     <div v-if="!minted" class="mint" >
-      <h2>Current Price Ξ {{price}}</h2>
+      <h2>Current Price Ξ {{bundlePrice}}</h2>
       <h3>{{amountMinted}} <img :src="divider"> 77</h3>
       <h4>Minted</h4>
       <span class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
     </div>
     <div v-else class="congrats">
       <h1>CONGRATULATIONS!</h1>
-      <h2>#77 GM TOKEN MINTED</h2>
-      <span class="btn">Share On Twitter</span>
+      <h2>#{{parseInt(amountMinted)+1}} GM TOKEN MINTED</h2>
+      <span class="btn "><img :src="twitterBlack">Share On Twitter</span>
     </div>
   </div>
 </template>
@@ -37,10 +37,7 @@ import MinBanner from '@/components/MinBanner.vue';
 import GMSHOPJSON from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm.mp4";
 
-import twitter from "@/assets/img/twitter.svg"
-import discord from "@/assets/img/discord.svg"
-import insta from "@/assets/img/insta.svg"
-import gmWhite from "@/assets/img/gm-white.svg"
+import twitterBlack from "@/assets/img/twitter-black.svg"
 import divider from "@/assets/img/divider.svg"
 
 
@@ -53,20 +50,18 @@ export default {
   data: () => {
     return {
       monkey,
-      twitter,
-      discord,
-      insta,
-      gmWhite,
+      twitterBlack,
       divider,
       amountMinted: '~',
-      price: 0.05,
+      bundlePrice: '~',
       minted: false,
       merchBundleId: TOKEN_ID_MERCH_BUNDLE,
     }
   },
   computed: mapState(['wallet']),
   created() {
-    this.getAmountMinted();
+    this.minted = false;
+    this.getcontractData();
     // check for wallet
     // check supply
     // check price
@@ -74,7 +69,7 @@ export default {
 
   },
   methods: {
-    async getAmountMinted() {
+    async getcontractData() {
         try {
           const { ethereum } = window;
 
@@ -83,7 +78,9 @@ export default {
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
 
             const supply = await connectedContract.getMinted();
-            this.amountMinted = ethers.utils.formatUnits(supply[2], 0)
+            const price = await connectedContract.getMerchBundlePrice();
+            this.amountMinted = ethers.utils.formatUnits(supply[TOKEN_ID_MERCH_BUNDLE], 0);
+            this.bundlePrice = ethers.utils.formatEther(price);
 
           } else {
             console.log("Ethereum object doesn't exist!");
@@ -105,8 +102,9 @@ export default {
             console.log("Going to pop wallet now to pay gas...")
 
             try {
-              const overrides = { value: ethers.utils.parseEther('0.001')};
-              const nftTxn = await connectedContract.mint(id, overrides)
+              console.log(  parseInt(this.bundlePrice) )
+              const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) + 0.01 ) )};
+              const nftTxn = await connectedContract.mintMerch(overrides)
               await nftTxn.wait();
               console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
               this.minted = true;
@@ -122,7 +120,6 @@ export default {
           console.log(error)
         }
      },
-
   },
 
 
@@ -189,23 +186,18 @@ export default {
 }
 
 
-  .twitter,
-  .discord,
-  .insta {
-      width: 3rem;
-      margin: 0 0.25rem;
-      /* cursor: pointer; */
-  }
-  .discord {
-    transform: translateY(-0.2rem) ;
-    padding: 0.25rem
-  }
+
   .mint,
   .congrats {
     color: #fff;
     z-index: 1;
     text-align: center;
     text-transform: uppercase;
+
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
   }
   .mint h2 {
     font-size: 1rem;
@@ -220,11 +212,13 @@ export default {
     height: 6rem;
     transform: translateY(1rem);
   }
-  .mint h4 {
+  .mint h4,
+  .congrats h2 {
+    font-size: 1rem;
      letter-spacing: 0.4em;
      margin-bottom: 3.5rem;
   }
-  
+  .mint .btn,
   .congrats .btn {
     background-color: #fff;
     color: black;
@@ -232,6 +226,14 @@ export default {
     border-radius: 1rem;
     font-size: 0.7rem;
     cursor: pointer;
+        display: flex;
+    justify-content: center;
+    width: fit-content;
+    align-items: center;
+  }
+  .congrats .btn img {
+      height: 1.5rem;
+      margin-right: 0.5rem;
   }
 
 </style>

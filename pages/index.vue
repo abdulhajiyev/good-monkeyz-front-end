@@ -13,7 +13,9 @@
           <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
             <span>CONNECT WALLET TO MINT</span>
           </span>
-          <nuxt-link v-else to="/mint/merch" class="btn">GMTOKEN MINT</nuxt-link>
+          <nuxt-link v-else to="/mint/merch" class="btn">
+            <span>MINT GMTOKEN</span>
+          </nuxt-link>
         </div>
 
         <div class="counter">
@@ -202,6 +204,7 @@ main {
   font-size: 0.75rem;
   overflow: hidden;
   display: inline-block ;
+  transform: translateZ(0);
 }
 .btn span {
   position: relative;

@@ -1,7 +1,7 @@
 <template>
     <div class="navbar">
         <div class="banner">
-         <img class="gm-white" :src="gmWhite" >
+        <nuxt-link to="/"><img class="gm-white" :src="gmWhite" ></nuxt-link>
          
             <div v-if="!wallet" class="social">
                 <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
