@@ -4,14 +4,14 @@
         <div class="modal" @click.stop>
             <h1>Select Wallet</h1>
             <h2>To access the merch drop, please connect your wallet.</h2>
-            <span class="btn metamask" @click="connectWallet()">Metamask <img :src="mmIcon"></span>
-            <!-- <span class="btn wallet-connect" @click="$emit('connect', 'wallet-connect')">Wallet Connect <img :src="wcIcon"></span> -->
+            <span class="btn metamask" @click="mmConnect()">Metamask <img :src="mmIcon"></span>
+            <span class="btn wallet-connect" @click="walletConnect()">Wallet Connect <img :src="wcIcon"></span>
         </div>
     </div>
 </template>
 
 <script>
-    import { mapMutations } from 'vuex'
+    import { mapMutations, mapActions } from 'vuex'
 
     import wcIcon from "@/assets/img/wc-icon.svg";
     import mmIcon from "@/assets/img/mm-icon.svg";
@@ -33,7 +33,8 @@
         },
         methods: {
             ...mapMutations(['setWallet']),
-            async connectWallet() {
+            ...mapActions(['setProvider']),
+            async mmConnect() {
 
                 try {
                     const { ethereum } = window;
@@ -45,14 +46,27 @@
                     // const chainId = await ethereum.request({ method: 'eth_chainId' });
 
                     if (accounts.length !== 0) {
-                        this.setWallet(accounts[0] );
-                        this.active = false
-                        this.$router.push('/mint/merch')
+                        this.login(accounts[0], 'metamask');
+                        this.$newMMprovider();
                     }
                 } catch (error) {
                     console.log(error)
                 }
             },
+            async walletConnect() {
+                const web3 = this.$newWCprovider();
+                console.log(web3)
+                if (web3.provider.accounts.length === 0) {
+                    await web3.provider.enable()
+                }
+                this.login(web3.provider.accounts[0], 'wallet-connect' );
+            },
+            login(WalletAddress, provider){
+                this.setWallet(WalletAddress);
+                this.setProvider(provider);
+                this.active = false
+                this.$router.push('/mint/merch')
+            }
         }
     }
 </script>

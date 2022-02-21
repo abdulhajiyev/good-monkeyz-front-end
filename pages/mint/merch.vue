@@ -58,7 +58,7 @@ export default {
       merchBundleId: TOKEN_ID_MERCH_BUNDLE,
     }
   },
-  computed: mapState(['wallet']),
+  computed: mapState(['wallet', 'provider']),
   created() {
     this.minted = false;
     this.getcontractData();
@@ -70,42 +70,29 @@ export default {
   },
   methods: {
     async getcontractData() {
-        try {
-          const { ethereum } = window;
+      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
 
-          if (ethereum) {
-            const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-            const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-
-            const supply = await connectedContract.getMinted();
-            const price = await connectedContract.getMerchBundlePrice();
-            this.amountMinted = ethers.utils.formatUnits(supply[TOKEN_ID_MERCH_BUNDLE], 0);
-            this.bundlePrice = ethers.utils.formatEther(price);
-
-          } else {
-            console.log("Ethereum object doesn't exist!");
-          }
-        } catch (error) {
-          console.log(error)
-        }
+      const supply = await connectedContract.getMinted();
+      const price = await connectedContract.getMerchBundlePrice();
+      this.amountMinted = ethers.utils.formatUnits(supply[TOKEN_ID_MERCH_BUNDLE], 0);
+      this.bundlePrice = ethers.utils.formatEther(price);
     },
     async mintNft(id) {
       console.log('mint')
+      
         try {
-          const { ethereum } = window;
-
-          if (ethereum) {
-            const provider = new ethers.providers.Web3Provider(ethereum);
+            const provider = this.$provider();
             const signer = provider.getSigner();
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
             console.log("Going to pop wallet now to pay gas...")
 
             try {
-              console.log(  parseInt(this.bundlePrice) )
+              console.log(  this.bundlePrice)
               const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) + 0.01 ) )};
               const nftTxn = await connectedContract.mintMerch(overrides)
-              await nftTxn.wait();
+              nftTxn.wait();
               console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
               this.minted = true;
             } catch (error) {
@@ -113,9 +100,7 @@ export default {
               console.log(error)
             }
 
-          } else {
-            console.log("Ethereum object doesn't exist!");
-          }
+    
         } catch (error) {
           console.log(error)
         }
