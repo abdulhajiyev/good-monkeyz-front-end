@@ -31,6 +31,7 @@
                     const accounts = await ethereum.request({ method: "eth_accounts" });
                     if (accounts.length !== 0) {
                         this.setWallet(accounts[0]);
+                        this.$newMMprovider();
                     }
                 } catch (error) {
                     console.error(error);

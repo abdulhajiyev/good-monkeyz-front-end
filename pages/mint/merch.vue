@@ -7,16 +7,22 @@
       :account="wallet"
       @connect="modalActive = true" 
     />
-    <div v-if="!minted" class="mint" >
+    <div v-if="minted" class="mint" >
       <h2>Current Price Ξ {{bundlePrice}}</h2>
       <h3>{{amountMinted}} <img :src="divider"> 77</h3>
-      <h4>Minted</h4>
-      <span class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
+      <h4 v-if="amountMinted < 77">Minted</h4>
+      <h4 v-else>Sold Out</h4>
+      <span v-if="amountMinted < 77" class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
     </div>
     <div v-else class="congrats">
       <h1>CONGRATULATIONS!</h1>
       <h2>#{{parseInt(amountMinted)+1}} GM TOKEN MINTED</h2>
       <span class="btn "><img :src="twitterBlack">Share On Twitter</span>
+      <span class="OS">
+        <a :href="`https://testnets.opensea.io/assets/${merchContract}/${merchBundleId}`">OS</a>
+        <a :href="`https://looksrare.org/collections/${merchContract}`">LR</a>
+        <a :href="`https://www.gem.xyz/collection/${merchContract}`">GEMZ</a>
+      </span>
     </div>
   </div>
 </template>
@@ -56,6 +62,7 @@ export default {
       bundlePrice: '~',
       minted: false,
       merchBundleId: TOKEN_ID_MERCH_BUNDLE,
+      merchContract: MERCH_DROP_CONTRACT,
     }
   },
   computed: mapState(['wallet', 'provider']),

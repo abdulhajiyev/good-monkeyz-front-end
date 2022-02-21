@@ -8,7 +8,7 @@
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
                 <a href="https://discord.gg/Q6eu62S5sP"><img class="discord" :src="discord"></a>
             </div>
-            <nuxt-link v-else to="/dashboard">
+            <nuxt-link to="/dashboard" v-else >
                 <div class="user">
                 <span>{{wallet.substring(0,4)+'..'+wallet.substr(-4)}}</span>
                 <img class="avatar" :src="user">
@@ -90,6 +90,7 @@
         align-items: center;
         font-size: 0.725rem;
         font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+        cursor: pointer;
     }
 
     .avatar {
@@ -97,4 +98,5 @@
         width: 2rem;
         margin: 0.1rem 0.2rem 0 0.75rem;
     }
+
 </style>
