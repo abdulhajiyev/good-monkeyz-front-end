@@ -88,7 +88,7 @@ export default {
     
     setInterval(()=> {
       this.countdownF();
-    }, 60)
+    }, 100)
   },
   methods: {
     async getAmountMinted() {
@@ -109,8 +109,9 @@ export default {
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / (1000) );
 
-      this.countdown = `${days}D ${hours}H ${minutes}M`;
+      this.countdown = `${days}D ${hours}H ${minutes}M ${seconds}S`;
       },
   }
 }
