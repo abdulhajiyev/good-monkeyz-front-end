@@ -87,16 +87,16 @@ export default {
     },
     async mintNft(id) {
       console.log('mint')
-      
         try {
             const provider = this.$provider();
             const signer = provider.getSigner();
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
-
-            console.log("Going to pop wallet now to pay gas...")
+            connectedContract.on("GMShopNFTMinted", (tokenId) => {
+              console.log('NEW MERCH BUNDLE MINTED') 
+              this.getcontractData();
+            });
 
             try {
-              console.log(  this.bundlePrice)
               const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) + 0.01 ) )};
               const nftTxn = await connectedContract.mintMerch(overrides)
               nftTxn.wait();
@@ -106,15 +106,11 @@ export default {
               console.log("Error MINTINIG");
               console.log(error)
             }
-
-    
         } catch (error) {
           console.log(error)
         }
      },
   },
-
-
 
 }
 </script>

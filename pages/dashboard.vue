@@ -6,9 +6,14 @@
         <h2>You are eligible for the Good Monkeyz merch drop</h2>
     </div>
     <div class="grid">
-      <div v-if="balance" class="item">
+      <div v-if="merchBundleNFT" class="item">
         <video muted autoplay loop :src="monkey"></video>
-        <nuxt-link to="/merch/redeem" class="btn">Redeem Item</nuxt-link>
+        <span class="btn">Merch Bundle</span>
+        <!-- <nuxt-link to="/merch/redeem" class="btn">Redeem Item</nuxt-link> -->
+      </div>
+      <div v-if="mintPassNFT" class="item">
+        <video muted autoplay loop :src="monkey"></video>
+        <span class="btn">Mint Pass</span>
       </div>
     </div>
   </div>
@@ -22,7 +27,15 @@ import Menu from '@/components/Menu.vue';
 
 import monkey from "@/assets/video/mm.mp4";
 
-import nftShop from '@/utils/nftShop.json';
+import GMSHOPJSON from '@/utils/nftShop.json';
+
+import { 
+  MERCH_DROP_CONTRACT,
+  INFURA_PROJECT_ID,
+  NETWORK_NAME,
+  TOKEN_ID_MERCH_BUNDLE 
+} from '@/utils/constants';
+
 
 export default {
   name: 'Dashboard',
@@ -32,37 +45,23 @@ export default {
   data: () => {
     return {
       monkey,
-      balance: '',
+      merchBundleNFT: 0,
+      mintPassNFT: 0,
     }
   },
   computed: mapState(['wallet']),
   created() {
     this.getBalance();
-    if (this.balance <= 0) {
-      this.$router.push('/ngmi')
-    }
   },
   methods: {
       getBalance() {
-
-      try {
-        const { ethereum } = window;
-
-        const CONTRACT_ADDRESS = "0x5958C4757564163d97941aC95Bf321232C52193D";
-
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum);
-          const signer = provider.getSigner();
-          const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, nftShop.abi, signer);
-
-          this.balance = connectedContract.balanceOf(this.wallet, 0);
-        } else {
-          console.log("Ethereum object doesn't exist!");
-        }
-      } catch (error) {
-        console.log(error)
+      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
+      this.merchBundleNFT = connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
+      this.mintPassNFT = connectedContract.balanceOf(this.wallet, 1);
+      if (this.merchBundleNFT <= 0 && this.mintPassNFT <= 0 ) {
+        this.$router.push('/ngmi')
       }
-
     },
   },
 }

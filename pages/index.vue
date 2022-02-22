@@ -5,17 +5,20 @@
       <div class="splash-inner" :style="`backgroundImage: url(${bg})`">
 
         <div class="banner-group">
-          <h2>Minting Tokens</h2>
+          <h2>Minting Monekyz Merch</h2>
           <div class="banner">
-            <span class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
+            <span v-if="open" class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
+            <span v-else class="marquee">{{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> </span>
           </div>
-          <p>There are only 77 limited edition GM tokens available for mint. <br> The GM Token will give you access to the limited edition GM merch bundle. <br> There are 7 hidden GM mint passes. Good luck minting!</p>
-          <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
-            <span>CONNECT WALLET TO MINT</span>
-          </span>
-          <nuxt-link v-else to="/mint/merch" class="btn">
-            <span>MINT GMTOKEN</span>
-          </nuxt-link>
+          <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
+          <div v-if="open">
+            <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
+              <span>CONNECT WALLET TO MINT</span>
+            </span>
+            <nuxt-link v-else to="/mint/merch" class="btn">
+              <span>MINT GMTOKEN</span>
+            </nuxt-link>
+          </div>
         </div>
 
         <div class="counter">
@@ -74,11 +77,18 @@ export default {
       gmWhite,
       divider,
       amountMinted: '~',
+      open: !true,
+      countdown: '1D 12H 20M',
     }
   },
   computed: mapState(['wallet']),
   created() {
     this.getAmountMinted();
+    this.countdownF();
+    
+    setInterval(()=> {
+      this.countdownF();
+    }, 60)
   },
   methods: {
     async getAmountMinted() {
@@ -91,7 +101,18 @@ export default {
         console.log(error)
       }
     },
-  },
+    countdownF() {
+      const countDownDate = new Date( Date.UTC(2022, 1, 25, 20, 0, 0, 0)).getTime();
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+      this.countdown = `${days}D ${hours}H ${minutes}M`;
+      },
+  }
 }
 </script>
 
@@ -160,12 +181,12 @@ main {
   display: block;
   will-change: transform;
   line-height: 1;
-  animation: marquee 30s linear infinite;
+  animation: marquee 60s linear infinite;
 }
 
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to { transform: translateX(-100%); }
 }
 
 @keyframes spin {

@@ -6,12 +6,9 @@ import {
     CHAIN_ID,
 } from '@/utils/constants';
 
-// import GMSHOPJSON from '@/utils/nftShop.json';
-
 export default ({ app }, inject) => {
     let prov;
     inject('newWCprovider', () => { 
-
         prov = new ethers.providers.Web3Provider(
             new WalletConnectProvider({
                 infuraId: INFURA_PROJECT_ID,
@@ -29,9 +26,4 @@ export default ({ app }, inject) => {
         console.log(prov)
        return prov;
     });
-    // inject('GMShopContract', () => { 
-    //     const provider = this.$provider;
-    //     const signer = provider.getSigner();
-    //     return new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
-    //  });
 }
