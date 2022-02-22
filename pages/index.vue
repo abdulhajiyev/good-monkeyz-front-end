@@ -102,7 +102,7 @@ export default {
       }
     },
     countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 1, 25, 20, 0, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 1, 25, 21, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 

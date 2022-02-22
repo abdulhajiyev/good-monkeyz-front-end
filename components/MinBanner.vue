@@ -2,7 +2,13 @@
     <div class="navbar">
         <div class="banner">
         <nuxt-link to="/"><img class="gm-white" :src="gmWhite" ></nuxt-link>
-         
+
+            <nav>
+                <nuxt-link to="/wen">wen monkeyz</nuxt-link>
+                <nuxt-link to="/faq">FAQ</nuxt-link>
+                <nuxt-link to="/early">Early Access</nuxt-link>
+            </nav>
+
             <div v-if="!wallet" class="social">
                 <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
@@ -46,6 +52,22 @@
 </script>
 
 <style scoped>
+
+    nav {
+        display: flex;
+        justify-content: center;
+    }
+    nav a {
+        color: #fff;
+        text-transform: uppercase;
+        padding: 1rem 1.5rem;
+        text-decoration: none;
+        font-size: 0.825rem;
+    }
+    a.nuxt-link-active {
+        color: #fff;
+    }
+
     .banner {
         position: absolute;
         top: 0;
