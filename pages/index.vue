@@ -82,17 +82,19 @@ export default {
       gmWhite,
       divider,
       amountMinted: '~',
-      open: false,
+      open: true,
+      countdown: '',
     }
   },
   computed: mapState(['wallet']),
   created() {
-    this.getAmountMinted();
+    // this.getAmountMinted();
     this.countdownF();
     
     setInterval(()=> {
       this.countdownF();
-    }, 100)
+      
+    }, 1000)
   },
   methods: {
     async getAmountMinted() {
@@ -106,6 +108,7 @@ export default {
       }
     },
     countdownF() {
+      console.log('interval')
       const countDownDate = new Date( Date.UTC(2022, 2, 7, 19, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
@@ -116,6 +119,7 @@ export default {
       const seconds = Math.floor((distance % (1000 * 60)) / (1000) );
 
       this.countdown = `${days}D ${hours}H ${minutes}M ${seconds}S`;
+      console.log(this.countdown)
       },
   }
 }

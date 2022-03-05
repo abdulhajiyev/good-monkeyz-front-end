@@ -52,6 +52,7 @@ import {
 import MinBanner from '@/components/MinBanner.vue';
 
 import GMSHOPJSON from '@/utils/nftShop.json';
+import SIGNATURES from '@/utils/signatures.json';
 import monkey from "@/assets/video/mm.mp4";
 
 import twitterBlack from "@/assets/img/twitter-black.svg"
@@ -84,6 +85,7 @@ export default {
   computed: mapState(['wallet', 'provider']),
   created() {
     this.getcontractData();
+
   },
   methods: {
     async getcontractData() {
@@ -95,6 +97,7 @@ export default {
       this.bundlePrice = ethers.utils.formatEther(merchBundle.price);
       this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0);
       
+
     },
     async mintNft(id) {
       console.log('mint')
@@ -106,10 +109,11 @@ export default {
               console.log('NEW MERCH BUNDLE MINTED %s', tokenId) 
               this.getcontractData();
             });
-
+            const signature = SIGNATURES.addresses[this.wallet][0];
+            console.log('SIG', signature)
             try {
               const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) ) )};
-              const nftTxn = await connectedContract.mintToken(0,overrides)
+              const nftTxn = await connectedContract.mintTokenAllow(0,signature ,overrides)
               nftTxn.wait();
               this.txHash = nftTxn.hash
               const result =  await nftTxn.wait(1);
