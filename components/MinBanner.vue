@@ -3,7 +3,7 @@
         <div class="banner">
         <nuxt-link to="/"><img class="gm-white" :src="gmWhite" ></nuxt-link>
 
-            <nav>
+            <nav v-if="active">
                 <nuxt-link to="/wen">wen monkeyz</nuxt-link>
                 <nuxt-link to="/faq">FAQ</nuxt-link>
                 <nuxt-link to="/early">Early Access</nuxt-link>
@@ -36,7 +36,7 @@
     import gmWhite from "@/assets/img/gm-white.svg"
 
     export default {
-        props: ['account'],
+        props: ['account', 'active'],
         data:  () => {
             return {
                 logoBlack,

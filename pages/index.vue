@@ -1,11 +1,15 @@
 <template>
   <div class="index">
-    <MinBanner :account="wallet" />
+    <MinBanner :account="wallet" :active="false" />
     <div class="splash">
-      <div class="splash-inner" :style="`backgroundImage: url(${bg})`">
+      <div class="splash-inner" :style="`background-image: url(${bg}), linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4))`">
 
         <div class="banner-group">
-          <h2>Minting Monekyz Merch</h2>
+          <!-- <h2>Minting Monekyz Merch</h2> -->
+          <span class="btn-sparkle">
+            <span class="subtitle">GM Bundle Token</span>
+            <span class="title">HOODIE + Hat + Mint Pass</span>
+          </span>
           <div class="banner">
             <span v-if="open" class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
             <span v-else class="marquee">{{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> </span>
@@ -21,15 +25,15 @@
           </div>
         </div>
 
-        <div class="counter">
-          <h3>{{amountMinted}} <img :src="divider"> 77</h3>
-          <h4>Claimed</h4>
-        </div>
-
-
         <div class="gm-spinner">
             <img class="gm-in" :src="gmIn">
             <img class="gm-out" :src="gmOut">
+        </div>
+
+        <div class="counter">
+          <h3 v-if="open">{{amountMinted}} <img :src="divider"> 77</h3>
+          <h3 v-else> ~ <img :src="divider"> 77</h3>
+          <h4>Claimed</h4>
         </div>
       </div>
     </div>
@@ -63,6 +67,7 @@ import divider from "@/assets/img/divider.svg"
 
 
 export default {
+  transition: 'index',
   name: 'Index',
   components: {
     MinBanner,
@@ -77,8 +82,7 @@ export default {
       gmWhite,
       divider,
       amountMinted: '~',
-      open: !true,
-      countdown: '1D 12H 20M',
+      open: false,
     }
   },
   computed: mapState(['wallet']),
@@ -95,14 +99,14 @@ export default {
       try {
         const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-        const minted = await connectedContract.getMinted();
-        this.amountMinted = ethers.utils.formatUnits(minted[TOKEN_ID_MERCH_BUNDLE], 0)
+        const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
+        this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0)
       } catch (error) {
         console.log(error)
       }
     },
     countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 1, 25, 21, 0, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 2, 7, 19, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 
@@ -118,6 +122,14 @@ export default {
 </script>
 
 <style scoped>
+  /* .index-enter-active, .index-leave-active { 
+    transition: opacity .7s ; 
+  }
+  .index-enter, .index-leave-active { 
+    opacity: 0;
+  } */
+
+
 main {
   background: #fff;
 }
@@ -138,19 +150,16 @@ main {
 }
 
 .splash-inner {
-  background-size: cover;
-  background-position: center center ;
+  background-blend-mode: overlay;
+  background-size: cover !important;
+  background-position: center center  !important;
   min-height: 100%;
   width: 100%;
+  text-align: center;
 }
 
 
 .banner-group {
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
   color: #fff;
   text-align: center;
 }
@@ -177,6 +186,34 @@ main {
   white-space: nowrap;
   pointer-events: none;
 }
+@media (max-width: 700px){
+  .banner-group {
+    padding-top: 8rem ;
+  }
+  .banner {
+    font-size: 3.6rem;
+    padding: 2rem 0;
+  }
+  .banner img {
+    max-height: 2.4rem;
+  }
+  .banner-group p {
+    font-size: 0.85rem;
+    max-width: 90%;
+    margin: 0 auto;
+    margin-bottom: 0;
+  }
+}
+@media (min-width: 700px){
+
+  .banner-group {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+}
 
 .marquee {
   display: block;
@@ -196,11 +233,23 @@ main {
 }
 
 .gm-spinner {
-  position: absolute;
   display: inline-block;
-  left: -1.5rem;
-  bottom: -1.5rem;
-  transform: scale(0.9);
+  transform: scale(0.6);
+}
+
+@media (min-width: 700px){
+  .gm-spinner {
+    position: absolute;
+    display: inline-block;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    transform: scale(0.9);
+  }
+  .counter {
+        position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+  }
 }
 .gm-out {
     animation: spin 20s linear infinite;
@@ -265,9 +314,6 @@ main {
 }
 
   .counter {
-    position: absolute;
-    bottom: 2rem;
-    right: 3rem;
     color: #fff;
   }
   .counter h3 {
@@ -284,7 +330,62 @@ main {
       font-size: 0.625rem;
      letter-spacing: 0.4em;
      text-transform: uppercase;
+     
   }
+
+  .btn-sparkle {
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    padding: 1.25rem;
+    display: inline-block;
+    border-radius: 20px;
+    transform: translateZ(0);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-sparkle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240%;
+  height: 220%;
+  z-index: -1;
+  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+  filter: blur(2px) brightness(105%);
+  transform: translate(-40%, -50%);
+  animation: sparkle 3s infinite alternate;
+}
+
+@keyframes sparkle {
+  0% {
+    transform: translate(-40%, -50%);
+    filter: blur(2px) brightness(105%);
+  }
+  50% {
+    transform: translate(-40%, -50%);
+    filter: blur(2px) brightness(105%);
+  }
+  90% {
+    transform: translate(-55%, -30%);
+    filter: blur(2px) brightness(120%);
+  }
+  100% {
+    transform: translate(-55%, -30%);
+    filter: blur(2px) brightness(120%);
+  }
+}
+  .btn-sparkle .subtitle {
+    font-size: 0.7rem;
+    display: block;
+    font-family: Helvetica;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+   }
+    .btn-sparkle .title {
+      font-size: 0.75rem;
+    display: block;
+   }
 
 </style>
 

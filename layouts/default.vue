@@ -22,6 +22,7 @@
         methods: {
             ...mapMutations(['setWallet']),
             async checkWallet() {
+                console.log('check wallet')
                 try {
                     const { ethereum } = window;
                     if (!ethereum) {

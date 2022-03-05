@@ -1,12 +1,12 @@
 <template>
     <div class="navbar">
         <img :src="logoBlack">
-        <nav>
+        <!-- <nav>
             <nuxt-link to="/wen">Wen Monkeyz</nuxt-link>
             <nuxt-link to="/shop">Shop</nuxt-link>
             <nuxt-link to="/early">Early Access</nuxt-link>
             <nuxt-link to="/team">GM Team</nuxt-link>
-        </nav>
+        </nav> -->
         <div v-if="account" class="user">
             {{account.substring(0,4)+'..'+account.substr(-4)}}
             <nuxt-link to="/dashboard"><img class="avatar" :src="user"></nuxt-link>

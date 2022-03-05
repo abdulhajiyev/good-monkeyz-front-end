@@ -7,29 +7,40 @@
       :account="wallet"
       @connect="modalActive = true" 
     />
-    <div v-if="minted" class="mint" >
-      <h2>Current Price Ξ {{bundlePrice}}</h2>
-      <h3>{{amountMinted}} <img :src="divider"> 77</h3>
-      <h4 v-if="amountMinted < 77">Minted</h4>
-      <h4 v-else>Sold Out</h4>
-      <span v-if="amountMinted < 77" class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
+    <div v-if="!minted" class="mint" >
+        <h2 >Current Price Ξ {{bundlePrice}}</h2>
+        <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
+        <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
+        <h4 v-else>Sold Out</h4>
+        <span v-if="amountMinted < 77 && !txHash" class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
+        <span v-if="txHash && !minted" class="btn">
+          <span class="loader"></span>
+          pending
+        </span>
     </div>
     <div v-else class="congrats">
       <h1>CONGRATULATIONS!</h1>
-      <h2>#{{parseInt(amountMinted)+1}} GM TOKEN MINTED</h2>
-      <span class="btn "><img :src="twitterBlack">Share On Twitter</span>
-      <span class="OS">
+      <h2>#{{parseInt(amountMinted)}} GM TOKEN MINTED</h2>
+      
+      <a :href="shareLink" class="btn "><img :src="twitterBlack">Share On Twitter</a>
+      <!-- <span class="OS">
         <a :href="`https://testnets.opensea.io/assets/${merchContract}/${merchBundleId}`">OS</a>
         <a :href="`https://looksrare.org/collections/${merchContract}`">LR</a>
         <a :href="`https://www.gem.xyz/collection/${merchContract}`">GEMZ</a>
-      </span>
+      </span> -->
     </div>
+    <transition name="fade">
+      <div v-show="errorMessage" class="error">
+        <span>{{errorMessage}}</span>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { ethers } from 'ethers';
+import JSConfetti from 'js-confetti'
 
 import { 
   MERCH_DROP_CONTRACT,
@@ -55,35 +66,35 @@ export default {
   },
   data: () => {
     return {
+      display: false,
       monkey,
       twitterBlack,
       divider,
       amountMinted: '~',
       bundlePrice: '~',
       minted: false,
+      txHash: false,
+      txPending: false,
       merchBundleId: TOKEN_ID_MERCH_BUNDLE,
       merchContract: MERCH_DROP_CONTRACT,
+      shareLink: `https://twitter.com/share?url=https://goodmonkeyz.art&amp;text=${encodeURIComponent('Monkey Madnes')}&amp;hashtags=goodmonkeyz`,
+      errorMessage: '',
     }
   },
   computed: mapState(['wallet', 'provider']),
   created() {
-    this.minted = false;
     this.getcontractData();
-    // check for wallet
-    // check supply
-    // check price
-    // on minted change count + price
-
   },
   methods: {
     async getcontractData() {
       const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
       const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
 
-      const supply = await connectedContract.getMinted();
-      const price = await connectedContract.getMerchBundlePrice();
-      this.amountMinted = ethers.utils.formatUnits(supply[TOKEN_ID_MERCH_BUNDLE], 0);
-      this.bundlePrice = ethers.utils.formatEther(price);
+      const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
+      // const supply = ethers.utils.formatUnits(merchBundle.supply, 0);
+      this.bundlePrice = ethers.utils.formatEther(merchBundle.price);
+      this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0);
+      
     },
     async mintNft(id) {
       console.log('mint')
@@ -91,25 +102,69 @@ export default {
             const provider = this.$provider();
             const signer = provider.getSigner();
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
-            connectedContract.on("GMShopNFTMinted", (tokenId) => {
-              console.log('NEW MERCH BUNDLE MINTED') 
+            connectedContract.on("GMMinted", (tokenId) => {
+              console.log('NEW MERCH BUNDLE MINTED %s', tokenId) 
               this.getcontractData();
             });
 
             try {
-              const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) + 0.01 ) )};
-              const nftTxn = await connectedContract.mintMerch(overrides)
+              const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) ) )};
+              const nftTxn = await connectedContract.mintToken(0,overrides)
               nftTxn.wait();
-              console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
-              this.minted = true;
+              this.txHash = nftTxn.hash
+              const result =  await nftTxn.wait(1);
+              
+              // console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
+              if(result.status === 1) {
+                this.minted = true;
+                this.fireConfetti();
+              } else {
+                throw new Error('TX Failed');
+              }
             } catch (error) {
-              console.log("Error MINTINIG");
-              console.log(error)
+              this.errorMessage = error.error.message
+              console.log("Error MINTINIG", error);
+              setTimeout( ()=> {
+                this.errorMessage = '';
+              }, 5500)
             }
         } catch (error) {
           console.log(error)
         }
      },
+     fireConfetti(){
+       const jsConfetti = new JSConfetti()
+        jsConfetti.addConfetti({
+          confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+          confettiRadius: 8,
+        });
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 700)
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 1400)
+
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 2000)
+
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 2400)
+     }
   },
 
 }
@@ -124,6 +179,23 @@ export default {
     transform: scale(1.2);
   }
 
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+
+  .error {
+    padding: 1rem;
+    position: absolute;
+    bottom: 1rem;
+    color: #fff;
+    background: linear-gradient(222.44deg, #fc7979 16.01%, #D91EA4 36.09%, #A31FC5 64.3%, #c45151 84.37%);
+    max-width: 80%;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+  }
 
 .pre-merch {
   background: #000;
@@ -185,16 +257,24 @@ export default {
     align-items: center;
     display: flex;
     flex-direction: column;
-
   }
+
   .mint h2 {
     font-size: 1rem;
     letter-spacing: 0.4em;
+    /* // */
+    opacity: 0;
+    animation: enter 2s ease 1 forwards;
+    animation-delay: 200ms;
   }
   .mint h3,
   .congrats h1 {
     font-size: 5.4rem;
     margin: 0;
+    /* // */
+    opacity: 0;
+    animation: enter 2s ease 1 forwards;
+    animation-delay: 400ms;
   }
   .mint h3 img {
     height: 6rem;
@@ -205,6 +285,10 @@ export default {
     font-size: 1rem;
      letter-spacing: 0.4em;
      margin-bottom: 3.5rem;
+     /* // */
+    opacity: 0;
+    animation: enter 2s ease 1 forwards;
+    animation-delay: 600ms;
   }
   .mint .btn,
   .congrats .btn {
@@ -218,11 +302,83 @@ export default {
     justify-content: center;
     width: fit-content;
     align-items: center;
+    /* // */
+    opacity: 0;
+    animation: enter 2s ease 1 forwards;
+    animation-delay: 800ms;
   }
   .congrats .btn img {
       height: 1.5rem;
       margin-right: 0.5rem;
   }
+  @keyframes enter {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 0;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+
+
+  .loader {
+
+  font-size: 10px;
+  margin-right: 0.75rem;
+  text-indent: -9999em;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #ffffff;
+  /* background: linear-gradient(to right, #000 10%, rgba(255, 255, 255, 0) 42%); */
+  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+  position: relative;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.loader:before {
+  width: 30%;
+  height: 30%;
+  background: #ffffff;
+  filter: blur(27px); 
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+.loader:after {
+  background: #fff;
+  width: 65%;
+  height: 65%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
 
 </style>
 

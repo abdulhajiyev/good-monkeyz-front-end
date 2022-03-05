@@ -45,8 +45,8 @@ export default {
   data: () => {
     return {
       monkey,
-      merchBundleNFT: 0,
-      mintPassNFT: 0,
+      merchBundleNFT: false,
+      mintPassNFT: false,
     }
   },
   computed: mapState(['wallet']),
@@ -54,11 +54,13 @@ export default {
     this.getBalance();
   },
   methods: {
-      getBalance() {
+      async getBalance() {
       const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
       const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-      this.merchBundleNFT = connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
-      this.mintPassNFT = connectedContract.balanceOf(this.wallet, 1);
+      this.merchBundleNFT = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
+      this.mintPassNFT = await connectedContract.balanceOf(this.wallet, 1);
+      console.log('wallte', this.wallet)
+      console.log(this.merchBundleNFT)
       if (this.merchBundleNFT <= 0 && this.mintPassNFT <= 0 ) {
         this.$router.push('/ngmi')
       }
