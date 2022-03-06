@@ -86,22 +86,21 @@
     }
 
     .social {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
 
     .twitter,
     .discord,
     .insta {
-        width: 3rem;
-        margin: 0 0.25rem;
+        height: 1.7rem;
+        margin: 0 0.45rem;
         /* cursor: pointer; */
     }
     .discord {
-        transform: translateY(-0.2rem) ;
-        padding: 0.25rem;
+        /* transform: translateY(-0.2rem) ; */
     }
 
     .user {

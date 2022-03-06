@@ -82,7 +82,7 @@ export default {
       gmWhite,
       divider,
       amountMinted: '~',
-      open: true,
+      open: false,
       countdown: '',
     }
   },
@@ -109,7 +109,7 @@ export default {
     },
     countdownF() {
       console.log('interval')
-      const countDownDate = new Date( Date.UTC(2022, 2, 7, 19, 0, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 
