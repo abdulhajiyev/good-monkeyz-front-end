@@ -143,7 +143,7 @@ export default {
     pointer-events: none;
   }
 
-@media (max-width: 700px), (orientation: landscape) {
+@media (max-width: 700px), (max-width: 700px) and (orientation: landscape) {
   .banner-group {
     padding-top: 8rem ;
   }
@@ -161,11 +161,18 @@ export default {
     margin-bottom: 0;
   }
 }
-@media (orientation: landscape) {
-  .banner-group {
+@media (max-width: 1000px) and (orientation: landscape) {
+    .banner-group {
     padding-top: 0 ;
   }
- }
+  .banner {
+    font-size: 5.6rem;
+  }
+    .banner img {
+    max-height: 4.4rem;
+  }
+}
+
 @media (min-width: 700px) {
 
   .banner-group {
@@ -213,8 +220,8 @@ export default {
     right: 3rem;
   }
 }
-@media(orientation: landscape) { 
-    .gm-spinner {
+@media  (min-width: 700px) and (orientation: landscape) { 
+  .gm-spinner {
     transform: scale(0.4) translate(-60%, 60%);
     left:0;
     bottom:0;
