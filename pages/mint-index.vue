@@ -1,18 +1,28 @@
 <template>
   <div class="index">
-    <MinBanner :account="false" :active="false" />
+    <MinBanner :account="wallet" :active="false" />
     <div class="splash">
       <div class="splash-inner" :style="`background-image: url(${bg}), linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5))`">
 
         <div class="banner-group">
-          <span class="btn btn--sparkle">
+          <!-- <h2>Minting Monekyz Merch</h2> -->
+          <span class="btn--sparkle">
             <span class="subtitle">GM Bundle Token</span>
             <span class="title">HOODIE + Hat + Mint Pass</span>
           </span>
           <div class="banner">
-            <span class="marquee">{{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> </span>
+            <span v-if="open" class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
+            <span v-else class="marquee">{{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> </span>
           </div>
           <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
+          <div v-if="open">
+            <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
+              <span>CONNECT WALLET TO MINT</span>
+            </span>
+            <nuxt-link v-else to="/mint/merch" class="btn">
+              <span>MINT GMTOKEN</span>
+            </nuxt-link>
+          </div>
         </div>
 
         <div class="gm-spinner">
@@ -21,7 +31,8 @@
         </div>
 
         <div class="counter">
-          <h3> ~ <img :src="divider"> 77</h3>
+          <h3 v-if="open">{{amountMinted}} <img :src="divider"> 77</h3>
+          <h3 v-else> ~ <img :src="divider"> 77</h3>
           <h4>Claimed</h4>
         </div>
       </div>
@@ -31,8 +42,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { ethers } from 'ethers';
+
 import MinBanner from '@/components/MinBanner.vue';
 
+import { 
+  MERCH_DROP_CONTRACT,
+  INFURA_PROJECT_ID,
+  NETWORK_NAME,
+  TOKEN_ID_MERCH_BUNDLE 
+} from '@/utils/constants';
+
+import GMSHOPJSON from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm.mp4";
 import bg from "@/assets/img/hood.jpg";
 import star from "@/assets/img/star.svg";
@@ -60,10 +82,13 @@ export default {
       gmWhite,
       divider,
       amountMinted: '~',
+      open: false,
       countdown: '',
     }
   },
+  computed: mapState(['wallet']),
   created() {
+    // this.getAmountMinted();
     this.countdownF();
     
     setInterval(()=> {
@@ -72,7 +97,18 @@ export default {
     }, 1000)
   },
   methods: {
+    async getAmountMinted() {
+      try {
+        const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
+        const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
+        this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0)
+      } catch (error) {
+        console.log(error)
+      }
+    },
     countdownF() {
+      console.log('interval')
       const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
@@ -83,6 +119,7 @@ export default {
       const seconds = Math.floor((distance % (1000 * 60)) / (1000) );
 
       this.countdown = `${days}D ${hours}H ${minutes}M ${seconds}S`;
+      console.log(this.countdown)
       },
   }
 }
@@ -143,7 +180,7 @@ export default {
     pointer-events: none;
   }
 
-@media (max-width: 700px), (orientation: landscape) {
+@media (max-width: 700px){
   .banner-group {
     padding-top: 8rem ;
   }
@@ -161,12 +198,7 @@ export default {
     margin-bottom: 0;
   }
 }
-@media (orientation: landscape) {
-  .banner-group {
-    padding-top: 0 ;
-  }
- }
-@media (min-width: 700px) {
+@media (min-width: 700px){
 
   .banner-group {
     width: 100%;
@@ -213,13 +245,6 @@ export default {
     right: 3rem;
   }
 }
-@media(orientation: landscape) { 
-    .gm-spinner {
-    transform: scale(0.4) translate(-60%, 60%);
-    left:0;
-    bottom:0;
-  }
-}
 
 .gm-out {
   animation: spin 20s linear infinite;
@@ -231,6 +256,56 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); 
+}
+
+.btn {
+  padding: 1rem;
+  border-radius: 1rem;
+  text-transform: uppercase;
+  background-color: #fff;
+  color: #000;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.75rem;
+  overflow: hidden;
+  display: inline-block ;
+  transform: translateZ(0);
+}
+.btn span {
+  position: relative;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 400px;
+  height: 300px;
+  z-index: 0;
+  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+  animation: go 3.8s infinite alternate;
+  opacity: 0.9;
+  filter: blur(24px);
+}
+
+
+@keyframes go {
+  0% {
+    transform: translate(-300px, 100px);
+  }
+  20% {
+    transform: translate(-300px, 100px);
+  }
+  50% {
+    transform: translate(-300px, 100px);
+  }
+  90% {
+    transform: translate(0px, -300px);
+  }
+  100% {
+    transform: translate(0px, -300px);
+  }
 }
 
   .counter {
@@ -253,5 +328,8 @@ export default {
      text-transform: uppercase;
   }
 
+
+
 </style>
+
 

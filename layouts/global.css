@@ -18,3 +18,58 @@ html {
     box-sizing: border-box;
     font-family: 'HelveticaNowDisplayXBlk', Arial, Helvetica, sans-serif;
 }
+
+.btn--sparkle {
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    padding: 1.25rem;
+    display: inline-block;
+    border-radius: 20px;
+    transform: translateZ(0);
+    position: relative;
+    overflow: hidden;
+  }
+  
+.btn--sparkle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240%;
+  height: 220%;
+  z-index: -1;
+  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+  filter: blur(2px) brightness(105%);
+  transform: translate(-40%, -50%);
+  animation: sparkle 3s infinite alternate;
+}
+
+@keyframes sparkle {
+  0% {
+    transform: translate(-40%, -50%);
+    filter: blur(2px) brightness(105%);
+  }
+  50% {
+    transform: translate(-40%, -50%);
+    filter: blur(2px) brightness(105%);
+  }
+  90% {
+    transform: translate(-55%, -30%);
+    filter: blur(2px) brightness(120%);
+  }
+  100% {
+    transform: translate(-55%, -30%);
+    filter: blur(2px) brightness(120%);
+  }
+}
+.btn--sparkle .subtitle {
+    font-size: 0.7rem;
+    display: block;
+    font-family: Helvetica;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+   }
+.btn--sparkle .title {
+      font-size: 0.75rem;
+    display: block;
+}
