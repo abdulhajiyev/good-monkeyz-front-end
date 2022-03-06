@@ -14,7 +14,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'Community lead project consisting of 10,000 Good Monkeyz NFTs — collection coming April 2022 🙈🙉🙊🐵🐒 ' },
       { name: 'format-detection', content: 'telephone=no' },
       {
         name: 'apple-mobile-web-app-capable',
@@ -24,6 +24,14 @@ export default {
         name: 'apple-mobile-web-app-status-bar-style',
         content: 'black-translucent'
       },
+      { hid: 'og-type', property: 'og:type', content: 'website' },
+      { hid: 'og-title', property: 'og:title', content: 'Good Monkeyz' },
+      { hid: 'og-desc', property: 'og:description', content: 'Community lead project consisting of 10,000 Good Monkeyz NFTs — collection coming April 2022 🙈🙉🙊🐵🐒 ' },
+      { hid: 'og-image', property: 'og:image',
+          content: 'https://goodmonkeyz.art/'
+      },
+      { hid: 'og-url', property: 'og:url', content: 'https://goodmonkeyz.art/social.jpg' },
+      { hid: 't-type', name: 'twitter:card', content: 'summary_large_image' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -40,7 +48,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/web3.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

@@ -1,182 +1,280 @@
 <template>
   <div class="index">
-    <div class="banner">
-      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +  Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + </span>
+    <MinBanner :account="false" :active="false" />
+    <div class="splash">
+      <div class="splash-inner" :style="`background-image: url(${bg}), linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5))`">
+
+        <div class="banner-group">
+          <span class="btn btn--sparkle">
+            <span class="subtitle">GM Bundle Token</span>
+            <span class="title">HOODIE + Hat + Mint Pass</span>
+          </span>
+          <div class="banner">
+            <span class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span>
+          </div>
+          <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
+        </div>
+
+        <div class="gm-spinner">
+            <img class="gm-in" :src="gmIn">
+            <img class="gm-out" :src="gmOut">
+        </div>
+
+        <div class="counter">
+          <h3> ~ <img :src="divider"> 77</h3>
+          <h4>Claimed</h4>
+        </div>
+      </div>
     </div>
 
-    <nav class="nav">
-      <a href="https://docs.google.com/spreadsheets/d/1UWjzL-hIX4_iLB7Stn8Cgv-AmFd_yCrE4qqSkg3nhwo/edit#gid=0" target="_blank"> VIEW EARLY ACCESS LIST
-        <img :src="external">
-      </a>
-    </nav>
-    
-    <div class="social">
-      <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
-      <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
-      <a href="https://discord.gg/Q6eu62S5sP"><img class="discord" :src="discord"></a>
-    </div>
-
-    <img class="bg-overlay" :src="bgOverlay" >
-    
-    <div class="banner banner--bottom">
-      <span class="marquee">Good monkeyz minting 2022   +   Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 + Good monkeyz minting 2022 +  Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + Good monkeyz minting 2022   + </span>
-    </div>
   </div>
 </template>
 
 <script>
-// import Menu from '@/components/Menu.vue';
+import MinBanner from '@/components/MinBanner.vue';
 
-import bgOverlay from "@/assets/img/gm-clean.svg"
+import monkey from "@/assets/video/mm.mp4";
+import bg from "@/assets/img/hood.jpg";
+import star from "@/assets/img/star.svg";
 
-import twitter from "@/assets/img/twitter.svg"
-import discord from "@/assets/img/discord.svg"
-import insta from "@/assets/img/insta.svg"
-import external from "@/assets/img/external.png"
+import gmWhite from "@/assets/img/gm-white.svg";
 
+import gmOut from "@/assets/img/gm-outer.svg";
+import gmIn from "@/assets/img/gm-inner.svg";
+import divider from "@/assets/img/divider.svg"
 
 
 export default {
-  name: 'IndexPage',
+  transition: 'index',
+  name: 'Index',
   components: {
-    // Menu,
+    MinBanner,
   },
   data: () => {
     return {
-      bgOverlay,
-      twitter,
-      discord,
-      insta,
-      external,
+      monkey,
+      bg,
+      star,
+      gmOut,
+      gmIn,
+      gmWhite,
+      divider,
+      amountMinted: '~',
+      countdown: '',
     }
   },
+  created() {
+    this.countdownF();
+    
+    setInterval(()=> {
+      this.countdownF();
+      
+    }, 1000)
+  },
+     mounted() {
+        this.zeroWidth = this.$refs.zerozero.offsetWidth;
+        setTimeout( () => {
+          this.zeroWidth = this.$refs.zerozero.offsetWidth;
+        }, 2000)
+      },
+  methods: {
+    countdownF() {
+      const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((distance % (1000 * 60)) / (1000) );
+
+      if(seconds.toString().length === 1) {
+        seconds = `0${seconds}`
+      }
+
+      this.countdown = `${days}D ${hours}H ${minutes}M <span class="seconds" style="width: ${this.zeroWidth}px; " ">${seconds}</span>S`;
+      },
+  }
 }
 </script>
 
-<style >
+<style scoped>
 
-main {
-  text-align: center;
-}
-.bg-overlay {
-    max-width: 90%;
-    max-height: 75vh;
-    padding-top: 25vh;
-    pointer-events: none;
-}
-
-.nav {
-    position: absolute;
+  .index {
+    width: 100%;
     display: flex;
+    justify-content: space-between;
+  }
+
+  .splash {
+    padding: 1rem;
+    min-height: 100vh;
     width: 100%;
-    justify-content: center;
-    top: 4.5rem;
-    left: 0;
-}
-.nav img {
-  height: 0.65rem;
-}
-a {
-    font-size: 0.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .splash-inner {
+    background-blend-mode: overlay;
+    background-size: cover !important;
+    background-position: center center !important;
+    min-height: 100%;
+    width: 100%;
+    text-align: center;
+  }
+
+  .banner-group {
     color: #fff;
-    text-decoration: none;
-}
-.info {
-  display: flex;
-  justify-content: space-between;
-  color: #fff;
-  flex-flow: column;
-  padding: 3rem;
-}
+    text-align: center;
+    
+  }
 
-.minted-number,
-.minted-title {
-  text-align: center;
-  width: 100%;
-}
-.minted-title {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-}
-.minted-number {
-  font-size: 2.5rem;
-}
+  .banner-group h2 {
+    text-align: center;
+    font-size: 0.625rem;
+    letter-spacing: 0.4em;
+    
+  }
 
-.social {
-  position: absolute;
-  top: 5rem;
-  right: 2rem;
-  left: auto;
-  transform: translateY(-1rem);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-@media(max-width: 600px) { 
-  .social {
-    bottom: 0rem;
-    left: 0;
-    right: auto;
-    top: auto;
+  .banner-group p {
+    line-height: 2;
+    font-family: Helvetica, sans-serif;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  .banner {
     width: 100%;
+    z-index: 1;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 9rem;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+@media (max-width: 700px), (max-width: 700px) and (orientation: landscape) {
+  .banner-group {
+    padding-top: 8rem ;
+  }
+  .banner {
+    font-size: 3.6rem;
+    padding: 2rem 0;
+  }
+  .banner img {
+    max-height: 2.4rem;
+  }
+  .banner-group p {
+    font-size: 0.85rem;
+    max-width: 90%;
+    margin: 0 auto;
+    margin-bottom: 0;
+  }
+}
+@media (max-width: 1000px) and (orientation: landscape) {
+    .banner-group {
+    padding-top: 0 ;
+  }
+  .banner {
+    font-size: 5.6rem;
+  }
+    .banner img {
+    max-height: 4.4rem;
   }
 }
 
-  .twitter,
-  .discord,
-  .insta {
-      width: 3rem;
-      margin: 0 0.25rem;
-      /* cursor: pointer; */
-  }
-  .discord {
-    transform: translateY(-0.2rem) ;
-    padding: 0.25rem
-  }
+@media (min-width: 700px) {
 
-
-.banner {
-  line-height: 1.5rem;
-  height: 2.5rem;
-  width: 100%;
-  padding: 0.4rem 0;
-  z-index: 1;
-  color: #fff;
-  background: rgba(255,255,255, 0.5);
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 1.5rem;
-  overflow: hidden;
-  white-space: nowrap;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.banner--bottom {
-  top: auto;
-  bottom: 0;
-}
-@media(max-width: 600px) { 
-  .banner--bottom {
-    display: none;
+  .banner-group {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
   }
 }
 
 .marquee {
   display: block;
   will-change: transform;
-  animation: marquee 30s linear infinite;
+  line-height: 1;
+  animation: marquee 60s linear infinite;
 }
 
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to { transform: translateX(-100%); }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg) }
+  to { transform: rotate(360deg) }
+}
 
+.gm-spinner {
+  display: inline-block;
+  transform: scale(0.6);
+}
 
+@media (min-width: 700px){
+  .gm-spinner {
+    position: absolute;
+    display: inline-block;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    transform: scale(0.9);
+  }
+  .counter {
+        position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+  }
+}
+@media  (max-width: 10n00px) and (min-width: 700px) and (orientation: landscape) { 
+  .gm-spinner {
+    transform: scale(0.4) translate(-60%, 60%);
+    left:0;
+    bottom:0;
+  }
+}
+
+.gm-out {
+  animation: spin 20s linear infinite;
+  transform-origin: 50% 50% ;
+}
+
+.gm-in {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+}
+
+  .counter {
+    color: #fff;
+  }
+
+  .counter h3 {
+    font-size: 2.6rem;
+    margin: 0;
+    
+  }
+  .counter h3 img {
+    height: 3.3rem;
+    transform: translateY(0.8rem);
+  }
+  .counter h4 {
+      text-align: center;
+      font-size: 0.625rem;
+     letter-spacing: 0.4em;
+     text-transform: uppercase;
+  }
+  .zerozero {
+    opacity: 0;
+  }
+  .marquee >>> .seconds {
+    display: inline-block;
+    text-align: right;
+  }
 </style>
-
 
