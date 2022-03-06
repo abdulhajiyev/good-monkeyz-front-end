@@ -10,7 +10,7 @@
             <span class="title">HOODIE + Hat + Mint Pass</span>
           </span>
           <div class="banner">
-            <span class="marquee">{{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> {{countdown}} <img :src="star"> </span>
+            <span class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span>
           </div>
           <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
         </div>
@@ -71,6 +71,12 @@ export default {
       
     }, 1000)
   },
+     mounted() {
+        this.zeroWidth = this.$refs.zerozero.offsetWidth;
+        setTimeout( () => {
+          this.zeroWidth = this.$refs.zerozero.offsetWidth;
+        }, 2000)
+      },
   methods: {
     countdownF() {
       const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
@@ -80,9 +86,13 @@ export default {
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / (1000) );
+      let seconds = Math.floor((distance % (1000 * 60)) / (1000) );
 
-      this.countdown = `${days}D ${hours}H ${minutes}M ${seconds}S`;
+      if(seconds.toString().length === 1) {
+        seconds = `0${seconds}`
+      }
+
+      this.countdown = `${days}D ${hours}H ${minutes}M <span class="seconds" style="width: ${this.zeroWidth}px; " ">${seconds}</span>S`;
       },
   }
 }
@@ -220,7 +230,7 @@ export default {
     right: 3rem;
   }
 }
-@media  (max-width: 1000px) and (min-width: 700px) and (orientation: landscape) { 
+@media  (max-width: 10n00px) and (min-width: 700px) and (orientation: landscape) { 
   .gm-spinner {
     transform: scale(0.4) translate(-60%, 60%);
     left:0;
@@ -259,6 +269,12 @@ export default {
      letter-spacing: 0.4em;
      text-transform: uppercase;
   }
-
+  .zerozero {
+    opacity: 0;
+  }
+  .marquee >>> .seconds {
+    display: inline-block;
+    text-align: right;
+  }
 </style>
 
