@@ -12,7 +12,7 @@
             <div v-if="!wallet" class="social">
                 <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
-                <a href="https://discord.gg/Q6eu62S5sP"><img class="discord" :src="discord"></a>
+                <a href="https://discord.gg/ztNYjaVCjp"><img class="discord" :src="discord"></a>
             </div>
             <nuxt-link to="/dashboard" v-else >
                 <div class="user">
