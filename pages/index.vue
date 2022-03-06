@@ -220,7 +220,7 @@ export default {
     right: 3rem;
   }
 }
-@media  (min-width: 700px) and (orientation: landscape) { 
+@media  (max-width: 1000px) and (min-width: 700px) and (orientation: landscape) { 
   .gm-spinner {
     transform: scale(0.4) translate(-60%, 60%);
     left:0;
