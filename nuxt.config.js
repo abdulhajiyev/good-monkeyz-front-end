@@ -39,7 +39,10 @@ export default {
         rel: 'apple-touch-icon',
         type: 'image/png',
         href: '/apple-touch-icon.png'
-      }],
+      },
+      { rel: 'icon',  type: 'image/svg+xml', href: '/favicon.svg'  },
+      { rel: 'manifest', href: '/manifest.json' },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
