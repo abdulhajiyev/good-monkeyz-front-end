@@ -4,7 +4,6 @@
     <div class="verify-block">
       <h1>Merch Bundle - Allow List Verification</h1>
 
-      <!-- <div v-if="!preCheck" class="setup"> -->
         <div class="step">
           <h2>1) Connect Wallet</h2>
           <span v-if="!wallet"  class="btn" @click="connectWallet()">CONNECT WALLET</span>
@@ -21,11 +20,6 @@
         </div>
 
         <p>Think you should be on the allow list but it's not working? Experiencing other problems? Contact sammyb on discord.</p>
-      <!-- </div> -->
-      <!-- <div v-else class="">
-        <h2>Verification Complete </h2>
-        <span class="connected">{{wallet}}</span>
-      </div> -->
 
     </div>
 
@@ -55,18 +49,20 @@ export default {
   created() {
     this.verify = this.$route.query.verify
     this.screenName = this.$route.query.screen_name;
-
-    this.$nuxt.$on('web3-active', async () => {
-      const address = this.wallet
-      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
-      this.preCheck = this.wallet === res.data.address
-      this.verify = true
-      this.screenName = res.data.screen_name
+    
+    this.$nuxt.$on('web3-active', () => {
+      this.checkByAddress(this.wallet);
     })
+    
   },
   methods: {
     connectWallet(){
       this.$nuxt.$emit('connect', '/verify')
+    },
+    async checkByAddress(address){
+      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
+      this.verify = true
+      this.screenName = res.data.screen_name
     }
   }
 }
