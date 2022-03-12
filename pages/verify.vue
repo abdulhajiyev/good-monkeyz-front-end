@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     connectWallet(){
-      this.$nuxt.$emit('connect', 'verify')
+      this.$nuxt.$emit('connect', '/verify')
     }
   }
 }
