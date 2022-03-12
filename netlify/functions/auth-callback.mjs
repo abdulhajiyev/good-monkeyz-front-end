@@ -37,7 +37,7 @@ exports.handler = async (event, context, callback) => {
   const allowList = await supabase
     .from('merch_allow_list')
     .select()
-    .eq('screen_name', 'lll')
+    .eq('screen_name', TWITTER_SCREEN_NAME)
     .limit(1)
     .single()
 
@@ -69,7 +69,7 @@ exports.handler = async (event, context, callback) => {
   return {
     statusCode: 302,
     headers: {
-      Location: `${RETURN_URL}?verify=${verified}`,
+      Location: `${RETURN_URL}?verify=${verified}&screen_name=${TWITTER_SCREEN_NAME}`,
       'Cache-Control': 'no-cache' 
     },
     body: ''
