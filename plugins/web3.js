@@ -19,7 +19,6 @@ export default ({ app }, inject) => {
     });
     inject('newMMprovider', () => { 
         prov = new ethers.providers.Web3Provider(window.ethereum);
-        // console.log(prov, 'MM provider')
        return prov;
     });
     inject('provider', () => { 

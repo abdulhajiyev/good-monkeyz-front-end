@@ -23,11 +23,13 @@
                 wcIcon,
                 mmIcon,
                 closeIcon,
-                active: false
+                active: false,
+                redirect: '/mint/merch'
             }
         },
         created() {
-            this.$nuxt.$on('connect', () => {
+            this.$nuxt.$on('connect', (redirect) => {
+                this.redirect = redirect || '/mint/merch'
                 this.active = true
             })
         },
@@ -65,7 +67,7 @@
                 this.setWallet(WalletAddress);
                 this.setProvider(provider);
                 this.active = false
-                this.$router.push('/mint/merch')
+                this.$router.push(this.redirect)
             }
         }
     }
