@@ -13,7 +13,7 @@
         <div class="step">
           <h2>2) Verify </h2>
           <span v-if="verify && screenName" class="verified">✅ @{{screenName}} </span>
-          <a v-if="!verify && !screenName" :href="`.netlify/functions/auth?address=${wallet}`" class="btn">
+          <a v-if="!verify && !screenName" :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
             <img class="twitter" :src="twitter" >
             <span >Verify with twitter</span>
           </a>
@@ -58,7 +58,7 @@ export default {
 
     this.$nuxt.$on('web3-active', async () => {
       const address = this.wallet
-      const res = await (await fetch(`.netlify/functions/check-allow-list?address=${address}`)).json()
+      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
       this.preCheck = this.wallet === res.data.address
       this.verify = true
       this.screenName = res.data.screen_name
