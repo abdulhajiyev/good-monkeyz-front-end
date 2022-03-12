@@ -114,6 +114,8 @@ export default {
       font-size: 0.7rem;
       margin-bottom: 1rem;
       display: inline-flex;
+      white-space: nowrap;
+      cursor: pointer;
     }
     .twitter {
       height: 1rem;
