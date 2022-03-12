@@ -33,6 +33,7 @@
                     if (accounts.length !== 0) {
                         this.setWallet(accounts[0]);
                         this.$newMMprovider();
+                        this.$nuxt.$emit('web3-active');
                     }
                 } catch (error) {
                     console.error(error);
