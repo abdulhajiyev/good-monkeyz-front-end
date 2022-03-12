@@ -14,12 +14,12 @@
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
                 <a href="https://discord.gg/ztNYjaVCjp"><img class="discord" :src="discord"></a>
             </div>
-            <nuxt-link to="/dashboard" v-else >
+            <span v-else >
                 <div class="user">
                 <span>{{wallet.substring(0,4)+'..'+wallet.substr(-4)}}</span>
                 <img class="avatar" :src="user">
                 </div>
-            </nuxt-link>
+            </span>
         </div>
     </div>
 </template>
@@ -111,7 +111,7 @@
         align-items: center;
         font-size: 0.725rem;
         font-family: 'Inconsolata', 'Courier New', Courier, monospace;
-        cursor: pointer;
+        color: #000;
     }
 
     .avatar {
