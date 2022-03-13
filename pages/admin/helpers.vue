@@ -135,7 +135,7 @@ export default {
             const tx = await connectedContract.createMerchItem(
                   250,
                   ethers.utils.parseEther('0.1'),
-                  ethers.utils.parseEther('0.0')
+                  ethers.utils.parseEther('0.000')
                 )
             console.log(tx)
 
@@ -160,9 +160,9 @@ export default {
             const tx = await connectedContract.updateMerchItem(
                     0, 
                     77,
-                    ethers.utils.parseEther('0.08'),
-                    ethers.utils.parseEther('0.005'),
-                    5,
+                    ethers.utils.parseEther('0.07'),
+                    ethers.utils.parseEther('0.007'),
+                    7,
                     true,
                     false,
                     true );
