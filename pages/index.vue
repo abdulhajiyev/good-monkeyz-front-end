@@ -2,7 +2,10 @@
   <div class="index">
     <MinBanner :account="wallet" :active="false" />
     <div class="splash">
-      <div class="splash-inner" :style="`background-image: url(${bg}), linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5))`">
+      <video class="video-bg" autoplay muted loop :src="monkey"></video> 
+      <div class="fade-bg"></div> 
+      <div class="splash-inner" >
+        <!-- <div class="splash-inner" :style="`background-image: url(${bg}), linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5))`"> -->
 
         <div class="banner-group">
           <!-- <h2>Minting Monekyz Merch</h2> -->
@@ -25,10 +28,10 @@
           </div>
         </div>
 
-        <div class="gm-spinner">
+        <!-- <div class="gm-spinner">
             <img class="gm-in" :src="gmIn">
             <img class="gm-out" :src="gmOut">
-        </div>
+        </div> -->
 
         <div class="counter">
           <h3 v-if="open">{{amountMinted}} <img :src="divider"> 77</h3>
@@ -56,7 +59,7 @@ import {
 
 import GMSHOPJSON from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm.mp4";
-import bg from "@/assets/img/hood.jpg";
+// import bg from "@/assets/img/hood.jpg";
 import star from "@/assets/img/star.svg";
 
 import gmWhite from "@/assets/img/gm-white.svg";
@@ -75,7 +78,7 @@ export default {
   data: () => {
     return {
       monkey,
-      bg,
+      // bg,
       star,
       gmOut,
       gmIn,
@@ -136,14 +139,37 @@ export default {
 
 <style scoped>
 
+
+  .video-bg {
+    position: absolute;
+    bottom: -10%;
+    left: -10%;
+    transform: scale(1.4);
+    filter: grayscale(100%);
+    z-index: -1;
+  }
+
+  .fade-bg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(270deg, #000000 47.4%, rgba(0, 0, 0, 0) 100%);
+    z-index: -1;
+  }
+
   .index {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    min-height: 100vh;
+    overflow: hidden;
   }
 
   .splash {
     padding: 1rem;
+    border: 1rem #fff solid;
     min-height: 100vh;
     width: 100%;
     position: relative;
