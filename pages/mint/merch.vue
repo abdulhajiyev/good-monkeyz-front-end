@@ -9,14 +9,14 @@
     />
     <div v-if="!minted" class="mint" >
         <h2 >Current Price Ξ {{bundlePrice}}</h2>
-        <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
+        <!-- <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
         <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
         <h4 v-else>Sold Out</h4>
         <span v-if="amountMinted < 77 && !txHash" class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
         <span v-if="txHash && !minted" class="btn">
           <span class="loader"></span>
           pending
-        </span>
+        </span> -->
     </div>
     <div v-else class="congrats">
       <h1>CONGRATULATIONS!</h1>
