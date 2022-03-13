@@ -5,10 +5,8 @@
       <video class="video-bg" autoplay muted loop :src="monkey"></video> 
       <div class="fade-bg"></div> 
       <div class="splash-inner" >
-        <!-- <div class="splash-inner" :style="`background-image: url(${bg}), linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5))`"> -->
 
         <div class="banner-group">
-          <!-- <h2>Minting Monekyz Merch</h2> -->
           <span class="btn--sparkle">
             <span class="subtitle">GM Bundle Token</span>
             <span class="title">HOODIE + Hat + Mint Pass</span>
@@ -138,7 +136,9 @@ export default {
 </script>
 
 <style scoped>
-
+  .index {
+    background: #000;
+  }
 
   .video-bg {
     position: absolute;
@@ -146,7 +146,7 @@ export default {
     left: -10%;
     transform: scale(1.4);
     filter: grayscale(100%);
-    z-index: -1;
+    z-index: 0;
   }
 
   .fade-bg {
@@ -156,7 +156,7 @@ export default {
     top: 0;
     left: 0;
     background: linear-gradient(270deg, #000000 47.4%, rgba(0, 0, 0, 0) 100%);
-    z-index: -1;
+    z-index: 0;
   }
 
   .index {
@@ -177,9 +177,6 @@ export default {
   }
 
   .splash-inner {
-    background-blend-mode: overlay;
-    background-size: cover !important;
-    background-position: center center !important;
     min-height: 100%;
     width: 100%;
     text-align: center;
