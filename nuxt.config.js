@@ -28,9 +28,9 @@ export default {
       { hid: 'og-title', property: 'og:title', content: 'Good Monkeyz' },
       { hid: 'og-desc', property: 'og:description', content: 'Community lead project consisting of 10,000 Good Monkeyz NFTs — collection coming April 2022 🙈🙉🙊🐵🐒 ' },
       { hid: 'og-image', property: 'og:image',
-          content: 'https://goodmonkeyz.art/'
+          content: 'https://goodmonkeyz.art/social.jpg'
       },
-      { hid: 'og-url', property: 'og:url', content: 'https://goodmonkeyz.art/social.jpg' },
+      { hid: 'og-url', property: 'og:url', content: 'https://goodmonkeyz.art' },
       { hid: 't-type', name: 'twitter:card', content: 'summary_large_image' },
     ],
     link: [
