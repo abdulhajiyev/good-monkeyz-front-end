@@ -2,7 +2,7 @@
   <div class="index">
     <MinBanner :account="wallet" :active="false" />
     <div class="splash">
-      <video class="video-bg" autoplay muted loop :src="monkey"></video> 
+      <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
       <div class="fade-bg"></div> 
       <div class="splash-inner" >
 
@@ -56,7 +56,7 @@ import {
 } from '@/utils/constants';
 
 import GMSHOPJSON from '@/utils/nftShop.json';
-import monkey from "@/assets/video/mm.mp4";
+import monkey from "@/assets/video/mm-med.mp4";
 // import bg from "@/assets/img/hood.jpg";
 import star from "@/assets/img/star.svg";
 
@@ -142,13 +142,21 @@ export default {
 
   .video-bg {
     position: absolute;
-    bottom: -10%;
-    left: -10%;
-    transform: scale(1.4);
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-90%, 50%);
     filter: grayscale(100%);
     z-index: 0;
+    width: 100%;
   }
-
+  @media (min-width: 700px){
+    .video-bg {
+      transform: scale(1.4);
+      bottom: -10%;
+      left: -10%;
+      width: 55%;
+    }
+  }
   .fade-bg {
     position: absolute;
     height: 100%;
@@ -200,6 +208,8 @@ export default {
     font-family: Helvetica, sans-serif;
     font-weight: 700;
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
   }
 
   .banner {
@@ -263,20 +273,6 @@ export default {
   transform: scale(0.6);
 }
 
-@media (min-width: 700px){
-  .gm-spinner {
-    position: absolute;
-    display: inline-block;
-    left: -1.5rem;
-    bottom: -1.5rem;
-    transform: scale(0.9);
-  }
-  .counter {
-        position: absolute;
-    bottom: 2rem;
-    right: 3rem;
-  }
-}
 
 .gm-out {
   animation: spin 20s linear infinite;
@@ -342,6 +338,8 @@ export default {
 
   .counter {
     color: #fff;
+    position: relative;
+    z-index: 1;
   }
 
   .counter h3 {
@@ -366,6 +364,21 @@ export default {
     display: inline-block;
     text-align: right;
   }
+
+@media (min-width: 700px){
+  .gm-spinner {
+    position: absolute;
+    display: inline-block;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    transform: scale(0.9);
+  }
+  .counter {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+  }
+}
 
 </style>
 

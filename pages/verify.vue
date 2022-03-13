@@ -1,6 +1,6 @@
 <template>
   <div class="verify">
-    <video class="video-bg" autoplay muted loop :src="monkey"></video>
+    <video class="video-bg"  width="55%" autoplay muted loop :src="monkey"></video>
     <div class="fade-bg"></div>
 
     <MinBanner :account="false" :active="false" />
@@ -21,7 +21,6 @@
         </div>
 
         <!-- <p>Think you should be on the allow list but it's not working? Experiencing other problems? Contact sammyb on discord.</p> -->
-
     </div>
 
   </div>
@@ -33,7 +32,7 @@ import { mapState } from 'vuex'
 import MinBanner from '@/components/MinBanner.vue';
 
 import twitter from "@/assets/img/twitter-black.svg"
-import monkey from "@/assets/video/mm.mp4";
+import monkey from "@/assets/video/mm-med.mp4";
 export default {
   name: 'Verify',
   components: {
@@ -77,11 +76,20 @@ export default {
 
   .video-bg {
     position: absolute;
-    bottom: -5%;
-    left: -5%;
-    transform: scale(1.4);
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, 20%);
     filter: grayscale(100%);
     z-index: -1;
+    width: 100%;
+  }
+  @media (min-width: 700px){
+    .video-bg {
+      transform: scale(1.4);
+      bottom: -10%;
+      left: -10%;
+      width: 55%;
+    }
   }
 
   .fade-bg {
