@@ -4,6 +4,7 @@
         <div class="options">
             <span class="btn" @click="addMerchItem()">Add Merch Item</span>
             <span class="btn" @click="updateMerchItem()">Update Merch Item</span>
+            <span class="btn" @click="updateURI()">updateURI</span>
             <span class="btn" @click="withdraw()">Withdraw</span>
         </div>
         <div class="data">
@@ -104,15 +105,26 @@ export default {
         console.log(this.merch)
   
     },
-    async updateURI() {
-
-    },
     withdraw(){
         const provider = this.$provider();
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
         connectedContract.withdraw()
+    },
+    async updateURI() {
+       try {
+        const provider = this.$provider();
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
+
+        const URI = 'https://ipfs.io/ipfs/QmatqgZqxYJDfog3QrXkXs8A84tc9ZwzVtYuKTFpREofTu/{id}.json'
+        const tx = await connectedContract.setURI(URI)
+        console.log(tx)
+
+      } catch (error) {
+        console.log(error)
+      }
     },
     async addMerchItem() {
         try {
