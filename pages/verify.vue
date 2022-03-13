@@ -61,8 +61,10 @@ export default {
     },
     async checkByAddress(address){
       const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
-      this.verify = true
-      this.screenName = res.data.screen_name
+      if ( res.data != null ) {
+        this.verify = true
+        this.screenName = res.data.screen_name
+      }
     }
   }
 }
