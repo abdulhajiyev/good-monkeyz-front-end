@@ -88,7 +88,7 @@ export default {
   },
   computed: mapState(['wallet']),
   created() {
-    // this.getAmountMinted();
+    this.getAmountMinted();
     this.countdownF();
     
     setInterval(()=> {
@@ -103,12 +103,12 @@ export default {
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
         const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
         this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0)
+        this.open = merchBundle.allowMintable;
       } catch (error) {
         console.log(error)
       }
     },
     countdownF() {
-      console.log('interval')
       const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
@@ -119,7 +119,6 @@ export default {
       const seconds = Math.floor((distance % (1000 * 60)) / (1000) );
 
       this.countdown = `${days}D ${hours}H ${minutes}M ${seconds}S`;
-      console.log(this.countdown)
       },
   }
 }
