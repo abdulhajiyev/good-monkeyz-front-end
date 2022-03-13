@@ -99,6 +99,7 @@ export default {
     padding: 5rem;
     min-height: 100vh;
     overflow: hidden;
+    background: #000;
     color: #fff;
     max-height: 100vh;
     position: relative;
