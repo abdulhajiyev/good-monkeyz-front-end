@@ -37,7 +37,7 @@ exports.handler = async (event, context, callback) => {
   const allowList = await supabase
     .from('merch_allow_list')
     .select()
-    .eq('screen_name', TWITTER_SCREEN_NAME)
+    .ilike('screen_name', TWITTER_SCREEN_NAME)
     .limit(1)
     .single()
 

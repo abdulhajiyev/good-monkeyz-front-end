@@ -68,6 +68,7 @@
                 this.setProvider(provider);
                 this.active = false
                 this.$router.push(this.redirect)
+                this.$nuxt.$emit('web3-active');
             }
         }
     }

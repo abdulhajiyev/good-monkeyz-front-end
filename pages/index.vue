@@ -1,27 +1,39 @@
 <template>
   <div class="index">
-    <MinBanner :account="false" :active="false" />
+    <MinBanner :account="wallet" :active="false" />
     <div class="splash">
-      <div class="splash-inner" :style="`background-image: url(${bg}), linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5))`">
+      <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
+      <div class="fade-bg"></div> 
+      <div class="splash-inner" >
 
         <div class="banner-group">
-          <span class="btn btn--sparkle">
+          <span class="btn--sparkle">
             <span class="subtitle">GM Bundle Token</span>
             <span class="title">HOODIE + Hat + Mint Pass</span>
           </span>
           <div class="banner">
-            <span class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span>
+            <span v-if="open" class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
+            <span v-else class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span>
           </div>
           <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
+          <div v-if="open">
+            <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
+              <span>CONNECT WALLET TO MINT</span>
+            </span>
+            <nuxt-link v-else to="/mint/merch" class="btn">
+              <span>MINT GMTOKEN</span>
+            </nuxt-link>
+          </div>
         </div>
 
-        <div class="gm-spinner">
+        <!-- <div class="gm-spinner">
             <img class="gm-in" :src="gmIn">
             <img class="gm-out" :src="gmOut">
-        </div>
+        </div> -->
 
         <div class="counter">
-          <h3> ~ <img :src="divider"> 77</h3>
+          <h3 v-if="open">{{amountMinted}} <img :src="divider"> 77</h3>
+          <h3 v-else> ~ <img :src="divider"> 77</h3>
           <h4>Claimed</h4>
         </div>
       </div>
@@ -31,17 +43,28 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { ethers } from 'ethers';
+
 import MinBanner from '@/components/MinBanner.vue';
 
-import monkey from "@/assets/video/mm.mp4";
-import bg from "@/assets/img/hood.jpg";
+import { 
+  MERCH_DROP_CONTRACT,
+  INFURA_PROJECT_ID,
+  NETWORK_NAME,
+  TOKEN_ID_MERCH_BUNDLE 
+} from '@/utils/constants';
+
+import GMSHOPJSON from '@/utils/nftShop.json';
+import monkey from "@/assets/video/mm-med.mp4";
+// import bg from "@/assets/img/hood.jpg";
 import star from "@/assets/img/star.svg";
 
 import gmWhite from "@/assets/img/gm-white.svg";
 
 import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
-import divider from "@/assets/img/divider.svg"
+import divider from "@/assets/img/divider.svg";
 
 
 export default {
@@ -53,17 +76,20 @@ export default {
   data: () => {
     return {
       monkey,
-      bg,
+      // bg,
       star,
       gmOut,
       gmIn,
       gmWhite,
       divider,
       amountMinted: '~',
+      open: false,
       countdown: '',
     }
   },
+  computed: mapState(['wallet']),
   created() {
+    this.getAmountMinted();
     this.countdownF();
     
     setInterval(()=> {
@@ -71,13 +97,24 @@ export default {
       
     }, 1000)
   },
-     mounted() {
-        this.zeroWidth = this.$refs.zerozero.offsetWidth;
-        setTimeout( () => {
-          this.zeroWidth = this.$refs.zerozero.offsetWidth;
-        }, 2000)
-      },
+  mounted() {
+    this.zeroWidth = this.$refs.zerozero.offsetWidth;
+    setTimeout( () => {
+      this.zeroWidth = this.$refs.zerozero.offsetWidth;
+    }, 2000)
+  },
   methods: {
+    async getAmountMinted() {
+      try {
+        const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
+        const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
+        this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0)
+        // this.open = merchBundle.allowMintable;
+      } catch (error) {
+        console.log(error)
+      }
+    },
     countdownF() {
       const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
       const now = new Date().getTime();
@@ -99,15 +136,48 @@ export default {
 </script>
 
 <style scoped>
+  .index {
+    background: #000;
+  }
+
+  .video-bg {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-90%, 50%);
+    filter: grayscale(100%);
+    z-index: 0;
+    width: 100%;
+  }
+  @media (min-width: 700px){
+    .video-bg {
+      transform: scale(1.4);
+      bottom: -10%;
+      left: -10%;
+      width: 55%;
+    }
+  }
+  .fade-bg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(270deg, #000000 47.4%, rgba(0, 0, 0, 0) 100%);
+    z-index: 0;
+  }
 
   .index {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    min-height: 100vh;
+    overflow: hidden;
   }
 
   .splash {
     padding: 1rem;
+    border: 1rem #fff solid;
     min-height: 100vh;
     width: 100%;
     position: relative;
@@ -115,9 +185,6 @@ export default {
   }
 
   .splash-inner {
-    background-blend-mode: overlay;
-    background-size: cover !important;
-    background-position: center center !important;
     min-height: 100%;
     width: 100%;
     text-align: center;
@@ -141,6 +208,8 @@ export default {
     font-family: Helvetica, sans-serif;
     font-weight: 700;
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
   }
 
   .banner {
@@ -153,7 +222,7 @@ export default {
     pointer-events: none;
   }
 
-@media (max-width: 700px), (max-width: 700px) and (orientation: landscape) {
+@media (max-width: 700px){
   .banner-group {
     padding-top: 8rem ;
   }
@@ -171,19 +240,7 @@ export default {
     margin-bottom: 0;
   }
 }
-@media (max-width: 1000px) and (orientation: landscape) {
-    .banner-group {
-    padding-top: 0 ;
-  }
-  .banner {
-    font-size: 5.6rem;
-  }
-    .banner img {
-    max-height: 4.4rem;
-  }
-}
-
-@media (min-width: 700px) {
+@media (min-width: 700px){
 
   .banner-group {
     width: 100%;
@@ -216,27 +273,6 @@ export default {
   transform: scale(0.6);
 }
 
-@media (min-width: 700px){
-  .gm-spinner {
-    position: absolute;
-    display: inline-block;
-    left: -1.5rem;
-    bottom: -1.5rem;
-    transform: scale(0.9);
-  }
-  .counter {
-        position: absolute;
-    bottom: 2rem;
-    right: 3rem;
-  }
-}
-@media  (max-width: 10n00px) and (min-width: 700px) and (orientation: landscape) { 
-  .gm-spinner {
-    transform: scale(0.4) translate(-60%, 60%);
-    left:0;
-    bottom:0;
-  }
-}
 
 .gm-out {
   animation: spin 20s linear infinite;
@@ -250,8 +286,60 @@ export default {
   transform: translate(-50%, -50%); 
 }
 
+.btn {
+  padding: 1rem;
+  border-radius: 1rem;
+  text-transform: uppercase;
+  background-color: #fff;
+  color: #000;
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.75rem;
+  overflow: hidden;
+  display: inline-block ;
+  transform: translateZ(0);
+}
+.btn span {
+  position: relative;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 400px;
+  height: 300px;
+  z-index: 0;
+  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+  animation: go 3.8s infinite alternate;
+  opacity: 0.9;
+  filter: blur(24px);
+}
+
+
+@keyframes go {
+  0% {
+    transform: translate(-300px, 100px);
+  }
+  20% {
+    transform: translate(-300px, 100px);
+  }
+  50% {
+    transform: translate(-300px, 100px);
+  }
+  90% {
+    transform: translate(0px, -300px);
+  }
+  100% {
+    transform: translate(0px, -300px);
+  }
+}
+
   .counter {
     color: #fff;
+    position: relative;
+    z-index: 1;
   }
 
   .counter h3 {
@@ -276,5 +364,22 @@ export default {
     display: inline-block;
     text-align: right;
   }
+
+@media (min-width: 700px){
+  .gm-spinner {
+    position: absolute;
+    display: inline-block;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    transform: scale(0.9);
+  }
+  .counter {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+  }
+}
+
 </style>
+
 
