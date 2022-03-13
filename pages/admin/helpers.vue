@@ -2,13 +2,9 @@
   <div class="admin">
       <div class="interface">
         <div class="options">
-            <span class="btn" @click="updateAllowList()">Update Allow List</span>
             <span class="btn" @click="addMerchItem()">Add Merch Item</span>
             <span class="btn" @click="updateMerchItem()">Update Merch Item</span>
-            <span class="btn" @click="withdraw()">withdraw</span>
-            <div class="">
-                <!-- <h2>Update Merch Item</h2> -->
-            </div>
+            <span class="btn" @click="withdraw()">Withdraw</span>
         </div>
         <div class="data">
             <span class="bal">Balance: {{formatEth(bal)}}Ξ</span>
@@ -22,6 +18,22 @@
             <li v-for="(item, index) in merch" :key="index">
                 {{index }}: <span v-html="mintStatus(index)"></span> - {{merchData[index].name}} -- {{formatEth(merch[index].price)}}Ξ -- {{merch[index].minted}} /{{merch[index].supply}}
             </li>
+            </ul>
+        </div>
+        <div class="allow-list">
+          <h2>Merch Allow List - Supabase database</h2>
+            <ul>
+              <li v-for="(item, index) in allowList" :key="index">
+                  {{index }}: {{item.screen_name }}: {{item.address }}:
+              </li>
+            </ul>
+        </div>
+        <div class="allow-list">
+          <h2>Signature List -  JSON File</h2>
+            <ul>
+              <li v-for="(item, index) in allowList" :key="index">
+                  {{index }}: {{item.screen_name }}: {{item.address }}:
+              </li>
             </ul>
         </div>
       </div>
@@ -63,21 +75,16 @@ export default {
           {
               name: 'Mint Pass',
           }
-      ]
+    ],
+    allowList: [],
     }
   },
   computed: {
     ...mapState(['wallet', 'provider']),
-    // formattedMerch() {
-    //     return this.merch.map( m => {
-    //         return {
-    //             m
-    //         }
-    //     })
-    // }
   },
   created() {
       this.getcontractData();
+      this.getAllowList();
   },
   methods: {
     mintStatus(id) {
@@ -95,13 +102,7 @@ export default {
             this.merch.push(await connectedContract.merch(index))
         }
         console.log(this.merch)
-    
-    // const merchCount = await GMMerchBundle.connect(owner).getMerchCount();
-    // console.log(merchCount)
-    //   const price = await connectedContract.getPrice();
-    //   const al = await connectedContract.checkAllowList('0x4Ead8bf030fd5575Fe978A5040ed82434e059691')
-        // console.log( ethers.utils.formatUnits(al,0))
-
+  
     },
     async updateURI() {
 
@@ -113,24 +114,6 @@ export default {
 
         connectedContract.withdraw()
     },
-    async updateAllowList() {
-      console.log('Allow')
-        try {
-            const provider = this.$provider();
-            const signer = provider.getSigner();
-            const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
-
-            try {
-              const tx = await connectedContract.setAllowList(['0x4Ead8bf030fd5575Fe978A5040ed82434e059691'])
-              console.log(tx)
-
-            } catch (error) {
-              console.log("Error MINTINIG", error);
-            }
-        } catch (error) {
-          console.log(error)
-        }
-     },
     async addMerchItem() {
         try {
             const provider = this.$provider();
@@ -138,9 +121,9 @@ export default {
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
             const tx = await connectedContract.createMerchItem(
-                  77,
-                  ethers.utils.parseEther('0.07'),
-                  ethers.utils.parseEther('0.001')
+                  250,
+                  ethers.utils.parseEther('0.1'),
+                  ethers.utils.parseEther('0.0')
                 )
             console.log(tx)
 
@@ -154,11 +137,20 @@ export default {
             const signer = provider.getSigner();
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
+            // INDEX
+            // SUPPLY
+            // PRICE
+            // INCREMENT
+            // INTERVAL
+            // ALLOW LIST
+            // PUBLIC
+            // INCL MINT PASS
             const tx = await connectedContract.updateMerchItem(
                     0, 
-                    100,
-                    ethers.utils.parseEther('0.05'),
-                    ethers.utils.parseEther('0.001'),
+                    77,
+                    ethers.utils.parseEther('0.08'),
+                    ethers.utils.parseEther('0.005'),
+                    5,
                     true,
                     false,
                     true );
@@ -168,8 +160,11 @@ export default {
           console.log(error)
         }
      },
+    async getAllowList(){
+      const list = await (await fetch(`/.netlify/functions/allow-list`)).json()
+      this.allowList = list.data;
+    }
   },
-
 }
 </script>
 
@@ -210,24 +205,31 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-     
+  flex-direction: column;
 }
 .interface {
-    
     padding: 1rem;
     font-family: 'Courier New', Courier, monospace;
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 800px;
 }
 .data {
     border:  1px dotted #000;
     padding: 1rem;
     position: relative;
+    flex-grow: 1;
 }
-.options {
+.options,
+.allow-list {
     border:  1px dotted #000;
     display: flex;
     flex-direction: column;
+}
+
+.allow-list {
+  flex-basis: 100%;
+  padding: 1rem;
 }
 
 
