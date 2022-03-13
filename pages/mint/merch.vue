@@ -109,16 +109,24 @@ export default {
               console.log('NEW MERCH BUNDLE MINTED %s', tokenId) 
               this.getcontractData();
             });
-            const signature = SIGNATURES.addresses[this.wallet][0];
-            console.log('SIG', signature)
+
             try {
+              let signature;
+              console.log(SIGNATURES.addresses)
+              const addressInList = Object.prototype.hasOwnProperty.call( SIGNATURES.addresses, this.wallet);
+              if ( addressInList ) {
+                signature = SIGNATURES.addresses[this.wallet][0];
+                console.log('SIG', signature)
+              } else {
+                throw new Error('Wallet not on Allow List');
+              }
+            
               const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) ) )};
               const nftTxn = await connectedContract.mintTokenAllow(0,signature ,overrides)
               nftTxn.wait();
               this.txHash = nftTxn.hash
               const result =  await nftTxn.wait(1);
               
-              // console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
               if(result.status === 1) {
                 this.minted = true;
                 this.fireConfetti();
@@ -126,7 +134,7 @@ export default {
                 throw new Error('TX Failed');
               }
             } catch (error) {
-              this.errorMessage = error.error.message
+              this.errorMessage = error || error.error.message
               console.log("Error MINTINIG", error);
               setTimeout( ()=> {
                 this.errorMessage = '';
