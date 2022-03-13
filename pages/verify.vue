@@ -1,17 +1,18 @@
 <template>
   <div class="verify">
+    <video class="video-bg" autoplay muted loop :src="monkey"></video>
+    <div class="fade-bg"></div>
+
     <MinBanner :account="false" :active="false" />
     <div class="verify-block">
-      <h1>Merch Bundle - Allow List Verification</h1>
+      
+      <h1>Wallet Authenticate</h1>
 
-        <div class="step">
-          <h2>1) Connect Wallet</h2>
+        <div v-if="!wallet" class="step">
           <span v-if="!wallet"  class="btn" @click="connectWallet()">CONNECT WALLET</span>
-          <span v-else class="connected">{{wallet}}</span>
         </div>
-        <div class="step">
-          <h2>2) Verify </h2>
-          <span v-if="verify && screenName" class="verified">✅ @{{screenName}} </span>
+        <div v-else class="step">
+          <span v-if="verify && screenName" class="verified">✅ {{screenName}} </span>
           <a v-if="!verify && !screenName" :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
             <img class="twitter" :src="twitter" >
             <span >Verify with twitter</span>
@@ -19,7 +20,7 @@
           <span v-if="verify === 'false'" class="not-verified">We can't find your account on the allow List :(</span>
         </div>
 
-        <p>Think you should be on the allow list but it's not working? Experiencing other problems? Contact sammyb on discord.</p>
+        <!-- <p>Think you should be on the allow list but it's not working? Experiencing other problems? Contact sammyb on discord.</p> -->
 
     </div>
 
@@ -32,6 +33,7 @@ import { mapState } from 'vuex'
 import MinBanner from '@/components/MinBanner.vue';
 
 import twitter from "@/assets/img/twitter-black.svg"
+import monkey from "@/assets/video/mm.mp4";
 export default {
   name: 'Verify',
   components: {
@@ -43,6 +45,7 @@ export default {
       twitter,
       screenName: '',
       preCheck: false,
+      monkey
     }
   },
   computed: mapState(['wallet']),
@@ -63,7 +66,7 @@ export default {
       const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
       if ( res.data != null ) {
         this.verify = true
-        this.screenName = res.data.screen_name
+        this.screenName = res.data.screen_name || res.data.discord
       }
     }
   }
@@ -71,10 +74,58 @@ export default {
 </script>
 
 <style scoped>
+
+  .video-bg {
+    position: absolute;
+    bottom: -5%;
+    left: -5%;
+    transform: scale(1.4);
+    filter: grayscale(100%);
+    z-index: -1;
+  }
+
+  .fade-bg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(270deg, #000000 47.4%, rgba(0, 0, 0, 0) 100%);
+    z-index: -1;
+  }
+
+
+  .verify {
+    padding: 5rem;
+    min-height: 100vh;
+    overflow: hidden;
+    color: #fff;
+    max-height: 100vh;
+    position: relative;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    
+    opacity: 0;
+    animation: enter 2s ease 1 forwards;
+    animation-delay: 200ms;
+  }
+
+
     h1 {
       text-transform: uppercase;
      letter-spacing: 0.02rem;
      line-height: 1;
+      font-size: 2rem;
+    letter-spacing: 0.4em;
+    margin-bottom: 3rem;
+    }
+    @media (max-width: 480px ){
+      h1 {
+        font-size: 1.4rem;
+      }
+      
     }
     .connected {
       padding: 1rem;
@@ -95,12 +146,6 @@ export default {
       border-radius: 1rem;
       display: inline-block;
     }
-    .verify {
-        padding: 5rem;
-        min-height: 100vh;
-        background: black;
-        color: #fff;
-    }
 
     .btn {
       padding: 1rem;
@@ -114,6 +159,10 @@ export default {
       display: inline-flex;
       white-space: nowrap;
       cursor: pointer;
+
+      opacity: 0;
+      animation: enter 2s ease 1 forwards;
+      animation-delay: 200ms;
     }
     .twitter {
       height: 1rem;
@@ -131,5 +180,20 @@ export default {
     .step {
       margin-bottom: 2rem;
     }
+
+
+    @keyframes enter {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 0;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 </style>
 

@@ -17,7 +17,7 @@ exports.handler = async (event, context) => {
     
   const auth = await client.generateAuthLink(CALLBACK_URL)
 
-  const ethAddress = event.queryStringParameters.address
+  const ethAddress = event.queryStringParameters.address.toLowerCase()
 
   const { data, error } = await supabase
       .from('Token')
