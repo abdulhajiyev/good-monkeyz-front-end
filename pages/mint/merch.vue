@@ -12,11 +12,12 @@
         <!-- <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
         <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
         <h4 v-else>Sold Out</h4>
-        <span v-if="amountMinted < 77 && !txHash" class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
+        <nuxt-link to="/verify" v-if="amountMinted < 77 && !txHash && !verify" class="btn" @click="mintNft(merchBundleId)">Verify Wallet</nuxt-link>
+        <span v-if="amountMinted < 77 && !txHash && verify" class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
         <span v-if="txHash && !minted" class="btn">
           <span class="loader"></span>
           pending
-        </span> -->
+        </span>  -->
     </div>
     <div v-else class="congrats">
       <h1>CONGRATULATIONS!</h1>
@@ -52,7 +53,6 @@ import {
 import MinBanner from '@/components/MinBanner.vue';
 
 import GMSHOPJSON from '@/utils/nftShop.json';
-import SIGNATURES from '@/utils/signatures.json';
 import monkey from "@/assets/video/mm.mp4";
 
 import twitterBlack from "@/assets/img/twitter-black.svg"
@@ -80,12 +80,19 @@ export default {
       merchContract: MERCH_DROP_CONTRACT,
       shareLink: `https://twitter.com/share?url=https://goodmonkeyz.art&amp;text=${encodeURIComponent('Monkey Madnes')}&amp;hashtags=goodmonkeyz`,
       errorMessage: '',
+      signature: '',
+      verify: '',
     }
   },
   computed: mapState(['wallet', 'provider']),
   created() {
+    this.verify = this.$route.query.verify
     this.getcontractData();
 
+    this.$nuxt.$on('web3-active', () => {
+      console.log(this.wallet)
+      this.checkByAddress(this.wallet);
+    })
   },
   methods: {
     async getcontractData() {
@@ -96,12 +103,22 @@ export default {
       // const supply = ethers.utils.formatUnits(merchBundle.supply, 0);
       this.bundlePrice = ethers.utils.formatEther(merchBundle.price);
       this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0);
-      
-
+    
+    },
+    async checkByAddress(address){
+      console.log('CHECK', address)
+      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${this.wallet}`)).json()
+      if ( res.data != null ) {
+        this.signature = res.data.signature
+        this.verify = true;
+      } else {
+        this.verify = false;
+      }
     },
     async mintNft(id) {
-      console.log('mint')
         try {
+            await this.checkByAddress(this.wallet);
+
             const provider = this.$provider();
             const signer = provider.getSigner();
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
@@ -111,18 +128,14 @@ export default {
             });
 
             try {
-              let signature;
-              console.log(SIGNATURES.addresses)
-              const addressInList = Object.prototype.hasOwnProperty.call( SIGNATURES.addresses, this.wallet);
-              if ( addressInList ) {
-                signature = SIGNATURES.addresses[this.wallet][0];
-                console.log('SIG', signature)
-              } else {
-                throw new Error('Wallet not on Allow List');
+              console.log('SIGN', this.signature)
+              if ( !this.signature ) {
+                console.log()
+                throw new Error('Wallet is not verified');
               }
-            
+              console.log(this.signature)
               const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) ) )};
-              const nftTxn = await connectedContract.mintTokenAllow(0,signature ,overrides)
+              const nftTxn = await connectedContract.mintTokenAllow(0, this.signature ,overrides)
               nftTxn.wait();
               this.txHash = nftTxn.hash
               const result =  await nftTxn.wait(1);
@@ -134,7 +147,12 @@ export default {
                 throw new Error('TX Failed');
               }
             } catch (error) {
-              this.errorMessage = error || error.error.message
+              if (error.error && error.error.message) {
+                  this.errorMessage = error.error.message
+              } else {
+                  this.errorMessage =  error
+              }
+
               console.log("Error MINTINIG", error);
               setTimeout( ()=> {
                 this.errorMessage = '';
@@ -196,6 +214,9 @@ export default {
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+  }
+  a {
+    text-decoration: none;
   }
 
   .error {

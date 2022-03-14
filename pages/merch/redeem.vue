@@ -2,14 +2,14 @@
   <div class="shop">
     <Menu :account="wallet"/>
     <div class="heading">
-        <h1>You're in! LFG </h1>
-        <h2>You are eligible for the Good Monkeyz merch drop</h2>
+        <!-- <h1>You're in! LFG </h1> -->
+        <!-- <h2>You are eligible for the Good Monkeyz merch drop</h2> -->
     </div>
     <div class="grid">
-      <div class="item">
+      <!-- <div class="item">
         <video muted autoplay loop :src="monkey"></video>
         <nuxt-link to="/merch/redeem" class="btn">Redeem Item</nuxt-link>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

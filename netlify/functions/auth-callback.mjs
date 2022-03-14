@@ -1,6 +1,7 @@
 import 'dotenv/config';
 const { createClient } =  require('@supabase/supabase-js')
 const { TwitterApi } = require('twitter-api-v2')
+import { ethers } from 'ethers';
 
 const {
   DATABASE_URL,
@@ -8,6 +9,8 @@ const {
   CONSUMER_KEY,
   CONSUMER_SECRET,
   RETURN_URL,
+  PRIVATE_KEY_DEV
+  // PRIVATE_KEY_MONKEY_PROD,
 } = process.env;
 
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
@@ -54,11 +57,30 @@ exports.handler = async (event, context, callback) => {
 
   let verified;
 
-  if (allowList.data.screen_name === TWITTER_SCREEN_NAME) {
+  if(allowList.data.signature) {
+    return {
+      statusCode: 302,
+      headers: {
+        Location: `${RETURN_URL}?verify=false&msg=used`,
+        'Cache-Control': 'no-cache' 
+      },
+      body: ''
+    }
+  }
+  if (allowList.data.screen_name.toLowerCase() === TWITTER_SCREEN_NAME.toLowerCase()) {
+
+    const MONKEY_KING = new ethers.Wallet(PRIVATE_KEY_DEV);
+    const messageHash = ethers.utils.solidityKeccak256(['address', 'uint256'], [OAuthStep1.data.address, 0]);
+    const messageBytes = ethers.utils.arrayify(messageHash);
+    const signature = await MONKEY_KING.signMessage(messageBytes);
+
     const updatedEthAddress = await supabase
       .from('merch_allow_list')
-      .update({ address: OAuthStep1.data.address })
-      .eq('screen_name', TWITTER_SCREEN_NAME)
+      .update({ 
+        address: OAuthStep1.data.address,
+        signature: signature,
+       })
+      .ilike('screen_name', TWITTER_SCREEN_NAME)
 
     if(updatedEthAddress.error)  throw new Error('ETH Address Not updated')
     verified = true
