@@ -100,7 +100,7 @@ export default {
     }, 1000)
   },
   mounted() {
-    if(this.$refs.zerozero){
+    if(!this.open){
       this.zeroWidth = this.$refs.zerozero.offsetWidth;
       setTimeout( () => {
         this.zeroWidth = this.$refs.zerozero.offsetWidth;
