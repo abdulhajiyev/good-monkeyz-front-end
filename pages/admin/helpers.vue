@@ -118,7 +118,7 @@ export default {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
-        const URI = 'https://ipfs.io/ipfs/QmcTcYcyZcf2VNqUv7fYiQ8UrQEgUZHxpMgPxuazDw3wcu/{id}.json'
+        const URI = 'https://ipfs.io/ipfs/QmabkU1KMUrusjGrZK6z6bqmRMQ2RXiGqQAFTVQrmMx7E2/{id}.json'
         const tx = await connectedContract.setURI(URI)
         console.log(tx)
 
