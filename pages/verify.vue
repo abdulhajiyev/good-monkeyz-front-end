@@ -11,9 +11,9 @@
         <div v-if="!wallet" class="step">
           <span v-if="!wallet"  class="btn" @click="connectWallet()">CONNECT WALLET</span>
         </div>
-        <div v-else clgass="step">
+        <div v-else class="step">
           <a v-if="!open && verify && screenName" class="verified">✅ {{screenName}} </a>
-          <nuxt-link to="/mint/merch?verify=true" v-if="open && verify && screenName" class="verified"> Continue with @{{screenName}} </nuxt-link>
+          <nuxt-link to="/mint/merch?verify=true" v-if="open && verify && screenName" class="verified">Continue with @{{screenName}} </nuxt-link>
           <a v-if="!verify && !screenName" :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
             <img class="twitter" :src="twitter" >
             <span >Verify with twitter</span>
