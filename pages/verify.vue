@@ -11,18 +11,17 @@
         <div v-if="!wallet" class="step">
           <span v-if="!wallet"  class="btn" @click="connectWallet()">CONNECT WALLET</span>
         </div>
-        <div v-else class="step">
-          <span v-if="verify && screenName" class="verified">✅ {{screenName}} </span>
+        <div v-else clgass="step">
+          <a v-if="!open && verify && screenName" class="verified">✅ {{screenName}} </a>
+          <nuxt-link to="/mint/merch?verify=true" v-if="open && verify && screenName" class="verified"> Continue with @{{screenName}} </nuxt-link>
           <a v-if="!verify && !screenName" :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
             <img class="twitter" :src="twitter" >
             <span >Verify with twitter</span>
           </a>
-          <span v-if="verify === 'false'" class="not-verified">We can't find your account on the allow List :(</span>
+          <span v-if="verify === 'false'" class="not-verified">{{failMessage}}</span>
         </div>
-
         <!-- <p>Think you should be on the allow list but it's not working? Experiencing other problems? Contact sammyb on discord.</p> -->
     </div>
-
   </div>
 </template>
 
@@ -44,13 +43,16 @@ export default {
       twitter,
       screenName: '',
       preCheck: false,
-      monkey
+      monkey,
+      failMessage: `We can't find your account on the allow List :(`,
+      open: true
     }
   },
   computed: mapState(['wallet']),
   created() {
     this.verify = this.$route.query.verify
     this.screenName = this.$route.query.screen_name;
+    this.failMessage = this.$route.query.msg === 'used' ? 'Twitter Account is already linked to another Address' : `We can't find your account on the allow List :(`
     
     this.$nuxt.$on('web3-active', () => {
       this.checkByAddress(this.wallet);
@@ -156,6 +158,10 @@ export default {
       display: inline-block;
     }
 
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
     .btn {
       padding: 1rem;
       border-radius: 1rem;
