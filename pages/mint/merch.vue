@@ -1,34 +1,33 @@
 <template>
   <div class="pre-merch">
-    <video class="video-bg" autoplay muted loop :src="monkey"></video>
+    <video class="video-bg" autoplay muted loop :src="card"></video>
     <div class="fade-bg"></div>
 
     <MinBanner
       :account="wallet"
       @connect="modalActive = true" 
     />
-    <div v-if="!minted" class="mint" >
+    <div v-if="minted" class="mint" >
         <h2 >Current Price Ξ {{bundlePrice}}</h2>
-        <!-- <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
+        <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
         <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
         <h4 v-else>Sold Out</h4>
         <nuxt-link to="/verify" v-if="amountMinted < 77 && !txHash && !verify" class="btn" @click="mintNft(merchBundleId)">Verify Wallet</nuxt-link>
-        <span v-if="amountMinted < 77 && !txHash && verify" class="btn" @click="mintNft(merchBundleId)">Mint Merch Token</span>
+        <span v-if="amountMinted < 77 && !txHash && verify" class="btn" @click="mintNft(merchBundleId)">Mint GM Bundle</span>
         <span v-if="txHash && !minted" class="btn">
           <span class="loader"></span>
           pending
-        </span>  -->
+        </span> 
     </div>
     <div v-else class="congrats">
       <h1>CONGRATULATIONS!</h1>
       <h2>#{{parseInt(amountMinted)}} GM TOKEN MINTED</h2>
       
-      <a :href="shareLink" class="btn "><img :src="twitterBlack">Share On Twitter</a>
-      <!-- <span class="OS">
-        <a :href="`https://testnets.opensea.io/assets/${merchContract}/${merchBundleId}`">OS</a>
-        <a :href="`https://looksrare.org/collections/${merchContract}`">LR</a>
-        <a :href="`https://www.gem.xyz/collection/${merchContract}`">GEMZ</a>
-      </span> -->
+      <div class="share-btns">
+        <a href="https://opensea.io/collection/good-monkeyz-limited-editions" class="btn"><img :src="openseaLogo">View On OpenSea</a>
+        <a :href="shareLink" class="btn btn--sparkle"><img :src="twitter">Share On Twitter</a>
+      </div>
+
     </div>
     <transition name="fade">
       <div v-show="errorMessage" class="error">
@@ -53,11 +52,11 @@ import {
 import MinBanner from '@/components/MinBanner.vue';
 
 import GMSHOPJSON from '@/utils/nftShop.json';
-import monkey from "@/assets/video/mm.mp4";
+import card from "@/assets/video/mint-med.mp4";
 
-import twitterBlack from "@/assets/img/twitter-black.svg"
+import twitter from "@/assets/img/twitter.svg"
+import openseaLogo from "@/assets/img/opensea.svg"
 import divider from "@/assets/img/divider.svg"
-
 
 export default {
   transition: 'mint',
@@ -68,8 +67,9 @@ export default {
   data: () => {
     return {
       display: false,
-      monkey,
-      twitterBlack,
+      card,
+      twitter,
+      openseaLogo,
       divider,
       amountMinted: '~',
       bundlePrice: '~',
@@ -243,13 +243,28 @@ export default {
 }
 
 .video-bg {
-  position: absolute;
-  bottom: -5%;
+  /* position: absolute;
+  bottom: 0;
   left: -5%;
   transform: scale(1.4);
-  filter: grayscale(100%);
-  z-index: 0;
+  filter: grayscale(100%); */
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-90%, 50%);
+    filter: grayscale(100%);
+    z-index: 0;
+    width: 100%;
+
 }
+  @media (min-width: 700px){
+    .video-bg {
+      transform: scale(1);
+      bottom: -10%;
+      left: -5%;
+      width: 55%;
+    }
+  }
 
 .fade-bg {
   position: absolute;
@@ -278,8 +293,6 @@ export default {
   align-items: center;
 }
 
-
-
   .mint,
   .congrats {
     color: #fff;
@@ -302,7 +315,7 @@ export default {
   }
   .mint h3,
   .congrats h1 {
-    font-size: 5.4rem;
+    font-size: 2rem;
     margin: 0;
     /* // */
     opacity: 0;
@@ -344,6 +357,43 @@ export default {
       height: 1.5rem;
       margin-right: 0.5rem;
   }
+
+    .share-btns {
+      display: flex;  
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .share-btns .btn {
+      margin: 0.5rem;
+    }
+    .share-btns .btn--sparkle {
+      background-color: transparent;
+      color: #fff;
+    }
+
+  @media (min-width: 400px){ 
+      .share-btns {
+        flex-direction: row;
+      }
+      .congrats h1 {
+          font-size: 2.4rem;
+      }
+  }
+    @media (min-width: 600px){ 
+
+      .congrats h1 {
+          font-size: 3.8rem;
+      }
+  }
+  @media (min-width: 880px){ 
+      .congrats h1 {
+          font-size: 5.6rem;
+      }
+  }
+    
+
+
   @keyframes enter {
     0% {
       opacity: 0;

@@ -7,12 +7,16 @@
       <div class="splash-inner" >
 
         <div class="banner-group">
-          <span class="btn--sparkle">
+          <span v-if="!open" class="btn--sparkle">
             <span class="subtitle">GM Bundle Token</span>
             <span class="title">HOODIE + Hat + Mint Pass</span>
           </span>
+          <span v-else class="btn--sparkle">
+            <span class="subtitle">Mint in Progress</span>
+            <span class="title">GM Merch Bundle &amp; + GM Mint Pass</span>
+          </span>
           <div class="banner">
-            <span v-if="open" class="marquee">GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> GM Token <img :src="star"> </span>
+            <span v-if="open" class="marquee">START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> </span>
             <span v-else class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span>
           </div>
           <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
@@ -21,7 +25,7 @@
               <span>CONNECT WALLET TO MINT</span>
             </span>
             <nuxt-link v-else to="/mint/merch" class="btn">
-              <span>MINT GMTOKEN</span>
+              <span>MINT GM BUNDLE</span>
             </nuxt-link>
           </div>
         </div>
@@ -98,10 +102,12 @@ export default {
     }, 1000)
   },
   mounted() {
-    this.zeroWidth = this.$refs.zerozero.offsetWidth;
-    setTimeout( () => {
+    if(this.$refs.zerozero){
       this.zeroWidth = this.$refs.zerozero.offsetWidth;
-    }, 2000)
+      setTimeout( () => {
+        this.zeroWidth = this.$refs.zerozero.offsetWidth;
+      }, 2000)
+    }
   },
   methods: {
     async getAmountMinted() {
