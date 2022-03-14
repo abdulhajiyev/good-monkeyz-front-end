@@ -61,7 +61,6 @@ import {
 
 import GMSHOPJSON from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm-med.mp4";
-// import bg from "@/assets/img/hood.jpg";
 import star from "@/assets/img/star.svg";
 
 import gmWhite from "@/assets/img/gm-white.svg";
@@ -80,7 +79,6 @@ export default {
   data: () => {
     return {
       monkey,
-      // bg,
       star,
       gmOut,
       gmIn,
