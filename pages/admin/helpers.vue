@@ -6,6 +6,7 @@
             <span class="btn" @click="updateMerchItem()">Update Merch Item</span>
             <span class="btn" @click="updateURI()">updateURI</span>
             <span class="btn" @click="withdraw()">Withdraw</span>
+            <span class="btn" @click="adminMint()">adminMint</span>
         </div>
         <div class="data">
             <span class="bal">Balance: {{formatEth(bal)}}Ξ</span>
@@ -25,18 +26,11 @@
           <h2>Merch Allow List - Supabase database</h2>
             <ul>
               <li v-for="(item, index) in allowList" :key="index">
-                  {{index }}: {{item.screen_name }}: {{item.address }}:
+                  {{index }}: {{item.screen_name }}: {{item.address }}: {{getMintStatus(item.address) ? "Minted" : 'X'}}
               </li>
             </ul>
         </div>
-        <div class="allow-list">
-          <h2>Signature List -  JSON File</h2>
-            <ul>
-              <li v-for="(item, index) in allowList" :key="index">
-                  {{index }}: {{item.screen_name }}: {{item.address }}:
-              </li>
-            </ul>
-        </div>
+
       </div>
   </div>
 </template>
@@ -78,6 +72,7 @@ export default {
           }
     ],
     allowList: [],
+    mintList: [],
     }
   },
   computed: {
@@ -93,6 +88,26 @@ export default {
     },
     formatEth(bigNum) {
         return ethers.utils.formatEther(bigNum);
+    },
+    getMintStatus(address){
+      if(this.mintList){
+        const item = this.mintList.filter(ad => ad.address === address)[0];
+        if(item){
+          return item.minted
+        }
+      }
+    },
+    async adminMint() {
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
+
+      const tx =  await connectedContract.mintAdmin(
+        this.wallet,
+        0,
+        1
+      );
+      console.log(tx);
     },
     async getcontractData() {
       const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
@@ -160,9 +175,9 @@ export default {
             const tx = await connectedContract.updateMerchItem(
                     0, 
                     77,
-                    ethers.utils.parseEther('0.07'),
-                    ethers.utils.parseEther('0.007'),
-                    7,
+                    ethers.utils.parseEther('0.105'),
+                    ethers.utils.parseEther('0.000'),
+                    77,
                     true,
                     false,
                     true );
@@ -173,8 +188,26 @@ export default {
         }
      },
     async getAllowList(){
+      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
+
       const list = await (await fetch(`/.netlify/functions/allow-list`)).json()
       this.allowList = list.data;
+      console.log(this.allowList)
+      
+
+      const addressList = list.data.map( user => user.address ).filter(x => x)
+      const ids = Array.from('0'.repeat(addressList.length))
+      const balances = await connectedContract.balanceOfBatch(addressList,ids)
+      const b = balances.map( bal => ethers.utils.formatUnits(bal, 0) );
+      
+      this.mintList = addressList.map( (ad, index) => {
+        return {
+          address: ad,
+          minted: b[index] === '1'
+        }
+      })
+
     }
   },
 }
