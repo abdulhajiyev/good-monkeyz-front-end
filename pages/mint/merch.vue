@@ -313,7 +313,14 @@ export default {
     animation: enter 2s ease 1 forwards;
     animation-delay: 200ms;
   }
-  .mint h3,
+  .mint h3 {
+    font-size: 5.6rem;
+    margin: 0;
+    /* // */
+    opacity: 0;
+    animation: enter 2s ease 1 forwards;
+    animation-delay: 400ms;
+  }
   .congrats h1 {
     font-size: 2rem;
     margin: 0;
