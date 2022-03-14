@@ -12,8 +12,8 @@
         <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
         <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
         <h4 v-else>Sold Out</h4>
-        <!-- <nuxt-link to="/verify" v-if="amountMinted < 77 && !txHash && !verify" class="btn" @click="mintNft(merchBundleId)">Verify Wallet</nuxt-link> -->
-        <span v-if="amountMinted < 77 && !txHash " class="btn" @click="mintNft(merchBundleId)">Mint GM Bundle</span>
+        <nuxt-link to="/verify" v-if="amountMinted < 77 && !txHash && !verify" class="btn" @click="mintNft(merchBundleId)">Verify Wallet</nuxt-link>
+        <span v-if="amountMinted < 77 && !txHash && verify" class="btn" @click="mintNft(merchBundleId)">Mint GM Bundle</span>
         <span v-if="txHash && !minted" class="btn">
           <span class="loader"></span>
           pending

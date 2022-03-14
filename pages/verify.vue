@@ -45,7 +45,7 @@ export default {
       preCheck: false,
       monkey,
       failMessage: `We can't find your account on the allow List :(`,
-      open: false
+      open: true
     }
   },
   computed: mapState(['wallet']),

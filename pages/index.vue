@@ -85,7 +85,7 @@ export default {
       gmWhite,
       divider,
       amountMinted: '~',
-      open: false,
+      open: true,
       countdown: '',
     }
   },
