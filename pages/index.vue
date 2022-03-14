@@ -114,7 +114,8 @@ export default {
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
         const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
         this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0)
-        // this.open = merchBundle.allowMintable;
+        this.open = merchBundle.allowMintable;
+        console.log('OPEN-> ', merchBundle);
       } catch (error) {
         console.log(error)
       }
