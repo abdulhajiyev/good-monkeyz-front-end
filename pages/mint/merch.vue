@@ -7,7 +7,7 @@
       :account="wallet"
       @connect="modalActive = true" 
     />
-    <div v-if="minted" class="mint" >
+    <div v-if="!minted" class="mint" >
         <h2 >Current Price Ξ {{bundlePrice}}</h2>
         <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
         <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
