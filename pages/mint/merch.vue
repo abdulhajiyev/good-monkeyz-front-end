@@ -88,7 +88,7 @@ export default {
   created() {
     this.verify = this.$route.query.verify
     this.getcontractData();
-
+    this.checkByAddress(this.wallet);
     this.$nuxt.$on('web3-active', () => {
       console.log(this.wallet)
       this.checkByAddress(this.wallet);
