@@ -136,7 +136,7 @@ export default {
               console.log(this.signature)
               const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) ) )};
               const nftTxn = await connectedContract.mintTokenAllow(0, this.signature ,overrides)
-              nftTxn.wait();
+              nftTxn.wait(1);
               this.txHash = nftTxn.hash
               const result =  await nftTxn.wait(1);
               
