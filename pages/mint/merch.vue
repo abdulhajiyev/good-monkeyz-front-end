@@ -78,7 +78,7 @@ export default {
       txPending: false,
       merchBundleId: TOKEN_ID_MERCH_BUNDLE,
       merchContract: MERCH_DROP_CONTRACT,
-      shareLink: `https://twitter.com/share?url=https://goodmonkeyz.art&amp;text=${encodeURIComponent('Monkey Madnes')}&amp;hashtags=goodmonkeyz`,
+      shareLink: `https://twitter.com/share?text=I just minted the GM Merch Bundle&url=https://opensea.io/collection/good-monkeyz-limited-editions&hashtags=goodmonkeyz`,
       errorMessage: '',
       signature: '',
       verify: '',
