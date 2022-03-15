@@ -12,8 +12,8 @@
         <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
         <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
         <h4 v-else>Sold Out</h4>
-        <nuxt-link to="/verify" v-if="amountMinted < 77 && !txHash && !verify" class="btn" @click="mintNft(merchBundleId)">Verify Wallet</nuxt-link>
-        <span v-if="amountMinted < 77 && !txHash && verify" class="btn" @click="mintNft(merchBundleId)">Mint GM Bundle</span>
+        <!-- <nuxt-link to="/verify" v-if="amountMinted < 77 && !txHash && !verify" class="btn" @click="mintNft(merchBundleId)">Verify Wallet</nuxt-link> -->
+        <span v-if="amountMinted < 77 && !txHash " class="btn" @click="mintNft(merchBundleId)">Mint GM Bundle</span>
         <span v-if="txHash && !minted" class="btn">
           <span class="loader"></span>
           pending
@@ -86,13 +86,13 @@ export default {
   },
   computed: mapState(['wallet', 'provider']),
   created() {
-    this.verify = this.$route.query.verify
+    // this.verify = this.$route.query.verify
     this.getcontractData();
-    this.checkByAddress(this.wallet);
-    this.$nuxt.$on('web3-active', () => {
-      console.log(this.wallet)
-      this.checkByAddress(this.wallet);
-    })
+    //   this.checkByAddress(this.wallet);
+    // this.$nuxt.$on('web3-active', () => {
+    //   console.log(this.wallet)
+    //   this.checkByAddress(this.wallet);
+    // })
   },
   methods: {
     async getcontractData() {
@@ -103,7 +103,7 @@ export default {
       // const supply = ethers.utils.formatUnits(merchBundle.supply, 0);
       this.bundlePrice = ethers.utils.formatEther(merchBundle.price);
       this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0);
-    
+
     },
     async checkByAddress(address){
       console.log('CHECK', address)
@@ -117,7 +117,7 @@ export default {
     },
     async mintNft(id) {
         try {
-            await this.checkByAddress(this.wallet);
+            // await this.checkByAddress(this.wallet);
 
             const provider = this.$provider();
             const signer = provider.getSigner();
@@ -128,17 +128,18 @@ export default {
             });
 
             try {
-              console.log('SIGN', this.signature)
-              if ( !this.signature ) {
-                console.log()
-                throw new Error('Wallet is not verified');
-              }
-              console.log(this.signature)
+              // console.log('SIGN', this.signature)
+              // if ( !this.signature ) {
+              //   console.log()
+              //   throw new Error('Wallet is not verified');
+              // }
+              // console.log(this.signature)
               const overrides = { value: ethers.utils.parseEther( String( parseFloat(this.bundlePrice) ) )};
-              const nftTxn = await connectedContract.mintTokenAllow(0, this.signature ,overrides)
-              nftTxn.wait(1);
+              // const nftTxn = await connectedContract.mintTokenAllow(0, this.signature ,overrides)
+              const nftTxn = await connectedContract.mintToken(0 ,overrides)
+              nftTxn.wait(2);
               this.txHash = nftTxn.hash
-              const result =  await nftTxn.wait(1);
+              const result =  await nftTxn.wait(2);
               
               if(result.status === 1) {
                 this.minted = true;
