@@ -11,16 +11,21 @@
             <span class="subtitle">GM Bundle Token</span>
             <span class="title">HOODIE + Hat + Mint Pass</span>
           </span>
+          <span v-if="open && amountMinted < 77" class="btn--sparkle">
+            <span class="subtitle">GM Bundle Token</span>
+            <span class="title">HOODIE + Hat + Mint Pass</span>
+          </span>
           <span v-else class="btn--sparkle">
-            <span class="subtitle">Mint in Progress</span>
-            <span class="title">GM Merch Bundle &amp; + GM Mint Pass</span>
+            <span class="subtitle">Limited Edition</span>
+            <span class="title">GM Merch Bundle &amp; GM Mint Pass</span>
           </span>
           <div class="banner">
-            <span v-if="open" class="marquee">START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> </span>
-            <span v-else class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span>
+            <span v-if="open && amountMinted < 77" class="marquee">START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> </span>
+            <span v-else class="marquee">MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> </span>
+            <!-- <span v-else class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span> -->
           </div>
           <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
-          <div v-if="open">
+          <div v-if="open && amountMinted < 77">
             <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
               <span>CONNECT WALLET TO MINT</span>
             </span>
