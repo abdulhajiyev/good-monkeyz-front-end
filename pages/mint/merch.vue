@@ -8,7 +8,7 @@
       @connect="modalActive = true" 
     />
     <div v-if="!minted" class="mint" >
-        <h2 >Current Price Ξ {{bundlePrice}}</h2>
+        <h2 >Price Ξ {{bundlePrice}}</h2>
         <h3 >{{amountMinted}} <img :src="divider"> 77</h3>
         <h4 v-if="amountMinted < 77 || amountMinted == '~' ">Minted</h4>
         <h4 v-else>Sold Out</h4>
