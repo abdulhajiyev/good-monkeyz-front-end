@@ -33,6 +33,10 @@
               <span>MINT GM BUNDLE</span>
             </nuxt-link>
           </div>
+          <a href="https://opensea.io/collection/good-monkeyz-limited-editions" class="btn">
+            <img :src="openseaLogo">
+            <span>View On OpenSea</span>
+          </a>
         </div>
 
         <!-- <div class="gm-spinner">
@@ -74,6 +78,7 @@ import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
 import divider from "@/assets/img/divider.svg";
 
+import openseaLogo from "@/assets/img/opensea.svg"
 
 export default {
   transition: 'index',
@@ -92,6 +97,7 @@ export default {
       amountMinted: '~',
       open: true,
       countdown: '',
+      openseaLogo
     }
   },
   computed: mapState(['wallet']),
@@ -375,6 +381,19 @@ export default {
     text-align: right;
   }
 
+  .btn img {
+      height: 1.5rem;
+      margin-right: 0.5rem;
+      z-index: 1;
+  }
+  .btn {
+    align-items: center;
+    justify-content: center;
+    display: inline-flex;
+  }
+  .btn span {
+    z-index: 1;
+  }
 @media (min-width: 700px){
   .gm-spinner {
     position: absolute;
