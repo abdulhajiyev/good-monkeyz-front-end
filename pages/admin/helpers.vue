@@ -9,7 +9,11 @@
             <span class="btn" @click="adminMint()">adminMint</span>
         </div>
         <div class="data">
-            <span class="bal">Balance: {{formatEth(bal)}}Ξ</span>
+            <div>
+              <span class="bal">Contract: {{formatEth(bal)}}Ξ</span>
+              <span class="bal">Deployer: {{formatEth(deployerBal)}}Ξ</span>
+              <span class="bal">Vault: {{formatEth(vaultBal)}}Ξ</span>
+            </div>
             <h2>Merch Drop Contract</h2>
             <h3>{{merchContract}} [{{networkName}}]</h3>
             <h3></h3>
@@ -58,6 +62,8 @@ export default {
   data: () => {
     return {
       bal: 0,
+      deployerBal: 0,
+      vaultBal: 0,
       merchCount: 0,
       merchBundleId: TOKEN_ID_MERCH_BUNDLE,
       merchContract: MERCH_DROP_CONTRACT,
@@ -87,7 +93,7 @@ export default {
         return (this.merch[id].allowMintable ? 'ALLOW ' : '<s>ALLOW</s> ') + (this.merch[id].publicMintable ? 'PUBLIC ' : '<s>PUBLIC</s>')
     },
     formatEth(bigNum) {
-        return ethers.utils.formatEther(bigNum);
+        return parseFloat(ethers.utils.formatEther(bigNum)).toFixed(2);
     },
     getMintStatus(address){
       if(this.mintList){
@@ -114,6 +120,9 @@ export default {
       const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
       this.merchCount =  await connectedContract.getMerchCount();
       this.bal = await provider.getBalance(connectedContract.address);
+      this.deployerBal = await provider.getBalance('0x179a304E5E87dA8D059fC65bE11d7635b4Ea9f69');
+      this.vaultBal = await provider.getBalance('goodmonkeyz.eth');
+
         for (let index = 0; index < this.merchCount; index++) {
             this.merch.push(await connectedContract.merch(index))
         }
@@ -179,7 +188,7 @@ export default {
                     ethers.utils.parseEther('0.000'),
                     77,
                     true,
-                    false,
+                    true,
                     true );
             console.log(tx)
 
