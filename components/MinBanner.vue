@@ -1,12 +1,17 @@
 <template>
-    <div class="navbar">
+    <div class="navbar" :class="{ 'navbar--black': color === 'black' }"> 
         <div class="banner">
-        <nuxt-link to="/"><img class="gm-white" :src="gmWhite" ></nuxt-link>
+        <nuxt-link to="/">
+        <img v-if="color === 'black'" class="gm-white" :src="logoBlack" >
+            <img v-else class="gm-white" :src="gmWhite" >
+        </nuxt-link>
 
             <nav v-if="active">
-                <nuxt-link to="/wen">wen monkeyz</nuxt-link>
-                <nuxt-link to="/faq">FAQ</nuxt-link>
+                <nuxt-link :to="{path: '/', hash: 'about'}" >About</nuxt-link> 
+                <nuxt-link :to="{path: '/', hash: 'faq'}" >FAQ</nuxt-link> 
                 <nuxt-link to="/early">Early Access</nuxt-link>
+                <nuxt-link :to="{path: '/', hash: 'team'}" >FAQ</nuxt-link> 
+                <span @click="goToMerch()" >Merch</span>
             </nav>
 
             <div v-if="!wallet" class="social">
@@ -34,9 +39,10 @@
     import discord from "@/assets/img/discord.svg"
     import insta from "@/assets/img/insta.svg"
     import gmWhite from "@/assets/img/gm-white.svg"
+    
 
     export default {
-        props: ['account', 'active'],
+        props: ['account', 'active', 'color'],
         data:  () => {
             return {
                 logoBlack,
@@ -48,6 +54,15 @@
             }
         },
         computed: mapState(['wallet']),
+        methods: {
+            goToMerch(){
+                if(this.wallet){
+                    this.$router.push('/merch/redeem');
+                } else {
+                    this.$nuxt.$emit('connect', '/merch/redeem')
+                }
+            },
+        }
     }
 </script>
 
@@ -57,15 +72,21 @@
         display: flex;
         justify-content: center;
     }
-    nav a {
+    nav a,
+    nav span {
         color: #fff;
         text-transform: uppercase;
         padding: 1rem 1.5rem;
         text-decoration: none;
         font-size: 0.825rem;
+        cursor: pointer;
     }
     a.nuxt-link-active {
         color: #fff;
+    }
+    .navbar--black a,
+    .navbar--black span {
+        color: #000;   
     }
 
     .banner {

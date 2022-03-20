@@ -1,84 +1,129 @@
 <template>
   <div class="index">
-    <MinBanner :account="wallet" :active="false" />
     <div class="splash">
+      <div class="banner banner--top">
+        <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
+      </div>
+      <div class="nav">  
+        <MinBanner :account="wallet" :active="true" />
+      </div>
       <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
       <div class="fade-bg"></div> 
-      <div class="splash-inner" >
-
-        <div class="banner-group">
-          <span v-if="!open" class="btn--sparkle">
-            <span class="subtitle">GM Bundle Token</span>
-            <span class="title">HOODIE + Hat + Mint Pass</span>
-          </span>
-          <span v-if="open && amountMinted < 77" class="btn--sparkle">
-            <span class="subtitle">GM Bundle Token</span>
-            <span class="title">HOODIE + Hat + Mint Pass</span>
-          </span>
-          <span v-else class="btn--sparkle">
-            <span class="subtitle">Limited Edition</span>
-            <span class="title">GM Merch Bundle &amp; GM Mint Pass</span>
-          </span>
-          <div class="banner">
-            <span v-if="open && amountMinted < 77" class="marquee">START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> </span>
-            <span v-else class="marquee">MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> </span>
-            <!-- <span v-else class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span> -->
-          </div>
-          <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
-          <div v-if="open && amountMinted < 77">
-            <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
-              <span>CONNECT WALLET TO MINT</span>
-            </span>
-            <nuxt-link v-else to="/mint/merch" class="btn">
-              <span>MINT GM BUNDLE</span>
-            </nuxt-link>
-          </div>
-          <a href="https://opensea.io/collection/good-monkeyz-limited-editions" class="btn">
-            <img :src="openseaLogo">
-            <span>View On OpenSea</span>
-          </a>
+      <div class="banner banner--bottom">
+        <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
+      </div>
+    </div>
+    <div class="monkeyz" id="about">
+      <div class="fade-bg fade--monkey"></div> 
+      <div class="lead">
+        <h2>Good Monkeyz are a collection of 10,000 generated NFTs living on the Ethereum blockchain</h2>
+      </div>
+      <div></div>
+      <div class="monkeyz-scroll">
+        <div class="m-scroll m-scroll--1">
+          <img :src="m1" ><img :src="m1" ><img :src="m1" >
         </div>
+        <div class="m-scroll m-scroll--2">
+          <img :src="m2" ><img :src="m2" ><img :src="m2" >
+        </div>
+        <div class="m-scroll m-scroll--3">
+          <img :src="m3" ><img :src="m3" ><img :src="m3" >
+        </div>
+        <div class="m-scroll m-scroll--4">
+          <img :src="m4" ><img :src="m4" ><img :src="m4" >
+        </div>
+      </div>
+    </div>
+  
 
-        <!-- <div class="gm-spinner">
-            <img class="gm-in" :src="gmIn">
-            <img class="gm-out" :src="gmOut">
-        </div> -->
-
-        <div class="counter">
-          <h3 v-if="open">{{amountMinted}} <img :src="divider"> 77</h3>
-          <h3 v-else> ~ <img :src="divider"> 77</h3>
-          <h4>Claimed</h4>
+    <div class="faq" id="faq">
+      <h2>FAQ</h2>
+      <div class="faq-list">
+        <div @click="openfaq(item.id)" class="faq-list__item" v-for="item in faq" :key="item.id">
+          <h3 class="faq-item__question">{{item.q}}</h3>
+          <span :class="{ active: item.active }" class="faq-item__close">&times;</span>
+            <p class="faq-item__answer">
+              {{item.a}}
+            </p>
         </div>
       </div>
     </div>
 
+    <div class="banner banner--middle">
+      <span class="marquee">MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ</span>
+    </div>
+
+
+    <div class="team" id="team">
+      <div class="monkey">
+        <div class="monkey__avatar">
+            <img :src="monkey1" >
+        </div>
+        <div class="monkey__info">
+            <h3>CHARLESP</h3>
+            <h4>CREATIVE</h4>
+            <h5>@CHARLESPATTSON</h5>
+        </div>
+      </div>
+      <div class="monkey">
+        <div class="monkey__info monkey__info--right">
+            <h3>SAMMYB</h3>
+            <h4>DEVELOPMENT</h4>
+            <h5>@SAM_BILLINGHAM</h5>
+        </div>
+        <div class="monkey__avatar">
+            <img :src="monkey2" >
+        </div>
+      </div>
+       <div class="monkey">
+        <div class="monkey__avatar">
+            <img :src="monkey3" >
+        </div>
+        <div class="monkey__info">
+            <h3>monkey2,</h3>
+            <h4>COMMUNITY</h4>
+            <h5>@JULIA91990</h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="good-things">
+      <p>GOOD THINGS COME TO GOOD MONKEYZ WHO WAIT. COMING APRIL 2022.</p>
+    </div>
+    
+    <div class="gm-full">
+        
+        <div class="gm-spinner">
+          <img class="gm-in" :src="gmIn">
+          <img class="gm-out" :src="gmOut">
+        </div>
+
+        <div class="spotlight spotlight--a"></div>
+        <div class="spotlight spotlight--b"></div>
+        <div class="spotlight spotlight--c"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { ethers } from 'ethers';
 
 import MinBanner from '@/components/MinBanner.vue';
-
-import { 
-  MERCH_DROP_CONTRACT,
-  INFURA_PROJECT_ID,
-  NETWORK_NAME,
-  TOKEN_ID_MERCH_BUNDLE 
-} from '@/utils/constants';
-
-import GMSHOPJSON from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm-med.mp4";
-import star from "@/assets/img/star.svg";
+import divider from "@/assets/img/divider.svg";
+import star from "@/assets/img/star-black.svg";
 
-import gmWhite from "@/assets/img/gm-white.svg";
+import m1 from "@/assets/img/monkey-group-1.png";
+import m2 from "@/assets/img/monkey-group-2.png";
+import m3 from "@/assets/img/monkey-group-3.png";
+import m4 from "@/assets/img/monkey-group-4.png";
 
+import monkey1 from "@/assets/img/monkey-1.png";
+import monkey2 from "@/assets/img/monkey-2.png";
+import monkey3 from "@/assets/img/monkey-3.png";
+// import gmFull from '@/assets/img/gm-full.svg';
 import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
-import divider from "@/assets/img/divider.svg";
-
-import openseaLogo from "@/assets/img/opensea.svg"
 
 export default {
   transition: 'index',
@@ -89,88 +134,90 @@ export default {
   data: () => {
     return {
       monkey,
+      divider,
       star,
+      m1,m2,m3,m4,
+      faq: [
+        {
+          id: 0,
+          q: 'Mint Price?',
+          a: '0.077 ETH',
+          active: false,
+        },
+        {
+          id: 1,
+          q: 'Mint Date',
+          a: '14th April LFG!',
+          active: false,
+        },
+        {
+          id: 2,
+          q: 'Wen Merch? How merch?',
+          a: 'Buy a token during the limted edition mint - or on the secondary market.',
+          active: false,
+        },
+        {
+          id: 3,
+          q: 'Whats in the Merch Bundle',
+          a: '1 Hoodie, 1 cap or Beanie, Sticker Pack, 1 Mint Pass NFT',
+          active: false,
+        },
+        {
+          id: 4,
+          q: 'What is the mint pass',
+          a: 'Mint passes can be exchanged for 1 Monkey for 0ETH Fee - will still require gas',
+          active: false,
+        },
+      ],
+      monkey1,
+      monkey2,
+      monkey3,
+      // gmFull,
       gmOut,
       gmIn,
-      gmWhite,
-      divider,
-      amountMinted: '~',
-      open: true,
-      countdown: '',
-      openseaLogo
+      
     }
   },
   computed: mapState(['wallet']),
   created() {
-    this.getAmountMinted();
-    this.countdownF();
-    
-    setInterval(()=> {
-      this.countdownF();
-      
-    }, 1000)
-  },
-  mounted() {
-    if(!this.open){
-      this.zeroWidth = this.$refs.zerozero.offsetWidth;
-      setTimeout( () => {
-        this.zeroWidth = this.$refs.zerozero.offsetWidth;
-      }, 2000)
-    }
   },
   methods: {
-    async getAmountMinted() {
-      try {
-        const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-        const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
-        this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0)
-        this.open = merchBundle.allowMintable;
-        console.log('OPEN-> ', merchBundle);
-      } catch (error) {
-        console.log(error)
-      }
+    openfaq(id){
+      this.faq[id].active = !this.faq[id].active;
     },
-    countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
-      const now = new Date().getTime();
-      const distance = countDownDate - now;
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((distance % (1000 * 60)) / (1000) );
-
-      if(seconds.toString().length === 1) {
-        seconds = `0${seconds}`
-      }
-
-      this.countdown = `${days}D ${hours}H ${minutes}M <span class="seconds" style="width: ${this.zeroWidth}px; " ">${seconds}</span>S`;
-      },
   }
 }
 </script>
 
 <style scoped>
+.index-enter-active, .index-leave-active { 
+  transition: opacity 0.7s, transform .5s; 
+}
+.index-enter, .index-leave-active { 
+  opacity: 0;
+}
   .index {
     background: #000;
+    /* width: 100%;
+    display: flex;
+    justify-content: space-between;
+    min-height: 100vh; */
+    overflow: hidden;
   }
 
   .video-bg {
     position: absolute;
-    bottom: 50%;
+    top: 50%;
     left: 50%;
-    transform: translate(-90%, 50%);
-    filter: grayscale(100%);
+    transform: translate(-50%, -50%);
+    filter: grayscale(30%);
     z-index: 0;
     width: 100%;
+    /* transform: scale(1.4); */
   }
   @media (min-width: 700px){
     .video-bg {
-      transform: scale(1.4);
-      bottom: -10%;
-      left: -10%;
-      width: 55%;
+      
     }
   }
   .fade-bg {
@@ -179,120 +226,276 @@ export default {
     width: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(270deg, #000000 47.4%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(180deg, #000000 12.4%, rgba(0, 0, 0, 0) 100%);
     z-index: 0;
   }
-
-  .index {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    min-height: 100vh;
-    overflow: hidden;
+  .fade--monkey {
+    background: linear-gradient(210deg, rgba(0,0,0,0.8) 43.4%, rgba(0, 0, 0, 0) 100%);
+    z-index: 1;
   }
 
   .splash {
-    padding: 1rem;
-    border: 1rem #fff solid;
     min-height: 100vh;
     width: 100%;
     position: relative;
     overflow: hidden;
+    padding-top: 3rem;
   }
 
-  .splash-inner {
-    min-height: 100%;
-    width: 100%;
-    text-align: center;
+    .banner {
+      width: 100%;
+      z-index: 1;
+      text-transform: uppercase;
+      font-weight: 900;
+      font-size: 3.3rem;
+      white-space: nowrap;
+      pointer-events: none;
+      position: absolute;
+      background: #fff;
+    }
+    .banner--top {
+      top: 0;
+    }
+    .banner--bottom {
+      bottom: 0;
+    }
+    .marquee {
+      display: block;
+      will-change: transform;
+      line-height: 1;
+      animation: marquee 60s linear infinite;
+    }
+    .marquee img{
+      height: 2.4rem;
+    }
+  .nav {
+    position: relative;
   }
 
-  .banner-group {
-    color: #fff;
-    text-align: center;
-    
+  .monkeyz {
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
   }
-
-  .banner-group h2 {
-    text-align: center;
-    font-size: 0.625rem;
-    letter-spacing: 0.4em;
-    
-  }
-
-  .banner-group p {
-    line-height: 2;
-    font-family: Helvetica, sans-serif;
-    font-weight: 700;
-    margin-bottom: 2rem;
+  .lead {
+    max-width: 80%;
+    margin: 0 auto;
     position: relative;
     z-index: 1;
   }
 
-  .banner {
-    width: 100%;
-    z-index: 1;
-    text-transform: uppercase;
+  h2  {
     font-weight: 900;
-    font-size: 9rem;
-    white-space: nowrap;
-    pointer-events: none;
+    font-size: 3.6rem;
+    color: #fff;
+  }
+  .m-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0.75rem 0 ;
+    animation: scroll 50s ease-in-out alternate infinite;
+  }
+  .m-scroll img {
+    max-height: 8rem;
+    display: inline;
+  }
+  .m-scroll--1,
+  .m-scroll--3 {
+    animation: scroll 50s ease-in-out alternate-reverse infinite;
   }
 
-@media (max-width: 700px){
-  .banner-group {
-    padding-top: 8rem ;
-  }
-  .banner {
-    font-size: 3.6rem;
-    padding: 2rem 0;
-  }
-  .banner img {
-    max-height: 2.4rem;
-  }
-  .banner-group p {
-    font-size: 0.85rem;
-    max-width: 90%;
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+
+  .faq {
+    max-width: 80%;
     margin: 0 auto;
+  }
+
+  .faq-list  {
+
+  }
+
+  .faq-list__item {
+    padding: 1.5rem 2rem;
+    background: #2B2B2B;
+    position: relative;
+    margin-bottom: 2rem;
+    transition: ease-in-out 300ms;
+  }
+  .faq-list__item:last-of-type {
     margin-bottom: 0;
   }
-}
-@media (min-width: 700px){
 
-  .banner-group {
-    width: 100%;
+  .faq-item__close {
     position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
+    font-size: 3rem;
+    color: #fff;
+    top: 1.4rem;
+    right: 1.5rem;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+    transform: rotate(135deg);
+    transition: ease-in-out 300ms;
   }
-}
+  .faq-item__close.active {
+     transform: rotate(90deg);
+  }
 
-.marquee {
-  display: block;
-  will-change: transform;
-  line-height: 1;
-  animation: marquee 60s linear infinite;
-}
+  .faq-item__question {
+    background: #2B2B2B;
+    color: #fff;
+    font-size: 2rem;
+    margin: 0;
+  }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
+  .faq-item__answer {
+    background: #2B2B2B;
+    color: #fff;
+  }
+  .faq-item__answer.active {
+    display: block;
+  }
 
-@keyframes spin {
-  from { transform: rotate(0deg) }
-  to { transform: rotate(360deg) }
+  .banner--middle {
+    color: #fff;
+    padding: 4rem 0;
+    background: #000;
+    font-size: 6rem;
+    position: static;
+  } 
+
+  .team {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+  .monkey {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10rem;
+  }
+  .monkey:last-of-type {
+     /* margin-bottom: 0; */
+     padding-bottom: 8rem;
+  }
+  .monkey__avatar {
+    max-width: 100%;
+    flex-basis: 40%;
+  }
+  .monkey__avatar img {
+    max-width: 100%;
+  }
+  .monkey__info {
+    flex-basis: 60%;
+  }
+  .monkey__info h3{
+    color: #fff;
+    font-size: 6rem;
+    margin: 0;
+    line-height: 1;
+    transform: translateX(-25%);
+    margin-top: 2rem;
+  }
+  .monkey__info h4 {
+    color: rgba(255,255,255,0.6);
+    font-size: 2.6rem;
+    margin: 0;
+    line-height: 1;
+    margin-left: 1rem;
+  }
+  .monkey__info h5 {
+    color: rgba(255,255,255,0.3);
+    font-size: 2.6rem;
+    margin: 0;
+    line-height: 1;
+    margin-left: 1rem;
+  }
+  .monkey__info--right h3 {
+    transform: translateX(25%);
+    text-align: right;
+  }
+  .monkey__info--right h4,
+  .monkey__info--right h5 {
+    margin-left: 0;
+    margin-right: 1rem;
+    text-align: right;
+  }
+
+
+  /*  */
+  .good-things {
+    max-width: 80%;
+    margin: 0 auto;
+    font-size: 8rem;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .gm-full {
+    text-align: center;
+    padding-bottom: 20rem;
+    position: relative;
+    /* overflow: hidden; */
+  }
+  /* .gm-full img {
+    position: relative;
+    z-index: 1;
+  } */
+  .spotlight {
+    width: 65%;
+    height: 550px;
+    opacity: 0.6;
+    filter: blur(100px);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    border-radius: 50%;
+  }
+
+  .spotlight--a {
+    background: #FF7A41;
+  }
+
+  .spotlight--b {
+    background: #C509DD;
+    width: 20%;
+    left: 20%;
+    bottom: -40%;
+  }
+  .spotlight--c {
+    background: #03A3D6;
+    left: auto;
+    right: -10%;
+    bottom: -20%;
+  }
+
+
+  @keyframes spin {
+  from { transform: rotate(0deg) translate(-50%, -50%)}
+  to { transform: rotate(360deg) translate(-50%, -50%)}
 }
 
 .gm-spinner {
   display: inline-block;
-  transform: scale(0.6);
 }
-
 
 .gm-out {
   animation: spin 20s linear infinite;
-  transform-origin: 50% 50% ;
+  transform-origin: 0% 0% ;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .gm-in {
@@ -300,115 +503,8 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); 
+  z-index: 1;
 }
-
-.btn {
-  padding: 1rem;
-  border-radius: 1rem;
-  text-transform: uppercase;
-  background-color: #fff;
-  color: #000;
-  position: relative;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 0.75rem;
-  overflow: hidden;
-  display: inline-block ;
-  transform: translateZ(0);
-}
-.btn span {
-  position: relative;
-}
-.btn::before {
-  content: '';
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  width: 400px;
-  height: 300px;
-  z-index: 0;
-  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
-  animation: go 3.8s infinite alternate;
-  opacity: 0.9;
-  filter: blur(24px);
-}
-
-
-@keyframes go {
-  0% {
-    transform: translate(-300px, 100px);
-  }
-  20% {
-    transform: translate(-300px, 100px);
-  }
-  50% {
-    transform: translate(-300px, 100px);
-  }
-  90% {
-    transform: translate(0px, -300px);
-  }
-  100% {
-    transform: translate(0px, -300px);
-  }
-}
-
-  .counter {
-    color: #fff;
-    position: relative;
-    z-index: 1;
-  }
-
-  .counter h3 {
-    font-size: 2.6rem;
-    margin: 0;
-    
-  }
-  .counter h3 img {
-    height: 3.3rem;
-    transform: translateY(0.8rem);
-  }
-  .counter h4 {
-      text-align: center;
-      font-size: 0.625rem;
-     letter-spacing: 0.4em;
-     text-transform: uppercase;
-  }
-  .zerozero {
-    opacity: 0;
-  }
-  .marquee >>> .seconds {
-    display: inline-block;
-    text-align: right;
-  }
-
-  .btn img {
-      height: 1.5rem;
-      margin-right: 0.5rem;
-      z-index: 1;
-  }
-  .btn {
-    align-items: center;
-    justify-content: center;
-    display: inline-flex;
-  }
-  .btn span {
-    z-index: 1;
-  }
-@media (min-width: 700px){
-  .gm-spinner {
-    position: absolute;
-    display: inline-block;
-    left: -1.5rem;
-    bottom: -1.5rem;
-    transform: scale(0.9);
-  }
-  .counter {
-    position: absolute;
-    bottom: 2rem;
-    right: 3rem;
-  }
-}
-
 </style>
 
 

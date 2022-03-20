@@ -17,6 +17,7 @@ body {
 html {
     box-sizing: border-box;
     font-family: 'HelveticaNowDisplayXBlk', Arial, Helvetica, sans-serif;
+    scroll-behavior: smooth;
 }
 
 .btn--sparkle {
