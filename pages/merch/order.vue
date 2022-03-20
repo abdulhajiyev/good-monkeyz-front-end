@@ -2,14 +2,8 @@
   <div class="shop">
     <MinBanner :account="wallet" :active="true" color="black" />
     <div class="heading">
-        <h1>You're in! LFG </h1> 
-        <h2>You are eligible for the Good Monkeyz merch drop</h2>
-    </div>
-    <div class="grid">
-      <div class="item">
-        <video muted autoplay loop :src="monkey"></video>
-        <nuxt-link to="/merch/options" class="btn">Redeem Item</nuxt-link>
-      </div>
+        <h1>Congratulations!</h1> 
+        <h2>Order</h2>
     </div>
   </div>
 </template>
@@ -17,6 +11,7 @@
 <script>
 import { ethers } from 'ethers';
 import { mapState} from 'vuex'
+import JSConfetti from 'js-confetti'
 
 import MinBanner from '@/components/MinBanner.vue';
 
@@ -34,7 +29,7 @@ import {
 
 export default {
   transition: 'scale',
-  name: 'Redeem',
+  name: 'Complete',
   components: {
     MinBanner,
   },
@@ -42,10 +37,13 @@ export default {
     return {
       monkey,
       balance: '',
+      orderNumber: '',
     }
   },
   computed: mapState(['wallet']),
   async created() {
+    this.orderNumber = this.$route.query.order
+    this.fireConfetti()
     console.log( await this.getBalance() )
   },
   methods: {
@@ -62,14 +60,47 @@ export default {
           return 0;
         }
     },
+         fireConfetti(){
+       const jsConfetti = new JSConfetti()
+        jsConfetti.addConfetti({
+          confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+          confettiRadius: 8,
+        });
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 700)
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 1400)
+
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 2000)
+
+        setTimeout( ()=> {
+          jsConfetti.addConfetti({
+            confettiColors: ['#FC9D79', '#D91EA4', '#A31FC5', '#7651C3', '#2CDAB0', '#FFF6B4'],
+            confettiRadius: 8,
+          });
+        }, 2400)
+     }
   },
-  middleware({ redirect }) {
-    const balance = 1
-    console.log('BALANCE: %s', balance)
-    if (balance < 1) {
-      return redirect('/ngmi');
-    }
-  }
+  // middleware({ redirect }) {
+  //   const balance = 1
+  //   console.log('BALANCE: %s', balance)
+  //   if (balance < 1) {
+  //     return redirect('/ngmi');
+  //   }
+  // }
 
 }
 </script>
@@ -138,5 +169,3 @@ main {
 }
 
 </style>
-
-

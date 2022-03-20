@@ -111,7 +111,7 @@ export default {
       const tx =  await connectedContract.mintAdmin(
         this.wallet,
         0,
-        1
+        10
       );
       console.log(tx);
     },
