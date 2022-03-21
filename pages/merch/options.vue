@@ -57,6 +57,7 @@ import {
 export default {
   transition: 'scale',
   name: 'Redeem',
+  middleware: 'merchOwner',
   components: {
     MinBanner,
   },
@@ -135,14 +136,6 @@ export default {
         }
     },
   },
-  middleware({ redirect }) {
-    const balance = 1
-    console.log('BALANCE: %s', balance)
-    if (balance < 1) {
-      return redirect('/ngmi');
-    }
-  }
-
 }
 </script>
 

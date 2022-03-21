@@ -15,62 +15,21 @@
 </template>
 
 <script>
-import { ethers } from 'ethers';
-import { mapState} from 'vuex'
-
 import MinBanner from '@/components/MinBanner.vue';
-
 import monkey from "@/assets/video/mm.mp4";
-
-import GMSHOPJSON from '@/utils/nftShop.json';
-
-import { 
-  MERCH_DROP_CONTRACT,
-  INFURA_PROJECT_ID,
-  NETWORK_NAME,
-  TOKEN_ID_MERCH_BUNDLE 
-} from '@/utils/constants';
-
 
 export default {
   transition: 'scale',
   name: 'Redeem',
+  middleware: 'merchOwner',
   components: {
     MinBanner,
   },
   data: () => {
     return {
       monkey,
-      balance: '',
     }
   },
-  computed: mapState(['wallet']),
-  async created() {
-    console.log( await this.getBalance() )
-  },
-  methods: {
-    async getBalance() {
-      
-     try {
-          const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-          const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-          const bal = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
-          console.log('conected bal:', bal);
-          return ethers.utils.formatUnits(bal, 0)
-        } catch(error){
-            console.error(error);
-          return 0;
-        }
-    },
-  },
-  middleware({ redirect }) {
-    const balance = 1
-    console.log('BALANCE: %s', balance)
-    if (balance < 1) {
-      return redirect('/ngmi');
-    }
-  }
-
 }
 </script>
 
