@@ -10,7 +10,7 @@
                 <nuxt-link :to="{path: '/', hash: 'about'}" >About</nuxt-link> 
                 <nuxt-link :to="{path: '/', hash: 'faq'}" >FAQ</nuxt-link> 
                 <nuxt-link to="/early">Early Access</nuxt-link>
-                <nuxt-link :to="{path: '/', hash: 'team'}" >FAQ</nuxt-link> 
+                <nuxt-link :to="{path: '/', hash: 'team'}" >Team</nuxt-link> 
                 <span @click="goToMerch()" >Merch</span>
             </nav>
 
@@ -133,6 +133,9 @@
         font-size: 0.725rem;
         font-family: 'Inconsolata', 'Courier New', Courier, monospace;
         color: #000;
+    }
+    .navbar--black .user {
+        background: #f1f1f1;
     }
 
     .avatar {

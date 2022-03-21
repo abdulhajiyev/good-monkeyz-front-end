@@ -10,21 +10,21 @@
             <div class="merch-options__form">
                 <label>Select your size</label>
                 <div class="select-btns">
-                    <span>Small</span>
-                    <span>Medium</span>
-                    <span>Large</span>
-                    <span>XLarge</span>
+                    <span @click="size = 's'" :class="{'active' : size === 's'}">Small</span>
+                    <span @click="size = 'm'" :class="{'active' : size === 'm'}">Medium</span>
+                    <span @click="size = 'l'" :class="{'active' : size === 'l'}">Large</span>
+                    <span @click="size = 'xl'" :class="{'active' : size === 'xl'}">XLarge</span>
                 </div>
                 <label>Select your choice</label>
                 <div class="select-btns select-btns--2 ">
-                    <span>Cap</span>
-                    <span>Beanie</span>
+                    <span @click="choice = 'cap'" :class="{'active' : choice === 'cap'}">Cap</span>
+                    <span @click="choice = 'beanie'" :class="{'active' : choice === 'beanie'}">Beanie</span>
                 </div>
                 <label>Delivery Address</label>
                 <div>
-                    <input type="text" placeholder="Full Name">
-                    <input type="text" placeholder="Address">
-                    <input type="email" placeholder="Email">
+                    <input v-model="name" type="text" placeholder="Name">
+                    <input v-model="address" type="text" placeholder="Shipping Address">
+                    <input v-model="email" type="email" placeholder="Email">
                 </div>
                 <span class="btn" @click="ordeMerch()">Complete</span>
             </div>
@@ -64,7 +64,11 @@ export default {
   data: () => {
     return {
       monkey,
-      balance: '',
+      size: 'm',
+      choice: 'cap',
+      name: '',
+      address: '',
+      email: '',
     }
   },
   computed: mapState(['wallet']),
@@ -83,6 +87,32 @@ export default {
           return 0;
         }
     },
+    async insertMerchOrder(message, signedMessage) {
+      const response = await fetch('/.netlify/functions/insert-order', {
+          method: 'POST',
+          cache: 'no-cache',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            message,
+            signedMessage
+          }) 
+      })
+      return await response.json();
+    },
+    async confirmMerchOrder(message, signedMessage, txHash) {
+      const response = await fetch('/.netlify/functions/verify-order', {
+          method: 'POST', 
+          cache: 'no-cache',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            message,
+            signedMessage,
+            txHash,
+          }) 
+      });
+
+      return await response.json(); 
+    },
     async ordeMerch() {
 
         const provider = this.$provider();
@@ -94,36 +124,28 @@ export default {
         // });
 
         try {
-            const message = `
-                    Message: SAM - UK
-                    Wallet address:
-                        ${this.wallet}
-                `
+            const message = `Merch Bundle: 
+  Size: ${this.size.toUpperCase()}
+  Choice: ${this.choice.toUpperCase()}
+  Name: ${this.name}
+  Address: ${this.address}
+  Email: ${this.email}
+Wallet address:
+${this.wallet}`
                 
             const signedMessage =  await signer.signMessage(message);
-            // send to db one -> 
+            const order = await this.insertMerchOrder(message, signedMessage)
+            console.log(order)
+            if (!order.success) throw new Error('Order not Initiated')
             const burn = await connectedContract.burnToken(this.wallet, 0);
-            const result = await burn.wait();
-            const txHash = result.transactionHash;
+            const burnTx = await burn.wait();
 
-            if(result.status === 1) {
-                console.log('success: ', txHash)
-                const data = {
-                    message,
-                    signedMessage,
-                    txHash,
-                }
-                const response = await fetch('/.netlify/functions/verify-burn', {
-                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data) // body data type must match "Content-Type" header
-                });
-
-                const json = await response.json(); // parses JSON response into native JavaScript objects
-                console.log(json)
-                if (json.success) {
-                    const orderNumber = 1
+            if(burnTx.status === 1) {
+              
+                const verifiedOrder = await this.confirmMerchOrder(message, signedMessage, burnTx.transactionHash)
+                console.log(verifiedOrder)
+                if (verifiedOrder.success) {
+                    const orderNumber = verifiedOrder.orderNumber
                     this.$router.push(`/merch/order?order=${orderNumber}`)
                 } else {
                     throw new Error('TX Failed');
@@ -171,7 +193,7 @@ export default {
 
 .mech-options {
     flex-basis: 50%;
-    padding: 2rem;
+    padding: 2rem 2rem 0 2rem;
 }
 .merch-showcase {
     flex-basis: 50%;
@@ -189,9 +211,13 @@ export default {
     border: solid 1px #000;
     font-family: 'Helvetica';
     border-radius: 0.5rem;
-        flex-basis: 24%;
+    flex-basis: 24%;
     text-align: center;
     cursor: pointer;
+}
+.select-btns span.active {
+  background: #000;
+  color: #fff;
 }
 .select-btns--2 span{
     flex-basis: 49.33%;

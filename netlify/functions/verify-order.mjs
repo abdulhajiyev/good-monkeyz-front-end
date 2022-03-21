@@ -27,6 +27,8 @@ exports.handler = async (event, context, callback) => {
     const message = body.message;
     const signedMessage = body.signedMessage;
     const burnTxHash = body.txHash;
+    console.log(body)
+    
 
     const signerAddress = ethers.utils.verifyMessage(message, signedMessage);
     const addressFromMessage = message.replace(/\n|\r/g, "").split("Wallet address:").pop().trim()
@@ -38,30 +40,46 @@ exports.handler = async (event, context, callback) => {
     const abi = [ "event GmBurned(address _address, uint256 _id)" ];
     const iface = new ethers.utils.Interface(abi);
     const log = iface.parseLog(receipt.logs[1]); 
-    const ad = log.args[0] //ad
+    const addressFromEvent = log.args[0] //ad
     const id = log.args[1] //id
     const name = log.name // event name
 
     
-    console.log(ad)
     console.log('id: ', id)
     console.log('FUNC: ', name)
 
     console.log(signerAddress.toLowerCase())
-    console.log(signerAddress.toLowerCase())
-    console.log(signerAddress.toLowerCase())
-    if(signerAddress.toLowerCase() === addressFromMessage.toLowerCase() && signerAddress.toLowerCase() === addressFromMessage.toLowerCase()){
+    console.log(addressFromMessage.toLowerCase())
+    console.log(addressFromEvent.toLowerCase())
+
+    if(signerAddress.toLowerCase() === addressFromMessage.toLowerCase() && signerAddress.toLowerCase() === addressFromEvent.toLowerCase()){
       console.log('match')
-    } else {
-      console.log('no match')
-      return {
-        statusCode: 200,
-        body: JSON.stringify({success: false})
+
+      const verifiedOrder = await supabase
+        .from('merch_orders')
+        .update({ 
+            verified: true
+        })
+        .ilike('address', signerAddress)
+        .limit(1)
+        .single()
+
+
+      if(verifiedOrder.data){
+        console.log('database update', verifiedOrder.data)
+        return {
+          statusCode: 200,
+          body: JSON.stringify(
+            {
+              success: true,
+              orderNumber: verifiedOrder.data.id
+            })
+        }
       }
     }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({success: true})
-  }
+    return {
+      statusCode: 200,
+      body: JSON.stringify({success: false})
+    }
 }

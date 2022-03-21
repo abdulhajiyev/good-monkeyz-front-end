@@ -1,31 +1,24 @@
 <template>
   <div class="shop">
-    <MinBanner :account="wallet" :active="true" color="black" />
+    <MinBanner :account="wallet" :active="true" color="black" class="nav" />
     <div class="heading">
-        <h1>Congratulations!</h1> 
-        <h2>Order</h2>
+        <img :src="gmBlack" class="logo">
+        <h1>Thank You!</h1> 
+        <h2>Order Number {{orderNumber}} Complete</h2>
+        <p>You’ll recieve an email with further instructions around delivery date and time</p> 
+        <a :href="shareLink" class="btn"><img :src="twitter">Share On Twitter</a>
     </div>
   </div>
 </template>
 
 <script>
-import { ethers } from 'ethers';
 import { mapState} from 'vuex'
 import JSConfetti from 'js-confetti'
 
 import MinBanner from '@/components/MinBanner.vue';
 
-import monkey from "@/assets/video/mm.mp4";
-
-import GMSHOPJSON from '@/utils/nftShop.json';
-
-import { 
-  MERCH_DROP_CONTRACT,
-  INFURA_PROJECT_ID,
-  NETWORK_NAME,
-  TOKEN_ID_MERCH_BUNDLE 
-} from '@/utils/constants';
-
+import gmBlack from "@/assets/img/gm-circle-black.svg"
+import twitter from "@/assets/img/twitter.svg"
 
 export default {
   transition: 'scale',
@@ -35,31 +28,19 @@ export default {
   },
   data: () => {
     return {
-      monkey,
+      gmBlack,
+      twitter,
       balance: '',
       orderNumber: '',
+      shareLink: `https://twitter.com/share?text=I just burned the GM Merch Bundle&url=https://opensea.io/collection/good-monkeyz-limited-editions&hashtags=goodmonkeyz`,
     }
   },
   computed: mapState(['wallet']),
-  async created() {
+  created() {
     this.orderNumber = this.$route.query.order
     this.fireConfetti()
-    console.log( await this.getBalance() )
   },
   methods: {
-    async getBalance() {
-      
-     try {
-          const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-          const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-          const bal = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
-          console.log('conected bal:', bal);
-          return ethers.utils.formatUnits(bal, 0)
-        } catch(error){
-            console.error(error);
-          return 0;
-        }
-    },
          fireConfetti(){
        const jsConfetti = new JSConfetti()
         jsConfetti.addConfetti({
@@ -94,14 +75,6 @@ export default {
         }, 2400)
      }
   },
-  // middleware({ redirect }) {
-  //   const balance = 1
-  //   console.log('BALANCE: %s', balance)
-  //   if (balance < 1) {
-  //     return redirect('/ngmi');
-  //   }
-  // }
-
 }
 </script>
 
@@ -114,58 +87,94 @@ export default {
   transform: scale(0.95);
 }
 
-main {
-  background: #fff;
+
+.logo {
+  margin-bottom: 2rem;
+  max-width: 10rem;
 }
-
-.grid {
-  display: flex;
-  justify-content: center;
-}
-
-.item {
-  max-width: 25%;
-  margin: 1rem;
-  padding: 1rem;
-  border-radius: 2rem;
-  box-shadow: 0px 34px 84px rgba(0, 0, 0, 0.09);
-  position: relative;
-}
-
-.item video{
-  max-width: 100%;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-}
-
-.item .btn {
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  display: block;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  padding: 0.5rem;
-  cursor: pointer;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-
 .heading {
-    padding: 6rem 0 2rem;
+    padding: 2rem;
     text-align: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
-.heading h1 {
+.heading h1,
+.heading h2 {
     font-size: 4rem;
     text-transform: uppercase;
     margin: 0;
 }
-.heading h2 {
-    margin: 0;
+
+.heading p {
+    margin-bottom: 2rem;
     font-family: Helvetica, sans-serif;
     font-size: 1.0rem;
     font-weight: 300;
 }
 
+.btn {
+  background: #000;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn img{
+  margin-right: 0.5rem;
+  height: 1.1rem;
+}
+
+  @keyframes enter {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 0;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* animations */
+  .nav {
+    opacity: 0;
+    animation: enter 1s ease 1 forwards;
+    animation-delay: 3500ms;
+  }
+  .logo {
+    opacity: 0;
+    animation: enter 500ms ease 1 forwards;
+  }
+
+  h1 {
+    opacity: 0;
+    animation: enter 600ms ease 1 forwards;
+    animation-delay: 200ms;
+  }
+  h2 {
+    opacity: 0;
+    animation: enter 600ms ease 1 forwards;
+    animation-delay: 400ms;
+  }
+  p {
+    opacity: 0;
+    animation: enter 600ms ease 1 forwards;
+    animation-delay: 600ms;
+  }
+  .btn {
+    opacity: 0;
+    animation: enter 600ms ease 1 forwards;
+    animation-delay: 2000ms;
+  }
 </style>
