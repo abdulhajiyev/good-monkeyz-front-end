@@ -40,14 +40,16 @@ exports.handler = async (event, context, callback) => {
     const abi = [ "event GmBurned(address _address, uint256 _id)" ];
     const iface = new ethers.utils.Interface(abi);
     const log = iface.parseLog(receipt.logs[1]); 
-    const addressFromEvent = log.args[0] //ad
-    const id = log.args[1] //id
-    const name = log.name // event name
-
+    const addressFromEvent = log.args[0] 
+    const id = log.args[1]
+    const name = log.name
+    if(name !== 'GmBurned' && id !== 0) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({success: false})
+      }
+    }
     
-    console.log('id: ', id)
-    console.log('FUNC: ', name)
-
     console.log(signerAddress.toLowerCase())
     console.log(addressFromMessage.toLowerCase())
     console.log(addressFromEvent.toLowerCase())
@@ -64,7 +66,6 @@ exports.handler = async (event, context, callback) => {
         .limit(1)
         .single()
 
-
       if(verifiedOrder.data){
         console.log('database update', verifiedOrder.data)
         return {
@@ -79,7 +80,7 @@ exports.handler = async (event, context, callback) => {
     }
 
     return {
-      statusCode: 200,
+      statusCode: 500,
       body: JSON.stringify({success: false})
     }
 }

@@ -80,13 +80,12 @@ export default {
 
 <style scoped>
 .scale-enter-active, .scale-leave-active { 
-  transition: opacity 1s, transform .5s; 
+  transition: opacity 0.7s, transform .5s; 
 }
 .scale-enter, .scale-leave-active { 
   opacity: 0;
-  transform: scale(0.95);
+  transform: scale(0.99);
 }
-
 
 .logo {
   margin-bottom: 2rem;
