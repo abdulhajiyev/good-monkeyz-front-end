@@ -201,7 +201,7 @@ ${this.wallet}`
   transition: opacity 0.4s, transform .4s; 
 }
 .scale-leave-active { 
-  transition: opacity 0.7s, transform 1.5s; 
+  transition: opacity 0.5s, transform .5s; 
 }
 .scale-enter {
   opacity: 0;
