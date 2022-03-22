@@ -110,10 +110,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import Vue from 'vue'
-import { KinesisScroll } from 'vue-kinesis'
-
-
 import MinBanner from '@/components/MinBanner.vue';
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
@@ -127,7 +123,6 @@ import m4 from "@/assets/img/monkey-group-4.png";
 import monkey1 from "@/assets/img/monkey-1.png";
 import monkey2 from "@/assets/img/monkey-2.png";
 import monkey3 from "@/assets/img/monkey-3.png";
-// import gmFull from '@/assets/img/gm-full.svg';
 import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
 
@@ -135,8 +130,6 @@ import spotlightFooter from "@/assets/img/spotlight-footer.png";
 import spotlightCharles from "@/assets/img/spotlight-charles.png";
 import spotlightSam from "@/assets/img/spotlight-sam.png";
 import spotlightHero from "@/assets/img/spotlight-hero.png";
-
-Vue.component('kinesis-scroll', KinesisScroll)
 
 export default {
   transition: 'index',
@@ -197,7 +190,6 @@ export default {
       monkey1,
       monkey2,
       monkey3,
-      // gmFull,
       gmOut,
       gmIn,
       spotlightFooter,
@@ -237,10 +229,6 @@ export default {
 }
   .index {
     background: #000;
-    /* width: 100%;
-    display: flex;
-    justify-content: space-between;
-    min-height: 100vh; */
     overflow: hidden;
   }
 
@@ -252,7 +240,6 @@ export default {
     filter: grayscale(30%);
     z-index: 0;
     width: 100%;
-    /* transform: scale(1.4); */
   }
   @media (min-width: 700px){
     .video-bg {
@@ -501,7 +488,7 @@ export default {
 
   .gm-full {
     text-align: center;
-    padding: 5rem 0 20rem;
+    padding: 5rem 0 g20rem;
     position: relative;
     /* overflow: hidden; */
   }
