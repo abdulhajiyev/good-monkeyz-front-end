@@ -488,7 +488,7 @@ export default {
 
   .gm-full {
     text-align: center;
-    padding: 5rem 0 g20rem;
+    padding: 5rem 0 20rem;
     position: relative;
     /* overflow: hidden; */
   }
