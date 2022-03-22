@@ -9,6 +9,7 @@
       </div>
       <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
       <div class="fade-bg"></div> 
+      <div class="spotlight spotlight--hero"></div>
       <div class="banner banner--bottom">
         <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
       </div>
@@ -17,6 +18,7 @@
       <div class="fade-bg fade--monkey"></div> 
       <div class="lead">
         <h2>Good Monkeyz are a collection of 10,000 generated NFTs living on the Ethereum blockchain</h2>
+        <p>Created from a combination of hundreds of different traits, all good! You’ll be able to find some very special 1/1 in the collection that we’ve collaborated with our friends.</p>
       </div>
       <div></div>
       <div class="monkeyz-scroll">
@@ -39,12 +41,12 @@
     <div class="faq" id="faq">
       <h2>FAQ</h2>
       <div class="faq-list">
-        <div @click="openfaq(item.id)" class="faq-list__item" v-for="item in faq" :key="item.id">
+        <div @click="openfaq(item.id)"  class="faq-list__item" v-for="item in faq" :key="item.id">
           <h3 class="faq-item__question">{{item.q}}</h3>
           <span :class="{ active: item.active }" class="faq-item__close">&times;</span>
-            <p class="faq-item__answer">
-              {{item.a}}
-            </p>
+          <Transition name="fade" mode="out-in">
+            <p :key="item.active" v-if="item.active" class="faq-item__answer" v-html="item.a"></p>
+          </Transition>
         </div>
       </div>
     </div>
@@ -56,31 +58,33 @@
 
     <div class="team" id="team">
       <div class="monkey">
-        <div class="monkey__avatar">
+        <div class="spotlight spotlight--charles"></div>
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.5">
             <img :src="monkey1" >
         </div>
-        <div class="monkey__info">
+        <div class="monkey__info" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.5">
             <h3>CHARLESP</h3>
             <h4>CREATIVE</h4>
             <h5>@CHARLESPATTSON</h5>
         </div>
       </div>
       <div class="monkey">
-        <div class="monkey__info monkey__info--right">
+        <div class="spotlight spotlight--sam"></div>
+        <div class="monkey__info monkey__info--right" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.5">
             <h3>SAMMYB</h3>
             <h4>DEVELOPMENT</h4>
             <h5>@SAM_BILLINGHAM</h5>
         </div>
-        <div class="monkey__avatar">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-2.2" data-rellax-percentage="0.5">
             <img :src="monkey2" >
         </div>
       </div>
-       <div class="monkey">
-        <div class="monkey__avatar">
+       <div class="monkey" >
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.5">
             <img :src="monkey3" >
         </div>
-        <div class="monkey__info">
-            <h3>monkey2,</h3>
+        <div class="monkey__info"  data-rellax-speed="0.4" data-rellax-percentage="0.5">
+            <h3>JULIAF</h3>
             <h4>COMMUNITY</h4>
             <h5>@JULIA91990</h5>
         </div>
@@ -140,32 +144,44 @@ export default {
       faq: [
         {
           id: 0,
-          q: 'Mint Price?',
-          a: '0.077 ETH',
-          active: false,
+          q: 'What is the supply & Mint Price?',
+          a: 'Maximum 10,000 Good Monkeyz available on the Ethereum Blockchain. Mint price is 0.077 ETH',
+          active: true,
         },
         {
           id: 1,
-          q: 'Mint Date',
-          a: '14th April LFG!',
+          q: 'Wen Monkeyz? Mint Date?',
+          a: "We are launching on April 26, 2022 at 2pm PST / 5pm EST.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
           active: false,
         },
         {
           id: 2,
-          q: 'Wen Merch? How merch?',
-          a: 'Buy a token during the limted edition mint - or on the secondary market.',
+          q: 'Early List & Public Mint?',
+          a: '4000 Early list Spaces avaiable - anyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs. 1000 (+remaning unminted from Early List) Public Mint. 250 Mint Passess. 250 Booster Packs.',
           active: false,
         },
         {
           id: 3,
-          q: 'Whats in the Merch Bundle',
-          a: '1 Hoodie, 1 cap or Beanie, Sticker Pack, 1 Mint Pass NFT',
+          q: 'Wen Merch?',
+          a: 'Merch Bundle tokens are now solely avaiable on the secondary market.<br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
           active: false,
         },
         {
           id: 4,
-          q: 'What is the mint pass',
-          a: 'Mint passes can be exchanged for 1 Monkey for 0ETH Fee - will still require gas',
+          q: 'What Is A Merch Bundle?',
+          a: 'A limited edition token. Max supply of 77 where minted. The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a sticker Pack. Worldwide shipping is included. When minted holders also recived a 2nd NFT a Mint Pass',
+          active: false,
+        },
+        {
+          id: 5,
+          q: 'What Is A Mint Pass?',
+          a: 'Mint passes can be exchanged for 1 Monkey for 0ETH Fee - will still require gas. A Max supply of 250 Mint passes are mintable. 77 Mint passess were minted with the Merch Bundle. Future mint passess will be avaiable through limited edition drops and competitions.',
+          active: false,
+        },
+        {
+          id: 6,
+          q: 'What Is A Booster Pack?',
+          a: 'Booster packs contain 3 Monkeyz. There are a max supply of 250 booster packs. 77 initial distribution randomly to minters on the early list.',
           active: false,
         },
       ],
@@ -190,6 +206,17 @@ export default {
 </script>
 
 <style scoped>
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s, transform .5s;
+}
+.fade-enter,
+.fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
 .index-enter-active, .index-leave-active { 
   transition: opacity 0.7s, transform .5s; 
 }
@@ -278,10 +305,21 @@ export default {
     overflow: hidden;
   }
   .lead {
-    max-width: 80%;
+    max-width: 70%;
     margin: 0 auto;
     position: relative;
     z-index: 1;
+    padding-bottom: 6rem;
+  }
+  .lead p{
+    color: #fff;
+    max-width: 50%;
+    margin-left: 50%;
+    position: absolute;
+    font-family: Helvetica, sans-serif;
+    font-weight: 400;
+    line-height: 2;
+    font-size: 1.3rem;
   }
 
   h2  {
@@ -358,11 +396,15 @@ export default {
   }
 
   .faq-item__answer {
-    background: #2B2B2B;
-    color: #fff;
+    font-family: Helvetica, sans-serif;
+    line-height: 1.3;
+    color: #888;
   }
-  .faq-item__answer.active {
-    display: block;
+
+  .faq-item__answer >>> a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: solid 1px #fff;
   }
 
   .banner--middle {
@@ -380,21 +422,25 @@ export default {
   .monkey {
     display: flex;
     flex-direction: row;
-    margin-bottom: 10rem;
+    margin-bottom: 6rem;
+    position: relative;
   }
   .monkey:last-of-type {
-     /* margin-bottom: 0; */
      padding-bottom: 8rem;
   }
   .monkey__avatar {
     max-width: 100%;
     flex-basis: 40%;
+   
   }
   .monkey__avatar img {
     max-width: 100%;
+    
   }
   .monkey__info {
     flex-basis: 60%;
+    position: relative;
+    z-index: 1;
   }
   .monkey__info h3{
     color: #fff;
@@ -437,6 +483,8 @@ export default {
     font-size: 8rem;
     line-height: 1;
     color: #fff;
+    z-index: 1;
+    position: relative;
   }
 
   .gm-full {
@@ -459,6 +507,38 @@ export default {
     left: 0;
     z-index: 0;
     border-radius: 50%;
+  }
+  .spotlight--hero{
+    background: #D60303;
+    filter: blur(250px);
+    opacity: 0.25;
+    bottom: auto;
+    left: auto;
+    top: -20%;
+    right: 0;
+  }
+
+  .spotlight--charles {
+    background: #C509DD;
+    filter: blur(200px);
+    opacity: 0.3;
+    bottom: auto;
+    left: -30%;
+    top: 20%;
+    right: auto;
+    z-index: 0;
+  }
+
+  .spotlight--sam {
+    background: #03A3D6;
+    filter: blur(500px);
+    opacity: 0.7;
+    bottom: auto;
+    left: auto;
+    top: -35%;
+    right: 0;
+    z-index: 0;
+    width: 80%;
   }
 
   .spotlight--a {
@@ -486,6 +566,7 @@ export default {
 
 .gm-spinner {
   display: inline-block;
+      margin-bottom: 5rem;
 }
 
 .gm-out {

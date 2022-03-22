@@ -9,7 +9,7 @@
             <nav v-if="active">
                 <nuxt-link :to="{path: '/', hash: 'about'}" >About</nuxt-link> 
                 <nuxt-link :to="{path: '/', hash: 'faq'}" >FAQ</nuxt-link> 
-                <nuxt-link to="/early">Early Access</nuxt-link>
+                <!-- <nuxt-link to="/early">Early Access</nuxt-link> -->
                 <nuxt-link :to="{path: '/', hash: 'team'}" >Team</nuxt-link> 
                 <span @click="goToMerch()" >Merch</span>
             </nav>
