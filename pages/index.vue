@@ -9,7 +9,7 @@
       </div>
       <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
       <div class="fade-bg"></div> 
-      <div class="spotlight spotlight--hero"></div>
+      <img class="spotlight spotlight--hero" :src="spotlightHero" >
       <div class="banner banner--bottom">
         <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
       </div>
@@ -58,24 +58,24 @@
 
     <div class="team" id="team">
       <div class="monkey">
-        <div class="spotlight spotlight--charles"></div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.5">
+        <img class="spotlight spotlight--charles" :src="spotlightCharles" >
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.6">
             <img :src="monkey1" >
         </div>
-        <div class="monkey__info" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.5">
+        <div class="monkey__info" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.3">
             <h3>CHARLESP</h3>
             <h4>CREATIVE</h4>
             <h5>@CHARLESPATTSON</h5>
         </div>
       </div>
       <div class="monkey">
-        <div class="spotlight spotlight--sam"></div>
-        <div class="monkey__info monkey__info--right" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.5">
+        <img class="spotlight spotlight--sam" :src="spotlightSam" >
+        <div class="monkey__info monkey__info--right" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.3">
             <h3>SAMMYB</h3>
             <h4>DEVELOPMENT</h4>
             <h5>@SAM_BILLINGHAM</h5>
         </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-2.2" data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-2.8" data-rellax-percentage="0.5">
             <img :src="monkey2" >
         </div>
       </div>
@@ -102,15 +102,17 @@
           <img class="gm-out" :src="gmOut">
         </div>
 
-        <div class="spotlight spotlight--a"></div>
-        <div class="spotlight spotlight--b"></div>
-        <div class="spotlight spotlight--c"></div>
+        <img class="spotlight spotlight--footer" :src="spotlightFooter" >
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+
+import Vue from 'vue'
+import { KinesisScroll } from 'vue-kinesis'
+
 
 import MinBanner from '@/components/MinBanner.vue';
 import monkey from "@/assets/video/mm-med.mp4";
@@ -128,6 +130,13 @@ import monkey3 from "@/assets/img/monkey-3.png";
 // import gmFull from '@/assets/img/gm-full.svg';
 import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
+
+import spotlightFooter from "@/assets/img/spotlight-footer.png";
+import spotlightCharles from "@/assets/img/spotlight-charles.png";
+import spotlightSam from "@/assets/img/spotlight-sam.png";
+import spotlightHero from "@/assets/img/spotlight-hero.png";
+
+Vue.component('kinesis-scroll', KinesisScroll)
 
 export default {
   transition: 'index',
@@ -191,7 +200,10 @@ export default {
       // gmFull,
       gmOut,
       gmIn,
-      
+      spotlightFooter,
+      spotlightCharles,
+      spotlightSam,
+      spotlightHero,
     }
   },
   computed: mapState(['wallet']),
@@ -489,7 +501,7 @@ export default {
 
   .gm-full {
     text-align: center;
-    padding-bottom: 20rem;
+    padding: 5rem 0 20rem;
     position: relative;
     /* overflow: hidden; */
   }
@@ -498,75 +510,40 @@ export default {
     z-index: 1;
   } */
   .spotlight {
-    width: 65%;
-    height: 550px;
-    opacity: 0.6;
-    filter: blur(100px);
+    width: 100%;
     position: absolute;
-    bottom: 0;
-    left: 0;
     z-index: 0;
-    border-radius: 50%;
   }
   .spotlight--hero{
-    background: #D60303;
-    filter: blur(250px);
     opacity: 0.25;
-    bottom: auto;
-    left: auto;
-    top: -20%;
-    right: 0;
   }
 
   .spotlight--charles {
-    background: #C509DD;
-    filter: blur(200px);
-    opacity: 0.3;
-    bottom: auto;
     left: -30%;
-    top: 20%;
-    right: auto;
-    z-index: 0;
+    opacity: 0.6;
   }
 
   .spotlight--sam {
-    background: #03A3D6;
-    filter: blur(500px);
-    opacity: 0.7;
-    bottom: auto;
-    left: auto;
-    top: -35%;
-    right: 0;
-    z-index: 0;
-    width: 80%;
+    right: -30%;
+    top: -50%;
+    opacity: 0.6;
+  } 
+  
+  .spotlight--footer {
+    bottom: 0;
+    left: 0;
   }
-
-  .spotlight--a {
-    background: #FF7A41;
-  }
-
-  .spotlight--b {
-    background: #C509DD;
-    width: 20%;
-    left: 20%;
-    bottom: -40%;
-  }
-  .spotlight--c {
-    background: #03A3D6;
-    left: auto;
-    right: -10%;
-    bottom: -20%;
-  }
-
+ 
 
   @keyframes spin {
-  from { transform: rotate(0deg) translate(-50%, -50%)}
-  to { transform: rotate(360deg) translate(-50%, -50%)}
+  from { display: block; transform: rotate(0deg) translate(-50%, -50%)}
+  to { display: block; transform: rotate(360deg) translate(-50%, -50%)}
 }
 
 .gm-spinner {
-  display: inline-block;
-      margin-bottom: 5rem;
+  display: block;
+  position: relative;
+  margin: 5rem;
 }
 
 .gm-out {
@@ -575,9 +552,13 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 1;
+  transform: rotate(360deg) translate(-50%, -50%);
 }
+
+@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) and (stroke-color:transparent) { 
+  .gm-out  { animation: none; } 
+} }
 
 .gm-in {
   position: absolute;
