@@ -62,7 +62,7 @@
         <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.6">
             <img :src="monkey1" >
         </div>
-        <div class="monkey__info" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.3">
+        <div class="monkey__info" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.5">
             <h3>CHARLESP</h3>
             <h4>CREATIVE</h4>
             <h5>@CHARLESPATTSON</h5>
@@ -80,10 +80,10 @@
         </div>
       </div>
        <div class="monkey" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-0.5" data-rellax-percentage="0.4">
             <img :src="monkey3" >
         </div>
-        <div class="monkey__info"  data-rellax-speed="0.4" data-rellax-percentage="0.5">
+        <div class="monkey__info"  data-rellax-speed="0.7" data-rellax-percentage="0.5">
             <h3>JULIAF</h3>
             <h4>COMMUNITY</h4>
             <h5>@JULIA91990</h5>

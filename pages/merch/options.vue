@@ -5,7 +5,10 @@
     <div class="merch">
         <div class="mech-options">
             <p>Congratulations! You’ve unlocked the...</p>
-            <h2>GOODMONKEYZ MERCH BUNDLE</h2>
+            <div>
+              <h2 v-resize-text="{ratio: 0.8}">GOODMONKEYZ</h2>
+              <h2 v-resize-text="{ratio: 0.817}"> MERCH BUNDLE</h2>
+            </div>
 
             <div class="merch-options__form">
                 <label>Select your size</label>
@@ -56,6 +59,10 @@
 import { ethers } from 'ethers';
 import { mapState} from 'vuex'
 
+import VueResizeText from 'vue-resize-text';
+
+import Vue from 'vue'
+
 import MinBanner from '@/components/MinBanner.vue';
 
 import gmBlack from "@/assets/img/gm-full.svg"
@@ -70,6 +77,8 @@ import {
   NETWORK_NAME,
   TOKEN_ID_MERCH_BUNDLE 
 } from '@/utils/constants';
+
+Vue.use(VueResizeText)
 
 export default {
   transition: 'scale',
@@ -196,7 +205,11 @@ ${this.wallet}`
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$s: 660px;
+$m: 960px;
+$l: 1720px;
+
 .scale-enter-active { 
   transition: opacity 0.4s, transform .4s; 
 }
@@ -217,48 +230,62 @@ ${this.wallet}`
   border: solid 1rem #fff;
   position: relative;
 }
+
+
 .border-bottom {
-    width: 100%;
-    position: fixed;
-    height: 1rem;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
-    background: #fff;
+  width: 100%;
+  position: fixed;
+  height: 1rem;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  background: #fff;
 }
 
 .merch {
   display: flex;
   justify-content: center;
   padding-top: 5rem;
-    min-height: 95vh;
+  min-height: 95vh;
 }
 
 .mech-options {
+  padding: 2rem 2rem 0 2rem;
+  max-width: 100%;
+  @media (min-width: $s) {
     flex-basis: 50%;
-    padding: 2rem 2rem 0 2rem;
+  }
 }
 .merch-showcase {
-    flex-basis: 50%;
-    min-height: 100%;
-    background: #ccc;
-    background-size: cover;
-    background-position: center;
+  flex-basis: 50%;
+  min-height: 100%;
+  background: #ccc;
+  background-size: cover;
+  background-position: center;
+  display: none;
+  @media (min-width: $s) {
+    display: block;
+  }
 }
 
 .select-btns {
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 .select-btns span {
     padding: 1rem;
+    margin-bottom: 0.5rem;
     border: solid 1px #000;
     font-family: 'Helvetica';
     border-radius: 0.5rem;
-    flex-basis: 24%;
+    flex-basis: 49.5%;
     text-align: center;
     cursor: pointer;
+  @media (min-width: $m) {
+    flex-basis: 24%;
+  }
 }
 .select-btns span.active {
   background: #000;
@@ -269,25 +296,25 @@ ${this.wallet}`
 }
 
 p {
-    font-family: 'Helvetica';
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1;
+  font-family: 'Helvetica';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  @media (min-width: $s) {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+  }
 }
 
 h2 {
-    font-size: 4.7rem;
-line-height: 0.85;
-    text-align: justify;
-    margin: 0;
+  margin: 0;
+  line-height: 1;
 }
-h2:after {
-  content: "";
-  display: inline-block;
-  width: 100%;
+h2:last-of-type {
+  margin-bottom: 1rem;
 }
+
 label {
     font-family: 'Helvetica';
     color: rgba(0,0,0,0.5);
@@ -307,11 +334,8 @@ input:placeholder-shown {
   border: solid 2px #999;
 }
 input:focus{
-
   background: linear-gradient(#fff, #fff) padding-box, linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%) border-box;
-  /* background: linear-gradient(#fff, #fff) padding-box, */
-              /* linear-gradient(45deg, slateblue, coral) border-box; */
-                outline: none;
+  outline: none;
   border: solid 2px transparent;
   border-radius: 0.5rem;
 }
@@ -329,6 +353,10 @@ input:focus{
     cursor: pointer;
     position: relative;
     border: none;
+    margin-bottom: 2rem;
+  @media (min-width: $s) {
+    margin-bottom: 0;
+  }
 }
 .btn:disabled {
   background: #ccc;

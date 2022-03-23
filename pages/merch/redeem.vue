@@ -16,7 +16,7 @@
 
 <script>
 import MinBanner from '@/components/MinBanner.vue';
-import monkey from "@/assets/video/mm.mp4";
+import monkey from "@/assets/video/mm-med.mp4";
 
 export default {
   transition: 'scale',
@@ -56,12 +56,18 @@ main {
 }
 
 .item {
-  max-width: 25%;
+  max-width: 80%;
   margin: 1rem;
   padding: 1rem;
   border-radius: 2rem;
   box-shadow: 0px 34px 84px rgba(0, 0, 0, 0.09);
   position: relative;
+  @media (min-width: $s) {
+      max-width: 50%;
+  }
+  @media (min-width: $m) {
+      max-width: 25%;
+  }
 }
 
 .item video{
@@ -83,21 +89,39 @@ main {
   text-decoration: none;
 }
 
-
 .heading {
+  padding: 8rem 0 0;
+  text-align: center;
+
+  @media (min-width: $m) {
     padding: 6rem 0 2rem;
-    text-align: center;
+  }
 }
 .heading h1 {
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  margin: 0;
+
+  @media (min-width: $m) {
+    font-size: 3.2rem;
+  }
+  @media (min-width: $m) {
     font-size: 4rem;
-    text-transform: uppercase;
-    margin: 0;
+  }
 }
 .heading h2 {
-    margin: 0;
+    margin-top: 0.5rem;
     font-family: Helvetica, sans-serif;
-    font-size: 1.0rem;
+    font-size: 0.9rem;
     font-weight: 300;
+
+    @media (min-width: $m) {
+      margin: 0;
+      font-size: 1.0rem;
+    }
+    @media (min-width: $m) {
+      font-size: 1.0rem;
+    }
 }
 
 </style>

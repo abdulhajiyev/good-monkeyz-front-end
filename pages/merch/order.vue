@@ -93,8 +93,7 @@ $l: 1720px;
 
 .logo {
   margin-bottom: 2rem;
-  max-width: 4rem;
-  display: none;
+  max-width: 6rem;
 
   @media (min-width: $s) {
     display: inline;

@@ -19,7 +19,7 @@
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
                 <a href="https://discord.gg/ztNYjaVCjp"><img class="discord" :src="discord"></a>
             </div>
-            <span v-else  class="user-area">
+            <span v-else class="user-area">
                 <div class="user">
                 <span>{{wallet.substring(0,4)+'..'+wallet.substr(-4)}}</span>
                 <img class="avatar" :src="user">
@@ -137,7 +137,8 @@ $l: 1720px;
         justify-content: center;
         align-items: center;
         @media (max-width: $s) {
-            align-self: flex-end
+            align-self: flex-end;
+            padding: 0.25rem 1.5rem 0 0;
         }
     }
 
@@ -164,9 +165,13 @@ $l: 1720px;
         color: #000;
     }
     .user-area {
+        padding-right: 2rem;
+        align-self: flex-end;
         @media (max-width: $s) {
-            align-self: flex-end;
             padding-right: 2rem;
+        }
+        @media (max-width: $m) {
+            padding-right: 0;
         }
     }
     .navbar--black .user {
