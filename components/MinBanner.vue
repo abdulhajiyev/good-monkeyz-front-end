@@ -1,9 +1,9 @@
 <template>
     <div class="navbar" :class="{ 'navbar--black': color === 'black' }"> 
         <div class="banner">
-        <nuxt-link to="/">
-            <img v-if="color === 'black'" class="gm-white" :src="logoBlack" >
-                <img v-else class="gm-white" :src="gmWhite" >
+            <nuxt-link to="/" class="logo">
+                <img v-if="color === 'black'" class="gm-white" :src="logoBlack" >
+            <img v-else class="gm-white" :src="gmWhite" >
             </nuxt-link>
 
             <nav v-if="active">
@@ -19,7 +19,7 @@
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
                 <a href="https://discord.gg/ztNYjaVCjp"><img class="discord" :src="discord"></a>
             </div>
-            <span v-else >
+            <span v-else  class="user-area">
                 <div class="user">
                 <span>{{wallet.substring(0,4)+'..'+wallet.substr(-4)}}</span>
                 <img class="avatar" :src="user">
@@ -32,7 +32,7 @@
 <script>
     import { mapState } from 'vuex'
 
-    import logoBlack from "@/assets/img/gm-black.svg"
+        import logoBlack from "@/assets/img/gm-black.svg"
     import user from "@/assets/img/user.png"
 
     import twitter from "@/assets/img/twitter.svg"
@@ -45,7 +45,7 @@
         props: ['account', 'active', 'color'],
         data:  () => {
             return {
-                logoBlack,
+                    logoBlack,
                 user,
                 twitter,
                 discord,
@@ -74,6 +74,11 @@ $l: 1720px;
     nav {
         display: flex;
         justify-content: center;
+        
+        @media (max-width: $s) {
+            order: 3;
+        }
+
     }
     nav a,
     nav span {
@@ -83,6 +88,13 @@ $l: 1720px;
         text-decoration: none;
         font-size: 0.825rem;
         cursor: pointer;
+    }
+    .logo {
+        @media (max-width: $s) {
+            position: absolute;
+            left: 2rem;
+            top: 1.5rem;
+        }
     }
     a.nuxt-link-active {
         color: #fff;
@@ -124,6 +136,9 @@ $l: 1720px;
         display: flex;
         justify-content: center;
         align-items: center;
+        @media (max-width: $s) {
+            align-self: flex-end
+        }
     }
 
 
@@ -147,6 +162,12 @@ $l: 1720px;
         font-size: 0.725rem;
         font-family: 'Inconsolata', 'Courier New', Courier, monospace;
         color: #000;
+    }
+    .user-area {
+        @media (max-width: $s) {
+            align-self: flex-end;
+            padding-right: 2rem;
+        }
     }
     .navbar--black .user {
         background: #f1f1f1;

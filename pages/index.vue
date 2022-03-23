@@ -336,12 +336,13 @@ $l: 1720px;
     line-height: 2;
     font-size: 1.1rem;
     @media (min-width: $s) {
-      margin-left: 50%;
-      max-width: 50%;
+
       font-size: 1.3rem;
     }
     @media (min-width: $m) {
       font-size: 1.4rem;
+            margin-left: 50%;
+      max-width: 50%;
     }
     @media (min-width: $s) {
       font-size: 1.7rem;
