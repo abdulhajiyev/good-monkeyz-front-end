@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <div class="splash">
+    <section class="splash">
       <div class="banner banner--top">
         <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
       </div>
@@ -13,8 +13,8 @@
       <div class="banner banner--bottom">
         <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
       </div>
-    </div>
-    <div class="monkeyz" id="about">
+    </section>
+    <section class="monkeyz" id="about">
       <div class="fade-bg fade--monkey"></div> 
       <div class="lead">
         <h2>Good Monkeyz are a collection of 10,000 generated NFTs living on the Ethereum blockchain</h2>
@@ -35,10 +35,10 @@
           <img :src="m4" ><img :src="m4" ><img :src="m4" >
         </div>
       </div>
-    </div>
+    </section>
   
 
-    <div class="faq" id="faq">
+    <section class="faq" id="faq">
       <h2>FAQ</h2>
       <div class="faq-list">
         <div @click="openfaq(item.id)"  class="faq-list__item" v-for="item in faq" :key="item.id">
@@ -49,14 +49,14 @@
           </Transition>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="banner banner--middle">
+    <section class="banner banner--middle">
       <span class="marquee">MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ</span>
-    </div>
+    </section>
 
 
-    <div class="team" id="team">
+    <section class="team" id="team">
       <div class="monkey">
         <img class="spotlight spotlight--charles" :src="spotlightCharles" >
         <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.6">
@@ -75,7 +75,7 @@
             <h4>DEVELOPMENT</h4>
             <h5>@SAM_BILLINGHAM</h5>
         </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-2.8" data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-2.15" data-rellax-percentage="0.5">
             <img :src="monkey2" >
         </div>
       </div>
@@ -89,11 +89,11 @@
             <h5>@JULIA91990</h5>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="good-things">
+    <section class="good-things">
       <p>GOOD THINGS COME TO GOOD MONKEYZ WHO WAIT. COMING APRIL 2022.</p>
-    </div>
+    </section>
     
     <div class="gm-full">
         
@@ -209,7 +209,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+$s: 660px;
+$m: 960px;
+$l: 1720px;
+
 
 .fade-enter-active,
 .fade-leave-active {
@@ -239,13 +244,12 @@ export default {
     transform: translate(-50%, -50%);
     filter: grayscale(30%);
     z-index: 0;
-    width: 100%;
-  }
-  @media (min-width: 700px){
-    .video-bg {
-      
+    width: 200%;
+    @media (min-width: $s) {
+      width: 100%;
     }
   }
+
   .fade-bg {
     position: absolute;
     height: 100%;
@@ -273,11 +277,20 @@ export default {
       z-index: 1;
       text-transform: uppercase;
       font-weight: 900;
-      font-size: 3.3rem;
+      font-size: 3rem;
       white-space: nowrap;
       pointer-events: none;
       position: absolute;
       background: #fff;
+      @media (min-width: $s) {
+        font-size: 3.3rem;
+      }
+      @media (min-width: $m) {
+        font-size: 3.5rem;
+      }
+      @media (min-width: $l) {
+        font-size: 4rem;
+      }
     }
     .banner--top {
       top: 0;
@@ -289,7 +302,11 @@ export default {
       display: block;
       will-change: transform;
       line-height: 1;
-      animation: marquee 60s linear infinite;
+      animation: marquee 20s linear infinite;
+      @media (min-width: $m) {
+        animation: marquee 60s linear infinite;
+      }
+   
     }
     .marquee img{
       height: 2.4rem;
@@ -312,19 +329,38 @@ export default {
   }
   .lead p{
     color: #fff;
-    max-width: 50%;
-    margin-left: 50%;
+    margin: 0 auto;
     position: absolute;
     font-family: Helvetica, sans-serif;
     font-weight: 400;
     line-height: 2;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    @media (min-width: $s) {
+      margin-left: 50%;
+      max-width: 50%;
+      font-size: 1.3rem;
+    }
+    @media (min-width: $m) {
+      font-size: 1.4rem;
+    }
+    @media (min-width: $s) {
+      font-size: 1.7rem;
+    }
   }
 
   h2  {
     font-weight: 900;
-    font-size: 3.6rem;
     color: #fff;
+    font-size: 1.5rem;
+    @media (min-width: $s) {
+      font-size: 2.6rem;
+    }
+    @media (min-width: $m) {
+      font-size: 3.6rem;
+    }
+    @media (min-width: $l) {
+        font-size: 5.5rem;
+    }
   }
   .m-scroll {
     display: flex;
@@ -390,14 +426,32 @@ export default {
   .faq-item__question {
     background: #2B2B2B;
     color: #fff;
-    font-size: 2rem;
+    font-size: 1.3rem;
     margin: 0;
+    @media (min-width: $s) {
+      font-size: 1.5rem;
+    }
+    @media (min-width: $m) {
+      font-size: 2rem;
+    }
+    @media (min-width: $l) {
+      font-size: 2.4rem;
+    }
   }
 
   .faq-item__answer {
     font-family: Helvetica, sans-serif;
     line-height: 1.3;
     color: #888;
+    @media (min-width: $s) {
+      font-size: 1.1rem;
+    }
+    @media (min-width: $m) {
+      font-size: 1.2rem;
+    }
+    @media (min-width: $l) {
+      font-size: 1.5rem;
+    }
   }
 
   .faq-item__answer >>> a {
@@ -410,58 +464,106 @@ export default {
     color: #fff;
     padding: 4rem 0;
     background: #000;
-    font-size: 6rem;
+    font-size: 3rem;
     position: static;
+    @media (min-width: $s) {
+      font-size: 4rem;
+    }
+    @media (min-width: $m) {
+      font-size: 6rem;
+    }
+    @media (min-width: $l) {
+      font-size: 8rem;
+    }
   } 
+
 
   .team {
     max-width: 80%;
-    margin: 0 auto;
+    margin: 2rem auto 0;
   }
   .monkey {
     display: flex;
     flex-direction: row;
     margin-bottom: 6rem;
     position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
   }
   .monkey:last-of-type {
      padding-bottom: 8rem;
   }
   .monkey__avatar {
     max-width: 100%;
-    flex-basis: 40%;
-   
+    flex-basis: 70%;
+    @media (min-width: $s) {
+      flex-basis: 50%;
+    }
+    @media (min-width: $m) {
+      flex-basis: 40%;
+    }
   }
   .monkey__avatar img {
     max-width: 100%;
     
   }
   .monkey__info {
-    flex-basis: 60%;
+    
     position: relative;
     z-index: 1;
+
+    flex-basis: 30%;
+    max-width: 50%;
+    padding-top: 50%;
+    @media (min-width: $s) {
+      flex-basis: 50%;
+      padding-top: 50%;
+    }
+    @media (min-width: $m) {
+      flex-basis: 60%;
+      padding-top: 0;
+    }
   }
   .monkey__info h3{
     color: #fff;
-    font-size: 6rem;
+    
     margin: 0;
     line-height: 1;
     transform: translateX(-25%);
     margin-top: 2rem;
+    font-size: 2rem;
+    @media (min-width: $s) {
+      font-size: 4rem;
+    }
+    @media (min-width: $m) {
+      font-size: 6rem;
+    }
   }
   .monkey__info h4 {
     color: rgba(255,255,255,0.6);
-    font-size: 2.6rem;
     margin: 0;
     line-height: 1;
     margin-left: 1rem;
+    font-size: 1.2rem;
+    @media (min-width: $s) {
+      font-size: 2.2rem;
+    }
+    @media (min-width: $m) {
+      font-size: 2.6rem;
+    }
   }
   .monkey__info h5 {
     color: rgba(255,255,255,0.3);
-    font-size: 2.6rem;
     margin: 0;
     line-height: 1;
     margin-left: 1rem;
+    font-size: 1.2rem;
+    @media (min-width: $s) {
+      font-size: 2.2rem;
+    }
+    @media (min-width: $m) {
+      font-size: 2.6rem;
+    }
   }
   .monkey__info--right h3 {
     transform: translateX(25%);
@@ -479,41 +581,74 @@ export default {
   .good-things {
     max-width: 80%;
     margin: 0 auto;
-    font-size: 8rem;
+    font-size: 3.3rem;
     line-height: 1;
     color: #fff;
     z-index: 1;
     position: relative;
+    @media (min-width: $s) {
+      font-size: 6rem;
+    }
+    @media (min-width: $m) {
+      font-size: 8rem;
+    }
+    @media (min-width: $l) {
+      font-size: 12rem;
+    }
   }
 
-  .gm-full {
-    text-align: center;
-    padding: 5rem 0 20rem;
-    position: relative;
-    /* overflow: hidden; */
-  }
-  /* .gm-full img {
-    position: relative;
-    z-index: 1;
-  } */
+
   .spotlight {
-    width: 100%;
+    width: 160%;
     position: absolute;
     z-index: 0;
+    @media (min-width: $s) {
+      width: 130%;
+    }
+    @media (min-width: $m) {
+      width: 100%;
+    }
   }
   .spotlight--hero{
     opacity: 0.25;
+    width: 300%;
+    @media (min-width: $s) {
+      width: 130%;
+    }
+    @media (min-width: $m) {
+      width: 100%;
+    }
   }
 
   .spotlight--charles {
     left: -30%;
     opacity: 0.6;
+    @media (min-width: 1600px) {
+      width: 180%;
+      left: -50%;
+      top: -100%;
+    }
+    @media (min-width: 2000px) {
+      width: 220%;
+      left: -70%;
+      top: -150%;
+    }
   }
 
   .spotlight--sam {
     right: -30%;
     top: -50%;
     opacity: 0.6;
+    @media (min-width: 1400px) {
+      width: 180%;
+      right: -50%;
+      top: -130%;
+    }
+    @media (min-width: 2000px) {
+      width: 220%;
+      right: -70%;
+      top: -150%;
+    }
   } 
   
   .spotlight--footer {
@@ -527,10 +662,27 @@ export default {
   to { display: block; transform: rotate(360deg) translate(-50%, -50%)}
 }
 
+.gm-full {
+  position: relative;
+  padding-bottom: 5rem;
+  @media (min-width: $m) {
+      transform: none;
+      padding-bottom: 0;
+      padding: 2rem 0 5rem;
+  }
+}
 .gm-spinner {
   display: block;
   position: relative;
-  margin: 5rem;
+  margin-top: 5rem;
+  transform: scale(0.6);
+  padding: 10rem 0 ;
+
+  @media (min-width: $m) {
+      transform: none;
+      padding-bottom: 0;
+      padding: 10rem 0 ;
+  }
 }
 
 .gm-out {

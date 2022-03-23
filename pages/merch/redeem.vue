@@ -33,7 +33,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$s: 660px;
+$m: 960px;
+$l: 1720px;
+
 .scale-enter-active, .scale-leave-active { 
   transition: opacity 0.6s, transform .5s; 
 }

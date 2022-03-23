@@ -78,7 +78,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$s: 660px;
+$m: 960px;
+$l: 1720px;
+
 .scale-enter-active, .scale-leave-active { 
   transition: opacity 0.3s, transform .5s; 
 }
@@ -89,22 +93,45 @@ export default {
 
 .logo {
   margin-bottom: 2rem;
-  max-width: 10rem;
+  max-width: 4rem;
+  display: none;
+
+  @media (min-width: $s) {
+    display: inline;
+    max-width: 8rem;
+  }
+  @media (min-width: $m) {
+    max-width: 10rem;
+  }
 }
 .heading {
-    padding: 2rem;
     text-align: center;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 10rem 0.5rem 2rem;
+
+    @media (min-width: $s) {
+      padding: 4rem 1rem
+    }
+    @media (min-width: $m) {
+      padding: 2rem;
+    }
 }
 .heading h1,
 .heading h2 {
-    font-size: 4rem;
+    font-size: 2rem;
     text-transform: uppercase;
     margin: 0;
+
+    @media (min-width: $s) {
+     font-size: 3rem;
+    }
+    @media (min-width: $m) {
+      font-size: 4rem;
+    }
 }
 
 .heading p {

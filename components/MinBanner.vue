@@ -2,9 +2,9 @@
     <div class="navbar" :class="{ 'navbar--black': color === 'black' }"> 
         <div class="banner">
         <nuxt-link to="/">
-        <img v-if="color === 'black'" class="gm-white" :src="logoBlack" >
-            <img v-else class="gm-white" :src="gmWhite" >
-        </nuxt-link>
+            <img v-if="color === 'black'" class="gm-white" :src="logoBlack" >
+                <img v-else class="gm-white" :src="gmWhite" >
+            </nuxt-link>
 
             <nav v-if="active">
                 <nuxt-link :to="{path: '/', hash: 'about'}" >About</nuxt-link> 
@@ -66,7 +66,10 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$s: 660px;
+$m: 960px;
+$l: 1720px;
 
     nav {
         display: flex;
@@ -93,11 +96,22 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        padding: 1.5rem;
+        
+        padding: 1.5rem 0;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         z-index: 1;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+
+        @media (min-width: $s) {
+            justify-content: space-between;
+            padding: 1.5rem;
+               flex-direction: row;
+        }
+        @media (min-width: $m) {
+        }
     }
     .banner a {
         text-decoration: none;
