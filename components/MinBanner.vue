@@ -9,7 +9,7 @@
             <nav v-if="active">
                 <nuxt-link :to="{path: '/', hash: 'about'}" >About</nuxt-link> 
                 <nuxt-link :to="{path: '/', hash: 'faq'}" >FAQ</nuxt-link> 
-                <!-- <nuxt-link to="/early">Early Access</nuxt-link> -->
+                <nuxt-link to="/early">Early Access</nuxt-link>
                 <nuxt-link :to="{path: '/', hash: 'team'}" >Team</nuxt-link> 
                 <span @click="goToMerch()" >Merch</span>
             </nav>
@@ -71,6 +71,7 @@ $s: 660px;
 $m: 960px;
 $l: 1720px;
 
+
     nav {
         display: flex;
         justify-content: center;
@@ -78,6 +79,7 @@ $l: 1720px;
         @media (max-width: $s) {
             order: 3;
         }
+         
 
     }
     nav a,
@@ -122,8 +124,8 @@ $l: 1720px;
             padding: 1.5rem;
                flex-direction: row;
         }
-        @media (min-width: $m) {
-        }
+        opacity: 0;
+        animation: enter-fade 1s ease 1 forwards;
     }
     .banner a {
         text-decoration: none;
