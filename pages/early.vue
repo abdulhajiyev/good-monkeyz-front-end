@@ -3,17 +3,17 @@
     <video class="video-bg"  width="55%" autoplay muted loop :src="monkey"></video>
     <div class="fade-bg"></div>
 
-    <MinBanner :account="false" :active="false" />
+    <MinBanner :account="false" :active="true" />
     <div class="verify-block">
       
-      <h1>Wallet Authenticate</h1>
+      <h2>{{count}}/4000</h2>
+      <h1>Early Access List</h1>
 
         <div v-if="!wallet" class="step">
           <span v-if="!wallet"  class="btn" @click="connectWallet()">CONNECT WALLET</span>
         </div>
         <div v-else class="step">
-          <a v-if="!open && verify && screenName" class="verified">✅ {{screenName}} wallet verified</a>
-          <nuxt-link to="/mint/merch?verify=true" v-if="open && verify && screenName" class="verified">✅ Continue with @{{screenName}}</nuxt-link>
+          <a v-if="verify && screenName" class="verified">✅ @{{screenName}} wallet verified</a>
           <a v-if="!verify && !screenName" :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
             <img class="twitter" :src="twitter" >
             <span >Verify with twitter</span>
@@ -45,7 +45,8 @@ export default {
       preCheck: false,
       monkey,
       failMessage: `We can't find your account on the allow List :(`,
-      open: true
+      open: true,
+      count: 0,
     }
   },
   computed: mapState(['wallet']),
@@ -54,6 +55,10 @@ export default {
     this.screenName = this.$route.query.screen_name;
     this.failMessage = this.$route.query.msg === 'used' ? 'Twitter Account is already linked to another Address' : `We can't find your account on the allow List :(`
     
+    this.getCount();
+    if(this.wallet) {
+      this.checkByAddress(this.wallet);
+    }
     this.$nuxt.$on('web3-active', () => {
       this.checkByAddress(this.wallet);
     })
@@ -61,7 +66,7 @@ export default {
   },
   methods: {
     connectWallet(){
-      this.$nuxt.$emit('connect', '/verify')
+      this.$nuxt.$emit('connect', '/early')
     },
     async checkByAddress(address){
       const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
@@ -69,6 +74,10 @@ export default {
         this.verify = true
         this.screenName = res.data.screen_name || res.data.discord
       }
+    },
+    async getCount(){
+      const res = await (await fetch(`/.netlify/functions/allow-list-count`)).json()
+      this.count = res.count
     }
   }
 }
@@ -123,6 +132,12 @@ export default {
     animation-delay: 200ms;
   }
 
+    h2 {
+      text-transform: uppercase;
+      line-height: 1;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+    }
 
     h1 {
       text-transform: uppercase;
@@ -136,7 +151,9 @@ export default {
       h1 {
         font-size: 1.4rem;
       }
-      
+      h2 {
+        font-size: 0.7rem;
+      }
     }
     .connected {
       padding: 1rem;
@@ -196,19 +213,5 @@ export default {
       margin-bottom: 2rem;
     }
 
-
-    @keyframes enter {
-    0% {
-      opacity: 0;
-    }
-    20% {
-      opacity: 0;
-      transform: scale(1.2);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
 </style>
 

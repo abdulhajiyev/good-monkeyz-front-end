@@ -9,8 +9,8 @@ const {
   CONSUMER_KEY,
   CONSUMER_SECRET,
   RETURN_URL,
-  // PRIVATE_KEY_DEV
-  PRIVATE_KEY_MONKEY_PROD,
+  PRIVATE_KEY_DEV
+  // PRIVATE_KEY_MONKEY_PROD,
 } = process.env;
 
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
@@ -38,7 +38,7 @@ exports.handler = async (event, context, callback) => {
   const TWITTER_SCREEN_NAME = userClient.screenName
   
   const allowList = await supabase
-    .from('merch_allow_list')
+    .from('allow_list')
     .select()
     .ilike('screen_name', TWITTER_SCREEN_NAME)
     .limit(1)
@@ -69,13 +69,13 @@ exports.handler = async (event, context, callback) => {
   }
   if (allowList.data.screen_name.toLowerCase() === TWITTER_SCREEN_NAME.toLowerCase()) {
 
-    const MONKEY_KING = new ethers.Wallet(PRIVATE_KEY_MONKEY_PROD);
+    const MONKEY_KING = new ethers.Wallet(PRIVATE_KEY_DEV);
     const messageHash = ethers.utils.solidityKeccak256(['address', 'uint256'], [OAuthStep1.data.address, 0]);
     const messageBytes = ethers.utils.arrayify(messageHash);
     const signature = await MONKEY_KING.signMessage(messageBytes);
 
     const updatedEthAddress = await supabase
-      .from('merch_allow_list')
+      .from('allow_list')
       .update({ 
         address: OAuthStep1.data.address,
         signature: signature,

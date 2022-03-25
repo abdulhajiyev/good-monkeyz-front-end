@@ -12,15 +12,13 @@ exports.handler = async (event, context, callback) => {
 console.log(event.queryStringParameters)
   const address = event.queryStringParameters.address
 
-  const {data, error} = await supabase
+  const {data, error, count} = await supabase
     .from('allow_list')
-    .select()
-    .ilike('address', address)
-    .limit(1)
-    .single()
+    .select("*", { count: "exact", head: true})
 
+  console.log(count)
   return {
     statusCode: 200,
-    body: JSON.stringify({data})
+    body: JSON.stringify({count})
   }
 }

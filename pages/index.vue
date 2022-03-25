@@ -218,7 +218,7 @@ $l: 1720px;
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s, transform .5s;
+  transition: opacity 0.35s, transform .35s;
 }
 .fade-enter,
 .fade-leave-to {
@@ -248,6 +248,9 @@ $l: 1720px;
     @media (min-width: $s) {
       width: 100%;
     }
+    /* // */
+    opacity: 0;
+    animation: enter-fade 8s ease 1 forwards;
   }
 
   .fade-bg {
@@ -270,6 +273,7 @@ $l: 1720px;
     position: relative;
     overflow: hidden;
     padding-top: 3rem;
+
   }
 
     .banner {
@@ -291,6 +295,9 @@ $l: 1720px;
       @media (min-width: $l) {
         font-size: 4rem;
       }
+      /* // */
+      opacity: 0;
+      animation: enter-right 1s ease 1 forwards;
     }
     .banner--top {
       top: 0;
@@ -311,9 +318,9 @@ $l: 1720px;
     .marquee img{
       height: 2.4rem;
     }
-  .nav {
-    position: relative;
-  }
+    .nav {
+      position: relative;
+    }
 
   .monkeyz {
     padding: 6rem 0;
@@ -411,14 +418,25 @@ $l: 1720px;
 
   .faq-item__close {
     position: absolute;
-    font-size: 3rem;
+    font-size: 2rem;
     color: #fff;
     top: 1.4rem;
-    right: 1.5rem;
-    font-family: Arial, Helvetica, sans-serif;
+    right: 1.2rem;
+    font-family: Helvetica, sans-serif;
     cursor: pointer;
     transform: rotate(135deg);
     transition: ease-in-out 300ms;
+
+    @media (min-width: $s) {
+      top: 1.6rem;
+      right: 1.5rem;
+    }
+    @media (min-width: $m) {
+      right: 1.5rem;
+      top: 1.7rem;
+      font-size: 2.6rem;
+    }
+
   }
   .faq-item__close.active {
      transform: rotate(90deg);
@@ -429,6 +447,7 @@ $l: 1720px;
     color: #fff;
     font-size: 1.3rem;
     margin: 0;
+    padding-right: 1rem;
     @media (min-width: $s) {
       font-size: 1.5rem;
     }
@@ -455,11 +474,12 @@ $l: 1720px;
     }
   }
 
-  .faq-item__answer >>> a {
+
+  .faq-item__answer ::v-deep a {
     color: #fff;
     text-decoration: none;
     border-bottom: solid 1px #fff;
-  }
+}
 
   .banner--middle {
     color: #fff;
@@ -613,6 +633,7 @@ $l: 1720px;
   .spotlight--hero{
     opacity: 0.25;
     width: 300%;
+    top: -10%;
     @media (min-width: $s) {
       width: 130%;
     }
