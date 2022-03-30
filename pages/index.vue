@@ -31,9 +31,6 @@
         <div class="m-scroll m-scroll--3">
           <img :src="m3" ><img :src="m3" ><img :src="m3" >
         </div>
-        <div class="m-scroll m-scroll--4">
-          <img :src="m4" ><img :src="m4" ><img :src="m4" >
-        </div>
       </div>
     </section>
   
@@ -115,10 +112,9 @@ import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
 import star from "@/assets/img/star-black.svg";
 
-import m1 from "@/assets/img/monkey-group-1.png";
-import m2 from "@/assets/img/monkey-group-2.png";
-import m3 from "@/assets/img/monkey-group-3.png";
-import m4 from "@/assets/img/monkey-group-4.png";
+import m1 from "@/assets/img/row-1.png";
+import m2 from "@/assets/img/row-2.png";
+import m3 from "@/assets/img/row-3.png";
 
 import monkey1 from "@/assets/img/monkey-1.png";
 import monkey2 from "@/assets/img/monkey-2.png";
@@ -142,7 +138,7 @@ export default {
       monkey,
       divider,
       star,
-      m1,m2,m3,m4,
+      m1,m2,m3,
       faq: [
         {
           id: 0,
