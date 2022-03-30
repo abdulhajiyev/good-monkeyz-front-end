@@ -70,7 +70,7 @@ exports.handler = async (event, context, callback) => {
   if (allowList.data.screen_name.toLowerCase() === TWITTER_SCREEN_NAME.toLowerCase()) {
 
     const MONKEY_KING = new ethers.Wallet(PRIVATE_KEY_DEV);
-    const messageHash = ethers.utils.solidityKeccak256(['address', 'uint256'], [OAuthStep1.data.address, 0]);
+    const messageHash = ethers.utils.solidityKeccak256(['address'], [OAuthStep1.data.address]);
     const messageBytes = ethers.utils.arrayify(messageHash);
     const signature = await MONKEY_KING.signMessage(messageBytes);
 
