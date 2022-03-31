@@ -239,7 +239,7 @@ export default {
         {
           id: 6,
           q: 'What Is A Booster Pack?',
-          a: 'Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
+          a: 'Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed to minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
           active: false,
         },
       ],
