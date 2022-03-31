@@ -17,6 +17,7 @@
                 <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
                 <a href="https://discord.gg/ztNYjaVCjp"><img class="discord" :src="discord"></a>
+                <a href="https://opensea.io/collection/good-monkeyz-limited-editions"><img class="opensea" :src="opensea"></a>
             </div>
             <span v-else class="user-area">
                 <div class="user">
@@ -37,6 +38,7 @@
     import twitter from "@/assets/img/twitter.svg"
     import discord from "@/assets/img/discord.svg"
     import insta from "@/assets/img/insta.svg"
+    import opensea from '@/assets/img/opensea-white.svg'
     import gmWhite from "@/assets/img/gm-white.svg"
     
 
@@ -49,6 +51,7 @@
                 twitter,
                 discord,
                 insta,
+                opensea,
                 gmWhite,
             }
         },
@@ -159,7 +162,8 @@ $l: 1720px;
 
     .twitter,
     .discord,
-    .insta {
+    .insta,
+    .opensea {
         height: 1.7rem;
         margin: 0 0.45rem;
     }
