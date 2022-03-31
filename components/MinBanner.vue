@@ -9,9 +9,8 @@
             <nav v-if="active">
                 <nuxt-link :to="{path: '/', hash: 'about'}" >About</nuxt-link> 
                 <nuxt-link :to="{path: '/', hash: 'faq'}" >FAQ</nuxt-link> 
-                <nuxt-link to="/early">Early Access</nuxt-link>
                 <nuxt-link :to="{path: '/', hash: 'team'}" >Team</nuxt-link> 
-                <span @click="goToMerch()" >Merch</span>
+                <!-- <span @click="goToMerch()" >Merch</span> -->
             </nav>
 
             <div v-if="!wallet" class="social">
@@ -75,12 +74,10 @@ $l: 1720px;
     nav {
         display: flex;
         justify-content: center;
-        
-        @media (max-width: $s) {
-            order: 3;
+        padding-top: 3rem;
+        @media (min-width: $s) {
+            padding-top: 0;
         }
-         
-
     }
     nav a,
     nav span {
@@ -92,10 +89,14 @@ $l: 1720px;
         cursor: pointer;
     }
     .logo {
-        @media (max-width: $s) {
-            position: absolute;
-            left: 2rem;
-            top: 1.5rem;
+        position: absolute;
+        left: 2rem;
+        top: 1.5rem;
+        padding-right: 2.5rem ;
+        @media (min-width: $s) {
+            position: relative;
+            left: auto;
+            top: auto;
         }
     }
     a.nuxt-link-active {
@@ -138,9 +139,20 @@ $l: 1720px;
         display: flex;
         justify-content: center;
         align-items: center;
-        @media (max-width: $s) {
-            align-self: flex-end;
-            padding: 0.25rem 1.5rem 0 0;
+
+
+        position: absolute;
+        top: 2rem;
+        right: 1.5rem;
+        padding-right: 2rem;
+        @media (min-width: $s) {
+            position: relative;
+            top: auto;
+            right: auto;
+            padding-right: 0;
+        }
+        @media (max-width: $m) {
+            padding-right: 0;
         }
     }
 
@@ -150,10 +162,6 @@ $l: 1720px;
     .insta {
         height: 1.7rem;
         margin: 0 0.45rem;
-        /* cursor: pointer; */
-    }
-    .discord {
-        /* transform: translateY(-0.2rem) ; */
     }
 
     .user {
@@ -167,10 +175,15 @@ $l: 1720px;
         color: #000;
     }
     .user-area {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
         padding-right: 2rem;
-        align-self: flex-end;
-        @media (max-width: $s) {
-            padding-right: 2rem;
+        @media (min-width: $s) {
+            position: relative;
+            top: auto;
+            right: auto;
+            padding-right: 0;
         }
         @media (max-width: $m) {
             padding-right: 0;

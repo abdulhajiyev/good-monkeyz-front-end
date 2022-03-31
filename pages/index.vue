@@ -9,7 +9,40 @@
       </div>
       <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
       <div class="fade-bg"></div> 
-      <img class="spotlight spotlight--hero" :src="spotlightHero" >
+      <div class="early">
+          <div v-if="!wallet">
+            <h1>Early Access Verify</h1>   
+            <span class="btn" @click="connectWallet()">Verify WALLET</span>
+          </div>
+          <div v-else> 
+            <div v-if="!status && addressCheck" >
+              <h1>Early Access Verify</h1>   
+              <a :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
+                <img class="twitter" :src="twitter" >
+                <span>AUTHENTICATE WITH TWITTER</span>
+              </a>
+            </div>
+            <div v-if="status === 'allow'">
+              <h1>VERIFICATION SUCCESSFUL</h1>   
+              <div class="verified">
+                <span class="mints">2 x Mint Slots</span>
+                <span class="screen-name">@{{screenName}}</span>
+              </div>
+            </div>
+            <div v-if="status === 'raffle'">
+              <h1>YOU’RE ON THE RAFFLE LIST</h1>   
+              <div class="verified">
+                <span class="mints">RAFFLE #{{raffleId}}</span>
+                <span class="screen-name">@{{screenName}}</span>
+              </div>
+            </div>
+            <span @click="resetError()" v-if="status === 'used'" class="not-verified">{{failMessage}}</span>
+          </div>
+      </div>
+      <div class="minting">
+        <h3 >0 <img :src="divider"> 10,000</h3>
+        <h4>MINTING TUESDAY 21 APRIL 2022</h4>
+      </div>
       <div class="banner banner--bottom">
         <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
       </div>
@@ -56,10 +89,10 @@
     <section class="team" id="team">
       <div class="monkey">
         <img class="spotlight spotlight--charles" :src="spotlightCharles" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-1" data-rellax-percentage="0.6">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-1.8"  data-rellax-percentage="0.5">
             <img :src="monkey1" >
         </div>
-        <div class="monkey__info" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.5">
+        <div class="monkey__info" >
             <h3>CHARLESP</h3>
             <h4>CREATIVE</h4>
             <h5>@CHARLESPATTSON</h5>
@@ -67,29 +100,52 @@
       </div>
       <div class="monkey">
         <img class="spotlight spotlight--sam" :src="spotlightSam" >
-        <div class="monkey__info monkey__info--right" v-rellax data-rellax-speed="0.4" data-rellax-percentage="0.3">
+        <div class="monkey__info monkey__info--right">
             <h3>SAMMYB</h3>
             <h4>DEVELOPMENT</h4>
             <h5>@SAM_BILLINGHAM</h5>
         </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-2.15" data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-1"  data-rellax-percentage="0.5">
             <img :src="monkey2" >
         </div>
       </div>
        <div class="monkey" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-0.5" data-rellax-percentage="0.4">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-2"  data-rellax-percentage="0.5">
             <img :src="monkey3" >
         </div>
-        <div class="monkey__info"  data-rellax-speed="0.7" data-rellax-percentage="0.5">
+        <div class="monkey__info" >
             <h3>JULIAF</h3>
             <h4>COMMUNITY</h4>
             <h5>@JULIA91990</h5>
         </div>
       </div>
+            <div class="monkey">
+        <img class="spotlight spotlight--sam" :src="spotlightSam" >
+        <div class="monkey__info monkey__info--right">
+            <h3>SNENS</h3>
+            <h4>MODZ</h4>
+            <h5>@BaronSnens</h5>
+        </div>
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-1"  data-rellax-percentage="0.5">
+            <img :src="monkey4" >
+        </div>
+      </div>
+       <div class="monkey" >
+        <div class="monkey__avatar" v-rellax data-rellax-speed="-1.8"  data-rellax-percentage="0.5">
+            <img :src="monkey5" >
+        </div>
+        <div class="monkey__info" >
+            <h3>SIO</h3>
+            <h4>MODZ</h4>
+            <h5>@selimimoberdorf</h5>
+        </div>
+      </div>
     </section>
 
     <section class="good-things">
-      <p>GOOD THINGS COME TO GOOD MONKEYZ WHO WAIT. COMING APRIL 2022.</p>
+      <p>GOOD TIMES</p>
+      <p>GOOD VIBES</p>
+      <p>GOOD MONKEYZ</p>
     </section>
     
     <div class="gm-full">
@@ -111,6 +167,7 @@ import MinBanner from '@/components/MinBanner.vue';
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
 import star from "@/assets/img/star-black.svg";
+import twitter from "@/assets/img/twitter-black.svg"
 
 import m1 from "@/assets/img/row-1.png";
 import m2 from "@/assets/img/row-2.png";
@@ -119,6 +176,8 @@ import m3 from "@/assets/img/row-3.png";
 import monkey1 from "@/assets/img/monkey-1.png";
 import monkey2 from "@/assets/img/monkey-2.png";
 import monkey3 from "@/assets/img/monkey-3.png";
+import monkey4 from "@/assets/img/monkey-4.png";
+import monkey5 from "@/assets/img/monkey-5.png";
 import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
 
@@ -138,6 +197,7 @@ export default {
       monkey,
       divider,
       star,
+      twitter,
       m1,m2,m3,
       faq: [
         {
@@ -149,13 +209,13 @@ export default {
         {
           id: 1,
           q: 'Wen Monkeyz? Mint Date?',
-          a: "We are launching on April 26, 2022 at 2pm PST / 5pm EST.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
+          a: "We are launching late April (Exact date TBC).<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
           active: false,
         },
         {
           id: 2,
           q: 'Early List & Public Mint?',
-          a: '4000 Early list Spaces avaiable - anyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs. 1000 (+remaning unminted from Early List) Public Mint. 250 Mint Passess. 250 Booster Packs.',
+          a: '3077 Early list Spaces avaiable - anyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs. 1000 (+remaning unminted from Early List) Public Mint. 250 Mint Passess. 250 Booster Packs.',
           active: false,
         },
         {
@@ -186,20 +246,76 @@ export default {
       monkey1,
       monkey2,
       monkey3,
+      monkey4,
+      monkey5,
       gmOut,
       gmIn,
       spotlightFooter,
       spotlightCharles,
       spotlightSam,
       spotlightHero,
+      screenName: '',
+      status: '',
+      addressCheck: false,
+      failMessage: '',
+      count: 0,
+      raffleId: null,
     }
   },
   computed: mapState(['wallet']),
   created() {
+    this.setStatus();
+    this.getCount();
+    if(this.wallet) {
+      this.checkByAddress(this.wallet);
+    }
+    this.$nuxt.$on('web3-active', () => {
+      this.checkByAddress(this.wallet);
+    })
   },
   methods: {
     openfaq(id){
       this.faq[id].active = !this.faq[id].active;
+    },
+    connectWallet(){
+      this.$nuxt.$emit('connect')
+    },
+    setStatus(userList, screenName){
+      const list = userList || this.$route.query.list 
+      
+      if(list === 'allow'){
+        this.status = 'allow';
+      } 
+      
+      if (list === 'raffle') {
+        this.status = 'raffle';;
+      } 
+      
+      if (list === 'false') {
+        this.status = 'used';
+        this.failMessage =  'Twitter Account is already linked to another Address';
+      }
+
+      console.log('LIST: ', list)
+
+      this.screenName = screenName || this.$route.query.screen_name;
+    },
+    async checkByAddress(address){
+      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
+      if ( res != null ) {
+        this.setStatus(res.list, res.screenName)
+        this.raffleId = res.raffleId || null
+        console.log(res)
+      }
+      this.addressCheck = true;
+    },
+    async getCount(){
+      const res = await (await fetch(`/.netlify/functions/allow-list-count`)).json()
+      this.count = res.count
+    },
+    resetError() {
+      this.failMessage = ''
+      this.status = ''
     },
   }
 }
@@ -238,11 +354,15 @@ $l: 1720px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    filter: grayscale(30%);
+    filter: grayscale(10%);
     z-index: 0;
-    width: 200%;
-    @media (min-width: $s) {
-      width: 100%;
+    width: 190%;
+    @media (min-width: $m) {
+      top: auto;
+      bottom: 0;
+      left: 0;
+      width: 80%;
+      transform: translate(-30%, 20%);
     }
     /* // */
     opacity: 0;
@@ -318,6 +438,166 @@ $l: 1720px;
       position: relative;
     }
 
+    // 
+    .early {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      color: #fff;
+      text-align: center;
+      opacity: 0;
+      animation-delay: 3s;
+      animation: enter-fade 1s ease 1 forwards;
+
+      h1 {
+        opacity: 0;
+        animation-delay: 1s;
+        animation: enter 1s ease 1 forwards;
+      }
+      .verified {
+        opacity: 0;
+        animation-delay: 1.2s;
+        animation: enter 1s ease 1 forwards;
+      }
+    }
+    .minting {
+      position: absolute;
+      bottom: 6rem;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      
+      opacity: 0;
+      animation-delay: 3s;
+      animation: enter-up 3s ease 1 forwards;
+    }
+    .minting h3 {
+      font-size: 3.5rem;
+      margin: 0 0 0.5rem;
+    }
+    .minting h4 {
+      font-size: 0.7rem;
+      margin: 0;
+      letter-spacing: 0.25rem;
+    }
+    .minting img {
+      height: 3.5rem;
+      transform: translateY(10px);
+    }
+
+    .verify {
+      padding: 5rem;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      max-height: 100vh;
+      position: relative;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      
+      opacity: 0;
+      animation: enter 2s ease 1 forwards;
+      animation-delay: 200ms;
+    }
+
+    .early h2 {
+      text-transform: uppercase;
+      line-height: 1;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+    }
+
+    .early h1 {
+      text-transform: uppercase;
+      letter-spacing: 0.02rem;
+      line-height: 1;
+        font-size: 2rem;
+      letter-spacing: 0.4em;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 480px ){
+      h1 {
+        font-size: 1.4rem;
+      }
+      h2 {
+        font-size: 0.7rem;
+      }
+    }
+    @media (min-width: $m) {
+      h1 {
+        white-space: nowrap;
+      }
+    }
+
+    .verified {
+      padding: 1.5rem 2.5rem;
+      background: linear-gradient(222.44deg, #79fcd2c0 16.01%, #1fc593de 34.3%, #7551c4ce 84.37% );
+      border-radius: 1.5rem;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-transform: uppercase;
+    }
+    .screen-name {
+      display: inline-block;
+    }
+    .mints {
+      display: inline-block;
+      font-family: Helvetica, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .not-verified {
+      background: linear-gradient(222.44deg, #fcdd79 16.01%, #c57d1f 34.3%, #c4516a 84.37% );
+      padding: 1rem;
+      border-radius: 1rem;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
+    .btn {
+      padding: 1rem;
+      border-radius: 1rem;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      margin-bottom: 1rem;
+      display: inline-flex;
+      white-space: nowrap;
+      cursor: pointer;
+
+      opacity: 0;
+      animation: enter 2s ease 1 forwards;
+      animation-delay: 200ms;
+    }
+    .twitter {
+      height: 1rem;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    .btn span {
+      display: inline-block;
+    }
+  
+
+    .step {
+      margin-bottom: 2rem;
+    }
+
+    //
   .monkeyz {
     padding: 6rem 0;
     position: relative;
@@ -374,6 +654,7 @@ $l: 1720px;
   }
   .m-scroll img {
     max-height: 8rem;
+    margin-right: 1.5rem;
     display: inline;
   }
   .m-scroll--1,
@@ -397,9 +678,6 @@ $l: 1720px;
     margin: 0 auto;
   }
 
-  .faq-list  {
-
-  }
 
   .faq-list__item {
     padding: 1.5rem 2rem;
@@ -518,10 +796,11 @@ $l: 1720px;
     }
     @media (min-width: $m) {
       flex-basis: 40%;
+      max-width: 400px;
     }
   }
   .monkey__avatar img {
-    max-width: 100%;
+    max-width: 90%;
     
   }
   .monkey__info {
@@ -531,16 +810,21 @@ $l: 1720px;
 
     flex-basis: 30%;
     max-width: 50%;
-    padding-top: 50%;
+    padding-top: 5%;
     @media (min-width: $s) {
       flex-basis: 50%;
-      padding-top: 50%;
+      padding-top: 12%;
     }
     @media (min-width: $m) {
       flex-basis: 60%;
-      padding-top: 0;
+      
+      // padding-top: 0;
     }
   }
+  .monkey__info--right{
+    margin-left: auto;
+  }
+  
   .monkey__info h3{
     color: #fff;
     
@@ -598,22 +882,25 @@ $l: 1720px;
   .good-things {
     max-width: 80%;
     margin: 0 auto;
-    font-size: 3.3rem;
+    font-size: 2.1rem;
     line-height: 1;
     color: #fff;
     z-index: 1;
     position: relative;
+    text-align: center;
     @media (min-width: $s) {
-      font-size: 6rem;
+      font-size: 5rem;
     }
     @media (min-width: $m) {
-      font-size: 8rem;
+      font-size: 7rem;
     }
     @media (min-width: $l) {
       font-size: 12rem;
     }
+    p {
+      margin: 0;
+    }
   }
-
 
   .spotlight {
     width: 160%;
@@ -627,7 +914,7 @@ $l: 1720px;
     }
   }
   .spotlight--hero{
-    opacity: 0.25;
+    opacity: 0.15;
     width: 300%;
     top: -10%;
     @media (min-width: $s) {

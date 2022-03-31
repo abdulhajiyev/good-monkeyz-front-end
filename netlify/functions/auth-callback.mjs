@@ -45,13 +45,32 @@ exports.handler = async (event, context, callback) => {
     .single()
 
   if(allowList.data === null) {
-    return {
-      statusCode: 302,
-      headers: {
-        Location: `${RETURN_URL}?verify=${false}`,
-        'Cache-Control': 'no-cache' 
-      },
-      body: ''
+    
+    const addToRaffleList = await supabase
+      .from('raffle_list')
+      .insert({
+        screen_name: TWITTER_SCREEN_NAME,  
+        address: OAuthStep1.data.address,
+      })
+    
+    if(addToRaffleList.data) {
+      return {
+        statusCode: 302,
+        headers: {
+          Location: `${RETURN_URL}?verify=${true}&list=raffle&screen_name=${TWITTER_SCREEN_NAME}`,
+          'Cache-Control': 'no-cache' 
+        },
+        body: ''
+      }
+    } else {
+      return {
+        statusCode: 302,
+        headers: {
+          Location: `${RETURN_URL}?verify=${false}&list=false&msg=used`,
+          'Cache-Control': 'no-cache' 
+        },
+        body: ''
+      }
     }
   }
 
@@ -61,7 +80,7 @@ exports.handler = async (event, context, callback) => {
     return {
       statusCode: 302,
       headers: {
-        Location: `${RETURN_URL}?verify=false&msg=used`,
+        Location: `${RETURN_URL}?verify=false&list=false&msg=used`,
         'Cache-Control': 'no-cache' 
       },
       body: ''
@@ -91,7 +110,7 @@ exports.handler = async (event, context, callback) => {
   return {
     statusCode: 302,
     headers: {
-      Location: `${RETURN_URL}?verify=${verified}&screen_name=${TWITTER_SCREEN_NAME}`,
+      Location: `${RETURN_URL}?verify=${verified}&list=allow&screen_name=${TWITTER_SCREEN_NAME}`,
       'Cache-Control': 'no-cache' 
     },
     body: ''
