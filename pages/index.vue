@@ -115,7 +115,7 @@
         </div>
         <div class="monkey__info" >
             <h3>JULIAF</h3>
-            <h4>COMMUNITY</h4>
+            <h4>Operations</h4>
             <h5>@JULIA91990</h5>
         </div>
       </div>
@@ -227,13 +227,13 @@ export default {
         {
           id: 4,
           q: 'What Is A Merch Bundle?',
-          a: 'A limited edition token. Max supply of 77. Primary sale sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a sticker Pack. Chance for an additional NFT drop on redemption. Worldwide shipping included. During minting holders also recived a Mint Pass NFT',
+          a: 'A limited edition token. Max supply of 77. Primary sale sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a Good Monkeyz sticker Pack. Chance for an additional NFT drop on redemption ;). Worldwide shipping included. During minting holders also received a Mint Pass NFT',
           active: false,
         },
         {
           id: 5,
           q: 'What Is A Mint Pass?',
-          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passess were minted with the OG Merch Bundle. Future mint passess will be avaiable through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.',
+          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passes were minted with the OG Merch Bundle. Future mint passes will be available through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.',
           active: false,
         },
         {
