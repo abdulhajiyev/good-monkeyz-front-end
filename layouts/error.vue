@@ -6,9 +6,9 @@
         <h2>Monkey you look lost?</h2>
     </div>
     <div class="btns">
-      <nuxt-link to="/" class="btn">
-      <span>Go Home</span>
-      </nuxt-link>
+      <span @click="home()" class="btn">
+        <span>Go Home</span>
+      </span >
       <!-- <span class="btn">Connect Another Wallet</span> -->
     </div>
     <img class="sad-monkey" :src="sadMonkey">
@@ -39,6 +39,10 @@ props: ['error'],
   created() {
   },
   methods: {
+      home() {
+        this.$router.push('/?backtothefuture')
+        this.$forceUpdate();
+      }
   },
 
 }
