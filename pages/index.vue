@@ -89,7 +89,7 @@
     <section class="team" id="team">
       <div class="monkey">
         <img class="spotlight spotlight--charles" :src="spotlightCharles" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-1.8"  data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
             <img :src="monkey1" >
         </div>
         <div class="monkey__info" >
@@ -105,12 +105,12 @@
             <h4>DEVELOPMENT</h4>
             <h5>@SAM_BILLINGHAM</h5>
         </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-1"  data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="1"  data-rellax-percentage="0.5">
             <img :src="monkey2" >
         </div>
       </div>
        <div class="monkey" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-2"  data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="0.9"  data-rellax-percentage="0.5">
             <img :src="monkey3" >
         </div>
         <div class="monkey__info" >
@@ -126,12 +126,12 @@
             <h4>MODZ</h4>
             <h5>@BaronSnens</h5>
         </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-1"  data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
             <img :src="monkey4" >
         </div>
       </div>
        <div class="monkey" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="-1.8"  data-rellax-percentage="0.5">
+        <div class="monkey__avatar" v-rellax data-rellax-speed="0.8"  data-rellax-percentage="0.5">
             <img :src="monkey5" >
         </div>
         <div class="monkey__info" >
@@ -373,8 +373,11 @@ $l: 1720px;
     width: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(180deg, #000000 12.4%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(270deg, #0a0606 14.4%, rgba(0, 0, 0, 0) 100%);
     z-index: 0;
+    @media (min-width: $m) {
+      background: linear-gradient(270deg, #0a0606 44.4%, rgba(0, 0, 0, 0) 100%);
+    }
   }
   .fade--monkey {
     background: linear-gradient(210deg, rgba(0,0,0,0.8) 43.4%, rgba(0, 0, 0, 0) 100%);
