@@ -27,13 +27,21 @@
             </ul>
         </div>
         <div class="allow-list">
-          <h2>Merch Allow List - Supabase database</h2>
+          <h2>Merch Allow List - Database</h2>
             <ul>
               <li v-for="(item, index) in allowList" :key="index">
                   {{index }}: {{item.screen_name }}: {{item.address }}: {{getMintStatus(item.address) ? "Minted" : 'X'}}
               </li>
             </ul>
         </div>
+        <!-- <div class="allow-list">
+          <h2>Merch Allow List - Database</h2>
+            <ul>
+              <li v-for="(item, index) in allowList" :key="index">
+                  {{index }}: {{item.screen_name }}: {{item.address }}: {{getMintStatus(item.address) ? "Minted" : 'X'}}
+              </li>
+            </ul>
+        </div> -->
 
       </div>
   </div>
@@ -111,7 +119,7 @@ export default {
       const tx =  await connectedContract.mintAdmin(
         this.wallet,
         0,
-        1
+        10
       );
       console.log(tx);
     },

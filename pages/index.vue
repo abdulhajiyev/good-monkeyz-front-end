@@ -1,84 +1,190 @@
 <template>
   <div class="index">
-    <MinBanner :account="wallet" :active="false" />
-    <div class="splash">
-      <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
+    <section class="splash">
+      <div class="banner banner--top">
+        <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
+      </div>
+      <div class="nav">  
+        <MinBanner :account="wallet" :active="true" />
+      </div>
+      <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
       <div class="fade-bg"></div> 
-      <div class="splash-inner" >
-
-        <div class="banner-group">
-          <span v-if="!open" class="btn--sparkle">
-            <span class="subtitle">GM Bundle Token</span>
-            <span class="title">HOODIE + Hat + Mint Pass</span>
-          </span>
-          <span v-if="open && amountMinted < 77" class="btn--sparkle">
-            <span class="subtitle">GM Bundle Token</span>
-            <span class="title">HOODIE + Hat + Mint Pass</span>
-          </span>
-          <span v-else class="btn--sparkle">
-            <span class="subtitle">Limited Edition</span>
-            <span class="title">GM Merch Bundle &amp; GM Mint Pass</span>
-          </span>
-          <div class="banner">
-            <span v-if="open && amountMinted < 77" class="marquee">START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> START MINTING <img :src="star"> </span>
-            <span v-else class="marquee">MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> MINTING FINISHED <img :src="star"> </span>
-            <!-- <span v-else class="marquee"><span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span v-html="countdown"></span> <img :src="star"> <span ref="zerozero">44</span></span> -->
+      <div class="early">
+          <div v-if="!wallet">
+            <h1>Early Access Verify</h1>   
+            <span class="btn" @click="connectWallet()">Verify WALLET</span>
           </div>
-          <p>There are 77 limited edition GM tokens available. <br> The GM Token gives you access to the limited edition GM merch bundle. <br> Everyone gets a Monkey! Happy Minting</p>
-          <div v-if="open && amountMinted < 77">
-            <span v-if="!wallet" @click="$nuxt.$emit('connect')" class="btn">
-              <span>CONNECT WALLET TO MINT</span>
-            </span>
-            <nuxt-link v-else to="/mint/merch" class="btn">
-              <span>MINT GM BUNDLE</span>
-            </nuxt-link>
+          <div v-else> 
+            <div v-if="!status && addressCheck" >
+              <h1>Early Access Verify</h1>   
+              <a :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
+                <img class="twitter" :src="twitter" >
+                <span>AUTHENTICATE WITH TWITTER</span>
+              </a>
+            </div>
+            <div v-if="status === 'allow'">
+              <h1>VERIFICATION SUCCESSFUL</h1>   
+              <div class="verified">
+                <span class="mints">2 x Mint Slots</span>
+                <span class="screen-name">@{{screenName}}</span>
+              </div>
+            </div>
+            <div v-if="status === 'raffle'">
+              <h1>YOU’RE ON THE RAFFLE LIST</h1>   
+              <div class="verified">
+                <span class="mints">RAFFLE #{{raffleId}}</span>
+                <span class="screen-name">@{{screenName}}</span>
+              </div>
+            </div>
+            <span @click="resetError()" v-if="status === 'used'" class="not-verified">{{failMessage}}</span>
           </div>
-          <a href="https://opensea.io/collection/good-monkeyz-limited-editions" class="btn">
-            <img :src="openseaLogo">
-            <span>View On OpenSea</span>
-          </a>
+      </div>
+      <div class="minting">
+        <h3 >0 <img :src="divider"> 10,000</h3>
+        <h4>MINTING THURSDAY 21 APRIL 2022</h4>
+      </div>
+      <div class="banner banner--bottom">
+        <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
+      </div>
+    </section>
+    <section class="monkeyz" id="about">
+      <div class="fade-bg fade--monkey"></div> 
+      <div class="lead">
+        <h2>Good Monkeyz are a collection of 10,000 generated NFTs living on the Ethereum blockchain</h2>
+        <p>Created from a combination of hundreds of different traits, all good! You’ll be able to find some very special 1/1 in the collection that we’ve collaborated on with our friends.</p>
+      </div>
+      <div></div>
+      <div class="monkeyz-scroll">
+        <div class="m-scroll m-scroll--1">
+          <img :src="m1" ><img :src="m1" ><img :src="m1" >
         </div>
-
-        <!-- <div class="gm-spinner">
-            <img class="gm-in" :src="gmIn">
-            <img class="gm-out" :src="gmOut">
-        </div> -->
-
-        <div class="counter">
-          <h3 v-if="open">{{amountMinted}} <img :src="divider"> 77</h3>
-          <h3 v-else> ~ <img :src="divider"> 77</h3>
-          <h4>Claimed</h4>
+        <div class="m-scroll m-scroll--2">
+          <img :src="m2" ><img :src="m2" ><img :src="m2" >
+        </div>
+        <div class="m-scroll m-scroll--3">
+          <img :src="m3" ><img :src="m3" ><img :src="m3" >
         </div>
       </div>
-    </div>
+    </section>
+  
 
+    <section class="faq" id="faq">
+      <h2>FAQ</h2>
+      <div class="faq-list">
+        <div @click="openfaq(item.id)"  class="faq-list__item" v-for="item in faq" :key="item.id">
+          <h3 class="faq-item__question">{{item.q}}</h3>
+          <span :class="{ active: item.active }" class="faq-item__close">&times;</span>
+          <Transition name="fade" mode="out-in">
+            <p :key="item.active" v-if="item.active" class="faq-item__answer" v-html="item.a"></p>
+          </Transition>
+        </div>
+      </div>
+    </section>
+
+    <section class="banner banner--middle">
+      <span class="marquee">MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ</span>
+    </section>
+
+
+    <section class="team" id="team">
+      <div class="monkey">
+        <img class="spotlight spotlight--charles" :src="spotlightCharles" >
+        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
+            <img :src="monkey1" >
+        </div>
+        <div class="monkey__info" >
+            <h3>CHARLESP</h3>
+            <h4>CREATIVE</h4>
+            <h5>@CHARLESPATTSON</h5>
+        </div>
+      </div>
+      <div class="monkey">
+        <img class="spotlight spotlight--sam" :src="spotlightSam" >
+        <div class="monkey__info monkey__info--right">
+            <h3>SAMMYB</h3>
+            <h4>DEVELOPMENT</h4>
+            <h5>@SAM_BILLINGHAM</h5>
+        </div>
+        <div class="monkey__avatar" v-rellax data-rellax-speed="1"  data-rellax-percentage="0.5">
+            <img :src="monkey2" >
+        </div>
+      </div>
+       <div class="monkey" >
+        <div class="monkey__avatar" v-rellax data-rellax-speed="0.9"  data-rellax-percentage="0.5">
+            <img :src="monkey3" >
+        </div>
+        <div class="monkey__info" >
+            <h3>JULIAF</h3>
+            <h4>Operations</h4>
+            <h5>@JULIA91990</h5>
+        </div>
+      </div>
+            <div class="monkey">
+        <img class="spotlight spotlight--sam" :src="spotlightSam" >
+        <div class="monkey__info monkey__info--right">
+            <h3>SNENS</h3>
+            <h4>MODZ</h4>
+            <h5>@BaronSnens</h5>
+        </div>
+        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
+            <img :src="monkey4" >
+        </div>
+      </div>
+       <div class="monkey" >
+        <div class="monkey__avatar" v-rellax data-rellax-speed="0.8"  data-rellax-percentage="0.5">
+            <img :src="monkey5" >
+        </div>
+        <div class="monkey__info" >
+            <h3>SIO</h3>
+            <h4>MODZ</h4>
+            <h5>@selimimoberdorf</h5>
+        </div>
+      </div>
+    </section>
+
+    <section class="good-things">
+      <p>GOOD TIMES</p>
+      <p>GOOD VIBES</p>
+      <p>GOOD MONKEYZ</p>
+    </section>
+    
+    <div class="gm-full">
+        
+        <div class="gm-spinner">
+          <img class="gm-in" :src="gmIn">
+          <img class="gm-out" :src="gmOut">
+        </div>
+
+        <img class="spotlight spotlight--footer" :src="spotlightFooter" >
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { ethers } from 'ethers';
 
 import MinBanner from '@/components/MinBanner.vue';
-
-import { 
-  MERCH_DROP_CONTRACT,
-  INFURA_PROJECT_ID,
-  NETWORK_NAME,
-  TOKEN_ID_MERCH_BUNDLE 
-} from '@/utils/constants';
-
-import GMSHOPJSON from '@/utils/nftShop.json';
 import monkey from "@/assets/video/mm-med.mp4";
-import star from "@/assets/img/star.svg";
+import divider from "@/assets/img/divider.svg";
+import star from "@/assets/img/star-black.svg";
+import twitter from "@/assets/img/twitter-black.svg"
 
-import gmWhite from "@/assets/img/gm-white.svg";
+import m1 from "@/assets/img/row-1.png";
+import m2 from "@/assets/img/row-2.png";
+import m3 from "@/assets/img/row-3.png";
 
+import monkey1 from "@/assets/img/monkey-1.png";
+import monkey2 from "@/assets/img/monkey-2.png";
+import monkey3 from "@/assets/img/monkey-3.png";
+import monkey4 from "@/assets/img/monkey-4.png";
+import monkey5 from "@/assets/img/monkey-5.png";
 import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
-import divider from "@/assets/img/divider.svg";
 
-import openseaLogo from "@/assets/img/opensea.svg"
+import spotlightFooter from "@/assets/img/spotlight-footer.png";
+import spotlightCharles from "@/assets/img/spotlight-charles.png";
+import spotlightSam from "@/assets/img/spotlight-sam.png";
+import spotlightHero from "@/assets/img/spotlight-hero.png";
 
 export default {
   transition: 'index',
@@ -89,326 +195,843 @@ export default {
   data: () => {
     return {
       monkey,
+      divider,
       star,
+      twitter,
+      m1,m2,m3,
+      faq: [
+        {
+          id: 0,
+          q: 'What Is The Supply & Mint Price?',
+          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
+          active: true,
+        },
+        {
+          id: 1,
+          q: 'Wen Monkeyz? Mint Date?',
+          a: "We are launching April 21st 2022.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
+          active: false,
+        },
+        {
+          id: 2,
+          q: 'Early List & Public Mint?',
+          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
+          active: false,
+        },
+        {
+          id: 3,
+          q: 'Wen Merch?',
+          a: 'Merch Bundle tokens are now solely available on the secondary market.<br><br> Merch Redemption system live early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
+          active: false,
+        },
+        {
+          id: 4,
+          q: 'What Is A Merch Bundle?',
+          a: 'A limited edition token. Max supply of 77. Primary sale sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a Good Monkeyz sticker Pack. Chance for an additional NFT drop on redemption ;). Worldwide shipping included. During minting holders also received a Mint Pass NFT',
+          active: false,
+        },
+        {
+          id: 5,
+          q: 'What Is A Mint Pass?',
+          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passes were minted with the OG Merch Bundle. Future mint passes will be available through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.',
+          active: false,
+        },
+        {
+          id: 6,
+          q: 'What Is A Booster Pack?',
+          a: 'Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed to minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
+          active: false,
+        },
+      ],
+      monkey1,
+      monkey2,
+      monkey3,
+      monkey4,
+      monkey5,
       gmOut,
       gmIn,
-      gmWhite,
-      divider,
-      amountMinted: '~',
-      open: true,
-      countdown: '',
-      openseaLogo
+      spotlightFooter,
+      spotlightCharles,
+      spotlightSam,
+      spotlightHero,
+      screenName: '',
+      status: '',
+      addressCheck: false,
+      failMessage: '',
+      count: 0,
+      raffleId: null,
     }
   },
   computed: mapState(['wallet']),
   created() {
-    this.getAmountMinted();
-    this.countdownF();
-    
-    setInterval(()=> {
-      this.countdownF();
-      
-    }, 1000)
-  },
-  mounted() {
-    if(!this.open){
-      this.zeroWidth = this.$refs.zerozero.offsetWidth;
-      setTimeout( () => {
-        this.zeroWidth = this.$refs.zerozero.offsetWidth;
-      }, 2000)
+    this.setStatus();
+    this.getCount();
+    if(this.wallet) {
+      this.checkByAddress(this.wallet);
     }
+    this.$nuxt.$on('web3-active', () => {
+      this.checkByAddress(this.wallet);
+    })
   },
   methods: {
-    async getAmountMinted() {
-      try {
-        const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-        const merchBundle = await connectedContract.merch(TOKEN_ID_MERCH_BUNDLE);
-        this.amountMinted = ethers.utils.formatUnits(merchBundle.minted, 0)
-        this.open = merchBundle.allowMintable;
-        console.log('OPEN-> ', merchBundle);
-      } catch (error) {
-        console.log(error)
-      }
+    openfaq(id){
+      this.faq[id].active = !this.faq[id].active;
     },
-    countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 2, 14, 20, 0, 0, 0)).getTime();
-      const now = new Date().getTime();
-      const distance = countDownDate - now;
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((distance % (1000 * 60)) / (1000) );
-
-      if(seconds.toString().length === 1) {
-        seconds = `0${seconds}`
+    connectWallet(){
+      this.$nuxt.$emit('connect')
+    },
+    setStatus(userList, screenName){
+      const list = userList || this.$route.query.list 
+      
+      if(list === 'allow'){
+        this.status = 'allow';
+      } 
+      
+      if (list === 'raffle') {
+        this.status = 'raffle';;
+      } 
+      
+      if (list === 'false') {
+        this.status = 'used';
+        this.failMessage =  'Twitter Account is already linked to another Address';
       }
 
-      this.countdown = `${days}D ${hours}H ${minutes}M <span class="seconds" style="width: ${this.zeroWidth}px; " ">${seconds}</span>S`;
-      },
+      this.screenName = screenName || this.$route.query.screen_name;
+    },
+    async checkByAddress(address){
+      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
+      if ( res != null ) {
+        this.setStatus(res.list, res.screenName)
+        this.raffleId = res.raffleId || null
+        console.log(res)
+      }
+      this.addressCheck = true;
+    },
+    async getCount(){
+      const res = await (await fetch(`/.netlify/functions/allow-list-count`)).json()
+      this.count = res.count
+    },
+    resetError() {
+      this.failMessage = ''
+      this.status = ''
+    },
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+$s: 660px;
+$m: 960px;
+$l: 1720px;
+
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.35s, transform .35s;
+}
+.fade-enter,
+.fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+.index-enter-active, .index-leave-active { 
+  transition: opacity 0.7s, transform .5s; 
+}
+.index-enter, .index-leave-active { 
+  opacity: 0;
+}
   .index {
     background: #000;
+    overflow: hidden;
   }
 
   .video-bg {
     position: absolute;
-    bottom: 50%;
+    top: 50%;
     left: 50%;
-    transform: translate(-90%, 50%);
-    filter: grayscale(100%);
+    transform: translate(-50%, -50%);
+    filter: grayscale(10%);
     z-index: 0;
-    width: 100%;
-  }
-  @media (min-width: 700px){
-    .video-bg {
-      transform: scale(1.4);
-      bottom: -10%;
-      left: -10%;
-      width: 55%;
+    width: 190%;
+    @media (min-width: $m) {
+      top: auto;
+      bottom: 0;
+      left: 0;
+      width: 80%;
+      transform: translate(-30%, 20%);
     }
+    /* // */
+    opacity: 0;
+    animation: enter-fade 8s ease 1 forwards;
   }
+
   .fade-bg {
     position: absolute;
     height: 100%;
     width: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(270deg, #000000 47.4%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(270deg, #0a0606 14.4%, rgba(0, 0, 0, 0) 100%);
     z-index: 0;
+    @media (min-width: $m) {
+      background: linear-gradient(270deg, #0a0606 44.4%, rgba(0, 0, 0, 0.4) 100%);
+    }
   }
-
-  .index {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    min-height: 100vh;
-    overflow: hidden;
+  .fade--monkey {
+    background: linear-gradient(210deg, rgba(0,0,0,0.8) 43.4%, rgba(0, 0, 0, 0) 100%);
+    z-index: 1;
   }
 
   .splash {
-    padding: 1rem;
-    border: 1rem #fff solid;
     min-height: 100vh;
     width: 100%;
     position: relative;
     overflow: hidden;
+    padding-top: 3rem;
+
   }
 
-  .splash-inner {
-    min-height: 100%;
-    width: 100%;
-    text-align: center;
-  }
+    .banner {
+      width: 100%;
+      z-index: 1;
+      text-transform: uppercase;
+      font-weight: 900;
+      font-size: 3rem;
+      white-space: nowrap;
+      pointer-events: none;
+      position: absolute;
+      background: #fff;
+      @media (min-width: $s) {
+        font-size: 3.3rem;
+      }
+      @media (min-width: $m) {
+        font-size: 3.5rem;
+      }
+      @media (min-width: $l) {
+        font-size: 4rem;
+      }
+      /* // */
+      opacity: 0;
+      animation: enter-right 1s ease 1 forwards;
+    }
+    .banner--top {
+      top: 0;
+    }
+    .banner--bottom {
+      bottom: 0;
+    }
+    .marquee {
+      display: block;
+      will-change: transform;
+      line-height: 1;
+      animation: marquee 20s linear infinite;
+      @media (min-width: $m) {
+        animation: marquee 60s linear infinite;
+      }
+   
+    }
+    .marquee img{
+      height: 2.4rem;
+    }
+    .nav {
+      position: relative;
+    }
 
-  .banner-group {
-    color: #fff;
-    text-align: center;
-    
-  }
+    // 
+    .early {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      color: #fff;
+      width: 90%;
+      text-align: center;
+      opacity: 0;
+      animation-delay: 3s;
+      animation: enter-fade 1s ease 1 forwards;
 
-  .banner-group h2 {
-    text-align: center;
-    font-size: 0.625rem;
-    letter-spacing: 0.4em;
-    
-  }
+      h1 {
+        opacity: 0;
+        animation-delay: 1s;
+        animation: enter 1s ease 1 forwards;
+      }
+      .verified {
+        opacity: 0;
+        animation-delay: 1.2s;
+        animation: enter 1s ease 1 forwards;
+      }
+    }
+    .minting {
+      position: absolute;
+      bottom: 6rem;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      
+      opacity: 0;
+      animation-delay: 3s;
+      animation: enter-up 3s ease 1 forwards;
 
-  .banner-group p {
-    line-height: 2;
-    font-family: Helvetica, sans-serif;
-    font-weight: 700;
-    margin-bottom: 2rem;
+      h3 {
+        font-size: 2.5rem;
+        margin: 0 0 0.5rem;
+      }
+      h4 {
+        font-size: 0.6rem;
+        margin: 0;
+        letter-spacing: 0.25rem;
+      }
+      img {
+        height: 2.5rem;
+        transform: translateY(10px);
+      }
+
+      @media (min-width: $s) {
+        h3 {
+          font-size: 3.5rem;
+        }
+        h4 {
+          font-size: 0.7rem;
+        }
+        img {
+          height: 3.5rem;
+        }
+      }
+    }
+
+
+    .verify {
+      padding: 5rem;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      max-height: 100vh;
+      position: relative;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      
+      opacity: 0;
+      animation: enter 2s ease 1 forwards;
+      animation-delay: 200ms;
+    }
+
+    .early h2 {
+      text-transform: uppercase;
+      line-height: 1;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+    }
+
+    .early h1 {
+      text-transform: uppercase;
+      letter-spacing: 0.02rem;
+      line-height: 1;
+      font-size: 1.4rem;
+      letter-spacing: 0.4em;
+      margin-bottom: 3rem;
+      @media (min-width: $s) {
+        font-size: 2rem;
+      }
+    }
+    @media (max-width: 480px ){
+      h1 {
+        font-size: 1.4rem;
+      }
+      h2 {
+        font-size: 0.7rem;
+      }
+    }
+    @media (min-width: $m) {
+      h1 {
+        white-space: nowrap;
+      }
+    }
+
+    .verified {
+      padding: 1.5rem 2.5rem;
+      background: linear-gradient(222.44deg, #79fcd2c0 16.01%, #1fc593de 34.3%, #7551c4ce 84.37% );
+      border-radius: 1.5rem;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-transform: uppercase;
+    }
+    .screen-name {
+      display: inline-block;
+    }
+    .mints {
+      display: inline-block;
+      font-family: Helvetica, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .not-verified {
+      background: linear-gradient(222.44deg, #fcdd79 16.01%, #c57d1f 34.3%, #c4516a 84.37% );
+      padding: 1rem;
+      border-radius: 1rem;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
+    .btn {
+      padding: 1rem;
+      border-radius: 1rem;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      margin-bottom: 1rem;
+      display: inline-flex;
+      white-space: nowrap;
+      cursor: pointer;
+
+      opacity: 0;
+      animation: enter 2s ease 1 forwards;
+      animation-delay: 200ms;
+    }
+    .twitter {
+      height: 1rem;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    .btn span {
+      display: inline-block;
+    }
+  
+
+    .step {
+      margin-bottom: 2rem;
+    }
+
+    //
+  .monkeyz {
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .lead {
+    max-width: 70%;
+    margin: 0 auto;
     position: relative;
     z-index: 1;
+    padding-bottom: 6rem;
   }
-
-  .banner {
-    width: 100%;
-    z-index: 1;
-    text-transform: uppercase;
-    font-weight: 900;
-    font-size: 9rem;
-    white-space: nowrap;
-    pointer-events: none;
-  }
-
-@media (max-width: 700px){
-  .banner-group {
-    padding-top: 8rem ;
-  }
-  .banner {
-    font-size: 3.6rem;
-    padding: 2rem 0;
-  }
-  .banner img {
-    max-height: 2.4rem;
-  }
-  .banner-group p {
-    font-size: 0.85rem;
-    max-width: 90%;
+  .lead p{
+    color: #fff;
     margin: 0 auto;
+    position: absolute;
+    font-family: Helvetica, sans-serif;
+    font-weight: 400;
+    line-height: 2;
+    font-size: 1.1rem;
+    @media (min-width: $s) {
+
+      font-size: 1.3rem;
+    }
+    @media (min-width: $m) {
+      font-size: 1.4rem;
+            margin-left: 50%;
+      max-width: 50%;
+    }
+    @media (min-width: $s) {
+      font-size: 1.7rem;
+    }
+  }
+
+  h2  {
+    font-weight: 900;
+    color: #fff;
+    font-size: 1.5rem;
+    @media (min-width: $s) {
+      font-size: 2.6rem;
+    }
+    @media (min-width: $m) {
+      font-size: 3.6rem;
+    }
+    @media (min-width: $l) {
+        font-size: 5.5rem;
+    }
+  }
+  .m-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0.75rem 0 ;
+    animation: scroll 50s ease-in-out alternate infinite;
+  }
+  .m-scroll img {
+    max-height: 8rem;
+    margin-right: 1.5rem;
+    display: inline;
+  }
+  .m-scroll--1,
+  .m-scroll--3 {
+    animation: scroll 50s ease-in-out alternate-reverse infinite;
+  }
+
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+
+  .faq {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+
+
+  .faq-list__item {
+    padding: 1.5rem 2rem;
+    background: #2B2B2B;
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: ease-in-out 300ms;
+  }
+  .faq-list__item:last-of-type {
     margin-bottom: 0;
   }
-}
-@media (min-width: 700px){
 
-  .banner-group {
-    width: 100%;
+  .faq-item__close {
     position: absolute;
-    top: 50%;
+    font-size: 2rem;
+    color: #fff;
+    top: 1.4rem;
+    right: 1.2rem;
+    font-family: Helvetica, sans-serif;
+    cursor: pointer;
+    transform: rotate(135deg);
+    transition: ease-in-out 300ms;
+
+    @media (min-width: $s) {
+      top: 1.6rem;
+      right: 1.5rem;
+    }
+    @media (min-width: $m) {
+      right: 1.5rem;
+      top: 1.7rem;
+      font-size: 2.6rem;
+    }
+
+  }
+  .faq-item__close.active {
+     transform: rotate(90deg);
+  }
+
+  .faq-item__question {
+    background: #2B2B2B;
+    color: #fff;
+    font-size: 1.3rem;
+    margin: 0;
+    padding-right: 1rem;
+    @media (min-width: $s) {
+      font-size: 1.5rem;
+    }
+    @media (min-width: $m) {
+      font-size: 2rem;
+    }
+    @media (min-width: $l) {
+      font-size: 2.4rem;
+    }
+  }
+
+  .faq-item__answer {
+    font-family: Helvetica, sans-serif;
+    line-height: 1.3;
+    color: #888;
+    @media (min-width: $s) {
+      font-size: 1.1rem;
+    }
+    @media (min-width: $m) {
+      font-size: 1.2rem;
+    }
+    @media (min-width: $l) {
+      font-size: 1.5rem;
+    }
+  }
+
+
+  .faq-item__answer ::v-deep a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: solid 1px #fff;
+}
+
+  .banner--middle {
+    color: #fff;
+    padding: 4rem 0;
+    background: #000;
+    font-size: 3rem;
+    position: static;
+    @media (min-width: $s) {
+      font-size: 4rem;
+    }
+    @media (min-width: $m) {
+      font-size: 6rem;
+    }
+    @media (min-width: $l) {
+      font-size: 8rem;
+    }
+  } 
+
+
+  .team {
+    max-width: 80%;
+    margin: 2rem auto 0;
+  }
+  .monkey {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 6rem;
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .monkey:last-of-type {
+     padding-bottom: 8rem;
+  }
+  .monkey__avatar {
+    max-width: 100%;
+    flex-basis: 70%;
+    @media (min-width: $s) {
+      flex-basis: 50%;
+    }
+    @media (min-width: $m) {
+      flex-basis: 40%;
+      max-width: 400px;
+    }
+  }
+  .monkey__avatar img {
+    max-width: 90%;
+    
+  }
+  .monkey__info {
+    
+    position: relative;
+    z-index: 1;
+
+    flex-basis: 30%;
+    max-width: 50%;
+    padding-top: 5%;
+    @media (min-width: $s) {
+      flex-basis: 50%;
+      padding-top: 12%;
+    }
+    @media (min-width: $m) {
+      flex-basis: 60%;
+      
+      // padding-top: 0;
+    }
+  }
+  .monkey__info--right{
+    margin-left: auto;
+  }
+  
+  .monkey__info h3{
+    color: #fff;
+    
+    margin: 0;
+    line-height: 1;
+    transform: translateX(-25%);
+    margin-top: 2rem;
+    font-size: 2rem;
+    @media (min-width: $s) {
+      font-size: 4rem;
+    }
+    @media (min-width: $m) {
+      font-size: 6rem;
+    }
+  }
+  .monkey__info h4 {
+    color: rgba(255,255,255,0.6);
+    margin: 0;
+    line-height: 1;
+    margin-left: 1rem;
+    font-size: 1.2rem;
+    @media (min-width: $s) {
+      font-size: 2.2rem;
+    }
+    @media (min-width: $m) {
+      font-size: 2.6rem;
+    }
+  }
+  .monkey__info h5 {
+    color: rgba(255,255,255,0.3);
+    margin: 0;
+    line-height: 1;
+    margin-left: 1rem;
+    font-size: 1.2rem;
+    @media (min-width: $s) {
+      font-size: 2.2rem;
+    }
+    @media (min-width: $m) {
+      font-size: 2.6rem;
+    }
+  }
+  .monkey__info--right h3 {
+    transform: translateX(25%);
+    text-align: right;
+  }
+  .monkey__info--right h4,
+  .monkey__info--right h5 {
+    margin-left: 0;
+    margin-right: 1rem;
+    text-align: right;
+  }
+
+
+  /*  */
+  .good-things {
+    max-width: 80%;
+    margin: 0 auto;
+    font-size: 2.1rem;
+    line-height: 1;
+    color: #fff;
+    z-index: 1;
+    position: relative;
+    text-align: center;
+    @media (min-width: $s) {
+      font-size: 5rem;
+    }
+    @media (min-width: $m) {
+      font-size: 7rem;
+    }
+    @media (min-width: $l) {
+      font-size: 12rem;
+    }
+    p {
+      margin: 0;
+    }
+  }
+
+  .spotlight {
+    width: 160%;
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    @media (min-width: $s) {
+      width: 130%;
+    }
+    @media (min-width: $m) {
+      width: 100%;
+    }
+  }
+  .spotlight--hero{
+    opacity: 0.15;
+    width: 300%;
+    top: -10%;
+    @media (min-width: $s) {
+      width: 130%;
+    }
+    @media (min-width: $m) {
+      width: 100%;
+    }
+  }
+
+  .spotlight--charles {
+    left: -30%;
+    opacity: 0.6;
+    @media (min-width: 1600px) {
+      width: 180%;
+      left: -50%;
+      top: -100%;
+    }
+    @media (min-width: 2000px) {
+      width: 220%;
+      left: -70%;
+      top: -150%;
+    }
+  }
+
+  .spotlight--sam {
+    right: -30%;
+    top: -50%;
+    opacity: 0.6;
+    @media (min-width: 1400px) {
+      width: 180%;
+      right: -50%;
+      top: -130%;
+    }
+    @media (min-width: 2000px) {
+      width: 220%;
+      right: -70%;
+      top: -150%;
+    }
+  } 
+  
+  .spotlight--footer {
+    bottom: 0;
     left: 0;
-    transform: translateY(-50%);
+  }
+ 
+
+  @keyframes spin {
+  from { display: block; transform: rotate(0deg) translate(-50%, -50%)}
+  to { display: block; transform: rotate(360deg) translate(-50%, -50%)}
+}
+
+.gm-full {
+  position: relative;
+  padding-bottom: 5rem;
+  @media (min-width: $m) {
+      transform: none;
+      padding-bottom: 0;
+      padding: 2rem 0 5rem;
   }
 }
-
-.marquee {
-  display: block;
-  will-change: transform;
-  line-height: 1;
-  animation: marquee 60s linear infinite;
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg) }
-  to { transform: rotate(360deg) }
-}
-
 .gm-spinner {
-  display: inline-block;
+  display: block;
+  position: relative;
+  margin-top: 5rem;
   transform: scale(0.6);
-}
+  padding: 10rem 0 ;
 
+  @media (min-width: $m) {
+      transform: none;
+      padding-bottom: 0;
+      padding: 10rem 0 ;
+  }
+}
 
 .gm-out {
   animation: spin 20s linear infinite;
-  transform-origin: 50% 50% ;
+  transform-origin: 0% 0% ;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: rotate(360deg) translate(-50%, -50%);
 }
+
+@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) and (stroke-color:transparent) { 
+  .gm-out  { animation: none; } 
+} }
 
 .gm-in {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); 
+  z-index: 1;
 }
-
-.btn {
-  padding: 1rem;
-  border-radius: 1rem;
-  text-transform: uppercase;
-  background-color: #fff;
-  color: #000;
-  position: relative;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 0.75rem;
-  overflow: hidden;
-  display: inline-block ;
-  transform: translateZ(0);
-}
-.btn span {
-  position: relative;
-}
-.btn::before {
-  content: '';
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  width: 400px;
-  height: 300px;
-  z-index: 0;
-  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
-  animation: go 3.8s infinite alternate;
-  opacity: 0.9;
-  filter: blur(24px);
-}
-
-
-@keyframes go {
-  0% {
-    transform: translate(-300px, 100px);
-  }
-  20% {
-    transform: translate(-300px, 100px);
-  }
-  50% {
-    transform: translate(-300px, 100px);
-  }
-  90% {
-    transform: translate(0px, -300px);
-  }
-  100% {
-    transform: translate(0px, -300px);
-  }
-}
-
-  .counter {
-    color: #fff;
-    position: relative;
-    z-index: 1;
-  }
-
-  .counter h3 {
-    font-size: 2.6rem;
-    margin: 0;
-    
-  }
-  .counter h3 img {
-    height: 3.3rem;
-    transform: translateY(0.8rem);
-  }
-  .counter h4 {
-      text-align: center;
-      font-size: 0.625rem;
-     letter-spacing: 0.4em;
-     text-transform: uppercase;
-  }
-  .zerozero {
-    opacity: 0;
-  }
-  .marquee >>> .seconds {
-    display: inline-block;
-    text-align: right;
-  }
-
-  .btn img {
-      height: 1.5rem;
-      margin-right: 0.5rem;
-      z-index: 1;
-  }
-  .btn {
-    align-items: center;
-    justify-content: center;
-    display: inline-flex;
-  }
-  .btn span {
-    z-index: 1;
-  }
-@media (min-width: 700px){
-  .gm-spinner {
-    position: absolute;
-    display: inline-block;
-    left: -1.5rem;
-    bottom: -1.5rem;
-    transform: scale(0.9);
-  }
-  .counter {
-    position: absolute;
-    bottom: 2rem;
-    right: 3rem;
-  }
-}
-
 </style>
 
 

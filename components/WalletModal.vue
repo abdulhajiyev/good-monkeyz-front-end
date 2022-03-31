@@ -29,7 +29,7 @@
         },
         created() {
             this.$nuxt.$on('connect', (redirect) => {
-                this.redirect = redirect || '/mint/merch'
+                this.redirect = redirect || '/'
                 this.active = true
             })
         },

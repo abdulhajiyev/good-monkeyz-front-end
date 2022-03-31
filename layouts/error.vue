@@ -3,14 +3,12 @@
        <MinBanner :account="wallet" :active="true" color="black" />
     <div class="heading">
         <h1>ERROR: NGMI!</h1>
-        <h2>Ouu we’re sorry! But you need a Good Monkeyz NFT<br> Connect a wallet that holds a Good Monkeyz NFT</h2>
+        <h2>Monkey you look lost?</h2>
     </div>
     <div class="btns">
-      <a href="https://opensea.io/collection/good-monkeyz-limited-editions" class="btn">
-      <img :src="openseaLogo">
-      <span>View On OpenSea
-      </span>
-      </a>
+      <span @click="home()" class="btn">
+        <span>Go Home</span>
+      </span >
       <!-- <span class="btn">Connect Another Wallet</span> -->
     </div>
     <img class="sad-monkey" :src="sadMonkey">
@@ -30,6 +28,7 @@ export default {
   components: {
     MinBanner,
   },
+props: ['error'],
   data: () => {
     return {
       openseaLogo,
@@ -40,6 +39,10 @@ export default {
   created() {
   },
   methods: {
+      home() {
+        this.$router.push('/?backtothefuture')
+        this.$forceUpdate();
+      }
   },
 
 }

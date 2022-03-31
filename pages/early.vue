@@ -1,23 +1,27 @@
 <template>
-  <div class="wen">
-    <MinBanner :account="wallet" />
-    <div class="splash">
-      <div class="splash-inner" >
-          
-        <h1>Early</h1>
-        
-        <a target="_blank" href="https://docs.google.com/spreadsheets/d/1UWjzL-hIX4_iLB7Stn8Cgv-AmFd_yCrE4qqSkg3nhwo/edit#gid=0">
-          View Early List Spreadsheet Here
-        </a>
-        
+  <div class="verify">
+    <video class="video-bg"  width="55%" autoplay muted loop :src="monkey"></video>
+    <div class="fade-bg"></div>
 
-        <div class="gm-spinner"> 
-            <img class="gm-in" :src="gmIn">
-            <img class="gm-out" :src="gmOut">
+    <MinBanner :account="false" :active="true" />
+    <div class="verify-block">
+      
+      <h2>{{count}}/4000</h2>
+      <h1>Early Access List</h1>
+
+        <div v-if="!wallet" class="step">
+          <span v-if="!wallet"  class="btn" @click="connectWallet()">CONNECT WALLET</span>
         </div>
-      </div>
+        <div v-else class="step">
+          <a v-if="verify && screenName" class="verified">✅ @{{screenName}} wallet verified</a>
+          <a v-if="!verify && !screenName" :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
+            <img class="twitter" :src="twitter" >
+            <span >Verify with twitter</span>
+          </a>
+          <span v-if="verify === 'false'" class="not-verified">{{failMessage}}</span>
+        </div>
+        <!-- <p>Think you should be on the allow list but it's not working? Experiencing other problems? Contact sammyb on discord.</p> -->
     </div>
-
   </div>
 </template>
 
@@ -26,131 +30,188 @@ import { mapState } from 'vuex'
 
 import MinBanner from '@/components/MinBanner.vue';
 
-import gmOut from "@/assets/img/gm-outer.svg";
-import gmIn from "@/assets/img/gm-inner.svg";
-
-
+import twitter from "@/assets/img/twitter-black.svg"
+import monkey from "@/assets/video/mm-med.mp4";
 export default {
-  name: 'Wen',
+  name: 'Verify',
   components: {
     MinBanner,
   },
   data: () => {
     return {
-      gmOut,
-      gmIn,
-      qa: [
-        {
-          q: 'Mint Price?',
-          a: '0.06 ETH - Public Mint, 0.04 ETH Early Mint, 0.08 Mint Pass',
-        },
-        {
-          q: 'Mint Date',
-          a: 'TBD - likely Early April',
-        },
-        {
-          q: 'Wen Merch? How merch?',
-          a: 'Buy a token during the limted edition mint - or on the secondary market.',
-        },
-        {
-          q: 'Whats in the Merch Bundle',
-          a: '1 Hoodie, 1 cap or Beanie, Sticker Pack, 1 Mint Pass NFT',
-        },
-        {
-          q: 'What is the mint pass',
-          a: 'Mint passes can be exchanged for 1 Monkey (on release) for 0ETH cost - will still require gas',
-        },
-        {
-          q: 'Who is making the monkeyz, are they doxed?',
-          a: 'Charles, Sam, Julia',
-        },
-      ],
+      verify: '',
+      twitter,
+      screenName: '',
+      preCheck: false,
+      monkey,
+      failMessage: `We can't find your account on the allow List :(`,
+      open: true,
+      count: 0,
     }
   },
   computed: mapState(['wallet']),
   created() {
+    this.verify = this.$route.query.verify
+    this.screenName = this.$route.query.screen_name;
+    this.failMessage = this.$route.query.msg === 'used' ? 'Twitter Account is already linked to another Address' : `We can't find your account on the allow List :(`
+    
+    this.getCount();
+    if(this.wallet) {
+      this.checkByAddress(this.wallet);
+    }
+    this.$nuxt.$on('web3-active', () => {
+      this.checkByAddress(this.wallet);
+    })
+    
   },
   methods: {
+    connectWallet(){
+      this.$nuxt.$emit('connect', '/early')
+    },
+    async checkByAddress(address){
+      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
+      if ( res.data != null ) {
+        this.verify = true
+        this.screenName = res.data.screen_name || res.data.discord
+      }
+    },
+    async getCount(){
+      const res = await (await fetch(`/.netlify/functions/allow-list-count`)).json()
+      this.count = res.count
+    }
   }
 }
 </script>
 
 <style scoped>
-.wen {
-    background: #ccc;
-    margin: 1rem;
-}
+
+  .video-bg {
+    position: absolute;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, 20%);
+    filter: grayscale(100%);
+    z-index: -1;
+    width: 100%;
+  }
+  @media (min-width: 700px){
+    .video-bg {
+      transform: scale(1.4);
+      bottom: -10%;
+      left: -10%;
+      width: 55%;
+    }
+  }
+
+  .fade-bg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(270deg, #000000 47.4%, rgba(0, 0, 0, 0) 100%);
+    z-index: -1;
+  }
 
 
-.index {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-h1 {
+  .verify {
+    padding: 5rem;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #000;
     color: #fff;
-    text-transform: uppercase;
+    max-height: 100vh;
+    position: relative;
     text-align: center;
-    margin-top: 6rem ;
-    font-size: 5rem;
-}
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    
+    opacity: 0;
+    animation: enter 2s ease 1 forwards;
+    animation-delay: 200ms;
+  }
 
+    h2 {
+      text-transform: uppercase;
+      line-height: 1;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+    }
 
+    h1 {
+      text-transform: uppercase;
+     letter-spacing: 0.02rem;
+     line-height: 1;
+      font-size: 2rem;
+    letter-spacing: 0.4em;
+    margin-bottom: 3rem;
+    }
+    @media (max-width: 480px ){
+      h1 {
+        font-size: 1.4rem;
+      }
+      h2 {
+        font-size: 0.7rem;
+      }
+    }
+    .connected {
+      padding: 1rem;
+      background: linear-gradient(222.44deg, #79fcd2 16.01%, #1fc594 34.3%, #7651C4 84.37% );
+      border-radius: 1rem;
+      display: inline-block;
+      line-break: anywhere;
+    }
+    .verified {
+      padding: 1rem;
+      background: linear-gradient(222.44deg, #79fcd2 16.01%, #1fc594 34.3%, #7651C4 84.37% );
+      border-radius: 1rem;
+      display: inline-block;
+    }
+    .not-verified {
+      background: linear-gradient(222.44deg, #fcdd79 16.01%, #c57d1f 34.3%, #c4516a 84.37% );
+      padding: 1rem;
+      border-radius: 1rem;
+      display: inline-block;
+    }
 
-ul {
-    max-width: 50%;
-    margin: 0 auto;
-}
-li {
-    color: #fff;
-    font-size: 1rem;
-}
-li .q {
-    font-weight: 700;
-    display: block;
-}
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
+    .btn {
+      padding: 1rem;
+      border-radius: 1rem;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      margin-bottom: 1rem;
+      display: inline-flex;
+      white-space: nowrap;
+      cursor: pointer;
 
-a {
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 400;
-    margin-bottom: 1rem ;
-    display: block;
-    text-decoration: dotted;
-    color: #fff;
-}
+      opacity: 0;
+      animation: enter 2s ease 1 forwards;
+      animation-delay: 200ms;
+    }
+    .twitter {
+      height: 1rem;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
 
-.splash {
-  padding: 1rem;
-  min-height: 100vh;
-  width: 100%;
+    .btn span {
+      display: inline-block;
+    }
+    p {
+      font-family: Helvetica, Arial, sans-serif;
+    }
 
-}
+    .step {
+      margin-bottom: 2rem;
+    }
 
-.gm-spinner {
-  position: absolute;
-  display: inline-block;
-  left: -1.5rem;
-  bottom: -1.5rem;
-  transform: scale(0.9);
-}
-.gm-out {
-    animation: spin 20s linear infinite;
-  transform-origin: 50% 50% ;
-}
-
-.gm-in {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); 
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg) }
-  to { transform: rotate(360deg) }
-}
 </style>
-
 
