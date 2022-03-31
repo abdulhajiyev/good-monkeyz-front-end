@@ -7,7 +7,7 @@
       <div class="nav">  
         <MinBanner :account="wallet" :active="true" />
       </div>
-      <video class="video-bg" width="55%" autoplay muted loop :src="monkey"></video> 
+      <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
       <div class="fade-bg"></div> 
       <div class="early">
           <div v-if="!wallet">
