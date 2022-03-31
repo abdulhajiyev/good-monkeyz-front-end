@@ -446,6 +446,7 @@ $l: 1720px;
       left: 50%;
       transform: translate(-50%, -60%);
       color: #fff;
+      width: 90%;
       text-align: center;
       opacity: 0;
       animation-delay: 3s;
@@ -472,20 +473,34 @@ $l: 1720px;
       opacity: 0;
       animation-delay: 3s;
       animation: enter-up 3s ease 1 forwards;
+
+      h3 {
+        font-size: 2.5rem;
+        margin: 0 0 0.5rem;
+      }
+      h4 {
+        font-size: 0.6rem;
+        margin: 0;
+        letter-spacing: 0.25rem;
+      }
+      img {
+        height: 2.5rem;
+        transform: translateY(10px);
+      }
+
+      @media (min-width: $s) {
+        h3 {
+          font-size: 3.5rem;
+        }
+        h4 {
+          font-size: 0.7rem;
+        }
+        img {
+          height: 3.5rem;
+        }
+      }
     }
-    .minting h3 {
-      font-size: 3.5rem;
-      margin: 0 0 0.5rem;
-    }
-    .minting h4 {
-      font-size: 0.7rem;
-      margin: 0;
-      letter-spacing: 0.25rem;
-    }
-    .minting img {
-      height: 3.5rem;
-      transform: translateY(10px);
-    }
+
 
     .verify {
       padding: 5rem;
@@ -516,9 +531,12 @@ $l: 1720px;
       text-transform: uppercase;
       letter-spacing: 0.02rem;
       line-height: 1;
-        font-size: 2rem;
+      font-size: 1.4rem;
       letter-spacing: 0.4em;
       margin-bottom: 3rem;
+      @media (min-width: $s) {
+        font-size: 2rem;
+      }
     }
     @media (max-width: 480px ){
       h1 {
