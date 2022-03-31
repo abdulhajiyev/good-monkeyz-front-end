@@ -15,8 +15,19 @@
 </template>
 
 <script>
+import { ethers } from 'ethers';
+import { mapState} from 'vuex'
+
 import MinBanner from '@/components/MinBanner.vue';
 import monkey from "@/assets/video/mm-med.mp4";
+import GMSHOPJSON from '@/utils/nftShop.json';
+
+import { 
+  MERCH_DROP_CONTRACT,
+  INFURA_PROJECT_ID,
+  NETWORK_NAME,
+  TOKEN_ID_MERCH_BUNDLE 
+} from '@/utils/constants';
 
 export default {
   transition: 'scale',
@@ -30,6 +41,38 @@ export default {
       monkey,
     }
   },
+  computed: { 
+    ...mapState(['wallet']),
+  },
+  created(){
+    this.$nuxt.$on('web3-active', () => {
+      this.ngmiRedirect()
+    })
+  },
+  methods: {
+    async ngmiRedirect() {
+      try {
+        const bal = await this.getBalance()
+        if (this.wallet && bal < 1) {
+            return this.$router.push('/ngmi');
+        }
+      } catch(error){
+        console.error(error);
+        return 0;
+      }
+    },
+    async getBalance() {
+     try {
+        const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
+        const balBig = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
+        return ethers.utils.formatUnits(balBig, 0)
+      } catch(error){
+          console.error(error);
+        return 0;
+      }
+    },
+  }
 }
 </script>
 

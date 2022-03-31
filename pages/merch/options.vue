@@ -106,16 +106,30 @@ export default {
       return this.address !== '' && this.email !== '';
     }
   },
-  async created() {
-    console.log( await this.getBalance() )
+  created() {
+    this.$nuxt.$on('web3-active', () => {
+      this.ngmiRedirect()
+    })
   },
   methods: {
+    async ngmiRedirect() {
+        try {
+            const bal = await this.getBalance()
+            if (this.wallet && bal < 1) {
+                return this.$router.push('/ngmi');
+            }
+        } catch(error){
+            console.error(error);
+            return 0;
+        }
+    },
     async getBalance() {
       
      try {
           const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
           const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-          return await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
+          const balBig = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
+          return ethers.utils.formatUnits(balBig, 0)
         } catch(error){
             console.error(error);
           return 0;
