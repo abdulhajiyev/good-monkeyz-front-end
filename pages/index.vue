@@ -119,8 +119,30 @@
             <h5>@JULIA91990</h5>
         </div>
       </div>
-            <div class="monkey">
-        <img class="spotlight spotlight--sam" :src="spotlightSam" >
+
+      <div class="monkey">
+        <div class="monkey__info monkey__info--right">
+            <h3>DAMIANK</h3>
+            <h4>3D DESIGNER</h4>
+            <h5>@Damian_Kidd</h5>
+        </div>
+        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
+            <img :src="monkey6" >
+        </div>
+      </div>
+
+      <div class="monkey" >
+        <div class="monkey__avatar" v-rellax data-rellax-speed="0.8"  data-rellax-percentage="0.5">
+            <img :src="monkey7" >
+        </div>
+        <div class="monkey__info" >
+            <h3>BENNYF</h3>
+            <h4>3D ARTIST</h4>
+            <h5>@BENFRYC</h5>
+        </div>
+      </div>
+
+      <div class="monkey">
         <div class="monkey__info monkey__info--right">
             <h3>SNENS</h3>
             <h4>MODZ</h4>
@@ -130,7 +152,8 @@
             <img :src="monkey4" >
         </div>
       </div>
-       <div class="monkey" >
+
+      <div class="monkey" >
         <div class="monkey__avatar" v-rellax data-rellax-speed="0.8"  data-rellax-percentage="0.5">
             <img :src="monkey5" >
         </div>
@@ -178,6 +201,8 @@ import monkey2 from "@/assets/img/monkey-2.png";
 import monkey3 from "@/assets/img/monkey-3.png";
 import monkey4 from "@/assets/img/monkey-4.png";
 import monkey5 from "@/assets/img/monkey-5.png";
+import monkey6 from "@/assets/img/monkey-6.png";
+import monkey7 from "@/assets/img/monkey-7.png";
 import gmOut from "@/assets/img/gm-outer.svg";
 import gmIn from "@/assets/img/gm-inner.svg";
 
@@ -248,6 +273,8 @@ export default {
       monkey3,
       monkey4,
       monkey5,
+      monkey6,
+      monkey7,
       gmOut,
       gmIn,
       spotlightFooter,
