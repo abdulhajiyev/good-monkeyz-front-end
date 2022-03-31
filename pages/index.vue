@@ -203,43 +203,43 @@ export default {
         {
           id: 0,
           q: 'What is the supply & Mint Price?',
-          a: 'Maximum 10,000 Good Monkeyz available on the Ethereum Blockchain. Mint price is 0.077 ETH',
+          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
           active: true,
         },
         {
           id: 1,
           q: 'Wen Monkeyz? Mint Date?',
-          a: "We are launching late April (Exact date TBC).<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
+          a: "We are launching April 21st 2022.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
           active: false,
         },
         {
           id: 2,
           q: 'Early List & Public Mint?',
-          a: '3077 Early list Spaces avaiable - anyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs. 1000 (+remaning unminted from Early List) Public Mint. 250 Mint Passess. 250 Booster Packs.',
+          a: '3500 Early list Spaces avaiable - anyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
           active: false,
         },
         {
           id: 3,
           q: 'Wen Merch?',
-          a: 'Merch Bundle tokens are now solely avaiable on the secondary market.<br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
+          a: 'Merch Bundle tokens are now solely avaiable on the secondary market.<br><br> Merch Redemtion system live early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
           active: false,
         },
         {
           id: 4,
           q: 'What Is A Merch Bundle?',
-          a: 'A limited edition token. Max supply of 77 where minted. The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a sticker Pack. Worldwide shipping is included. When minted holders also recived a 2nd NFT a Mint Pass',
+          a: 'A limited edition token. Max supply of 77. Primary sale sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a sticker Pack. Chance for an additional NFT drop on redemption. Worldwide shipping included. During minting holders also recived a Mint Pass NFT',
           active: false,
         },
         {
           id: 5,
           q: 'What Is A Mint Pass?',
-          a: 'Mint passes can be exchanged for 1 Monkey for 0ETH Fee - will still require gas. A Max supply of 250 Mint passes are mintable. 77 Mint passess were minted with the Merch Bundle. Future mint passess will be avaiable through limited edition drops and competitions.',
+          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passess were minted with the OG Merch Bundle. Future mint passess will be avaiable through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.',
           active: false,
         },
         {
           id: 6,
           q: 'What Is A Booster Pack?',
-          a: 'Booster packs contain 3 Monkeyz. There are a max supply of 250 booster packs. 77 initial distribution randomly to minters on the early list.',
+          a: 'Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
           active: false,
         },
       ],
@@ -295,8 +295,6 @@ export default {
         this.status = 'used';
         this.failMessage =  'Twitter Account is already linked to another Address';
       }
-
-      console.log('LIST: ', list)
 
       this.screenName = screenName || this.$route.query.screen_name;
     },
@@ -683,6 +681,7 @@ $l: 1720px;
     padding: 1.5rem 2rem;
     background: #2B2B2B;
     position: relative;
+    cursor: pointer;
     margin-bottom: 2rem;
     transition: ease-in-out 300ms;
   }
@@ -906,6 +905,7 @@ $l: 1720px;
     width: 160%;
     position: absolute;
     z-index: 0;
+    pointer-events: none;
     @media (min-width: $s) {
       width: 130%;
     }
