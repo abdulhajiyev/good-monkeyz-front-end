@@ -2,7 +2,7 @@
   <div class="index">
     <section class="splash">
       <div class="banner banner--top">
-        <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
+        <span  class="marquee">GOOD MONKEYZ MINTING APRIL 21 2022<img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> </span>
       </div>
       <div class="nav">  
         <MinBanner :account="wallet" :active="true" />
@@ -44,7 +44,7 @@
         <h4>MINTING THURSDAY 21 APRIL 2022</h4>
       </div>
       <div class="banner banner--bottom">
-        <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
+        <span  class="marquee">GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> </span>
       </div>
     </section>
     <section class="monkeyz" id="about">
