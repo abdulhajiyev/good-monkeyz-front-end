@@ -51,7 +51,7 @@
       <div class="fade-bg fade--monkey"></div> 
       <div class="lead">
         <h2>Good Monkeyz are a collection of 10,000 generated NFTs living on the Ethereum blockchain</h2>
-        <p>Created from a combination of hundreds of different traits, all good! You’ll be able to find some very special 1/1 in the collection that we’ve collaborated with our friends.</p>
+        <p>Created from a combination of hundreds of different traits, all good! You’ll be able to find some very special 1/1 in the collection that we’ve collaborated on with our friends.</p>
       </div>
       <div></div>
       <div class="monkeyz-scroll">
@@ -202,7 +202,7 @@ export default {
       faq: [
         {
           id: 0,
-          q: 'What is the supply & Mint Price?',
+          q: 'What Is The Supply & Mint Price?',
           a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
           active: true,
         },
@@ -215,13 +215,13 @@ export default {
         {
           id: 2,
           q: 'Early List & Public Mint?',
-          a: '3500 Early list Spaces avaiable - anyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
+          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
           active: false,
         },
         {
           id: 3,
           q: 'Wen Merch?',
-          a: 'Merch Bundle tokens are now solely avaiable on the secondary market.<br><br> Merch Redemtion system live early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
+          a: 'Merch Bundle tokens are now solely available on the secondary market.<br><br> Merch Redemption system live early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
           active: false,
         },
         {
