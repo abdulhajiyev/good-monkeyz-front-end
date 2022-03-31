@@ -41,7 +41,7 @@
       </div>
       <div class="minting">
         <h3 >0 <img :src="divider"> 10,000</h3>
-        <h4>MINTING TUESDAY 21 APRIL 2022</h4>
+        <h4>MINTING THURSDAY 21 APRIL 2022</h4>
       </div>
       <div class="banner banner--bottom">
         <span  class="marquee">GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> GOOD MONKEYZ MINTING 2022 <img :src="star"> </span>
@@ -376,7 +376,7 @@ $l: 1720px;
     background: linear-gradient(270deg, #0a0606 14.4%, rgba(0, 0, 0, 0) 100%);
     z-index: 0;
     @media (min-width: $m) {
-      background: linear-gradient(270deg, #0a0606 44.4%, rgba(0, 0, 0, 0) 100%);
+      background: linear-gradient(270deg, #0a0606 44.4%, rgba(0, 0, 0, 0.4) 100%);
     }
   }
   .fade--monkey {
