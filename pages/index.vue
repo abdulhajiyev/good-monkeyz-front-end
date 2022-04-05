@@ -71,7 +71,7 @@
   
 
     <section class="faq" id="faq">
-      <h2>FAQ</h2>
+      <h2>GMQs</h2>
       <div class="faq-list">
         <div @click="openfaq(item.id)"  class="faq-list__item" v-for="item in faq" :key="item.id">
           <h3 class="faq-item__question">{{item.q}}</h3>
@@ -229,44 +229,45 @@ export default {
       faq: [
         {
           id: 0,
-          q: 'What Is The Supply & Mint Price?',
-          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
-          active: true,
+          q: 'Roadmap',
+          a: `Our primary goal is delivering a collection to be proud of. With this said we realise launching a collection is just the beginning. Our aims for the next steps will be the following.<br><br>
+OG Membership<br>
+The GMF (Good Monkey Fund)<br>
+The FOM (Friends of Monkeyz)<br>
+The MV (Monkey Vault)<br>
+GM Limited Editions<br>
+The Monkeyz expanded universe<br>
+<br>One step at a time. We hope you join us as a Good Monkey.`,
+          active: false,
         },
         {
           id: 1,
-          q: 'Wen Monkeyz? Mint Date?',
-          a: "We are launching April 21st 2022.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
+          q: 'Supply & Mint Price',
+          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
           active: false,
         },
         {
           id: 2,
-          q: 'Early List & Public Mint?',
-          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
+          q: 'Mint Date',
+          a: "We are launching April 21st 2022.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
           active: false,
         },
         {
           id: 3,
-          q: 'Wen Merch?',
-          a: 'Merch Bundle tokens are now solely available on the secondary market.<br><br> Merch Redemption system live early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
+          q: 'Early List & Public Mint',
+          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
           active: false,
         },
         {
           id: 4,
-          q: 'What Is A Merch Bundle?',
-          a: 'A limited edition token. Max supply of 77. Primary sale sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a Good Monkeyz sticker Pack. Chance for an additional NFT drop on redemption ;). Worldwide shipping included. During minting holders also received a Mint Pass NFT',
+          q: 'Merch',
+          a: 'A limited edition token with a max supply of 77 sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a Good Monkeyz sticker Pack. Worldwide shipping included. During minting holders also received a Mint Pass NFT<br><br>Merch Bundle tokens are now solely available on the secondary market.<br><br> Merch Redemption system will be live in early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
           active: false,
         },
         {
           id: 5,
-          q: 'What Is A Mint Pass?',
-          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passes were minted with the OG Merch Bundle. Future mint passes will be available through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.',
-          active: false,
-        },
-        {
-          id: 6,
-          q: 'What Is A Booster Pack?',
-          a: 'Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed to minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
+          q: 'Mint Pass & Booster Pack',
+          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passes were minted with the OG Merch Bundle. Future mint passes will be available through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.<br><br>Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed to minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
           active: false,
         },
       ],
