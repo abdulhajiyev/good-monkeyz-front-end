@@ -11,32 +11,14 @@
       <div class="fade-bg"></div> 
       <div class="early">
           <div v-if="!wallet">
-            <h1>Early Access Verify</h1>   
+            <h1>Early Access Minting</h1>
             <span class="btn" @click="connectWallet()">Verify WALLET</span>
+            <Squircle :height="1" >
+              thing
+            </Squircle>
           </div>
           <div v-else> 
-            <div v-if="!status && addressCheck" >
-              <h1>Early Access Verify</h1>   
-              <a :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
-                <img class="twitter" :src="twitter" >
-                <span>AUTHENTICATE WITH TWITTER</span>
-              </a>
-            </div>
-            <div v-if="status === 'allow'">
-              <h1>VERIFICATION SUCCESSFUL</h1>   
-              <div class="verified">
-                <span class="mints">2 x Mint Slots</span>
-                <span class="screen-name">@{{screenName}}</span>
-              </div>
-            </div>
-            <div v-if="status === 'raffle'">
-              <h1>YOU’RE ON THE RAFFLE LIST</h1>   
-              <div class="verified">
-                <span class="mints">RAFFLE #{{raffleId}}</span>
-                <span class="screen-name">@{{screenName}}</span>
-              </div>
-            </div>
-            <span @click="resetError()" v-if="status === 'used'" class="not-verified">{{failMessage}}</span>
+            <Mint />
           </div>
       </div>
       <div class="minting">
@@ -187,6 +169,9 @@
 import { mapState } from 'vuex'
 
 import MinBanner from '@/components/MinBanner.vue';
+import Mint from '@/components/Mint.vue';
+import Squircle from '@/components/Squircle.vue'
+
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
 import star from "@/assets/img/star-black.svg";
@@ -216,6 +201,8 @@ export default {
   name: 'Index',
   components: {
     MinBanner,
+    Mint,
+    Squircle,
   },
   data: () => {
     return {
@@ -613,7 +600,8 @@ $l: 1720px;
     }
     .btn {
       padding: 1rem;
-      border-radius: 1rem;
+      // border-radius: 1rem;
+      border-radius: 1.7rem 1.7rem 1.7rem 1.7rem / 0.7rem 0.7rem 0.7rem 0.7rem;
       background: #fff;
       color: #000;
       text-decoration: none;
