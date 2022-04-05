@@ -12,7 +12,9 @@
       <div class="early">
           <div v-if="!wallet">
             <h1>Early Access Verify</h1>   
-            <span class="btn" @click="connectWallet()">Verify WALLET</span>
+            <span class="btn" @click="connectWallet()">
+              <span>Verify WALLET</span>
+            </span>
           </div>
           <div v-else> 
             <div v-if="!status && addressCheck" >
@@ -24,14 +26,14 @@
             </div>
             <div v-if="status === 'allow'">
               <h1>VERIFICATION SUCCESSFUL</h1>   
-              <div class="verified">
+              <div class="verified btn--sparkle">
                 <span class="mints">2 x Mint Slots</span>
                 <span class="screen-name">@{{screenName}}</span>
               </div>
             </div>
             <div v-if="status === 'raffle'">
               <h1>YOU’RE ON THE RAFFLE LIST</h1>   
-              <div class="verified">
+              <div class="verified btn--sparkle">
                 <span class="mints">RAFFLE #{{raffleId}}</span>
                 <span class="screen-name">@{{screenName}}</span>
               </div>
@@ -580,14 +582,16 @@ $l: 1720px;
     }
 
     .verified {
-      padding: 1.5rem 2.5rem;
-      background: linear-gradient(222.44deg, #79fcd2c0 16.01%, #1fc593de 34.3%, #7551c4ce 84.37% );
-      border-radius: 1.5rem;
+      padding: 1.4rem 2rem;
+      border-radius: 4.5rem / 1rem;
+      // background: linear-gradient(222.44deg, #79fcd2c0 16.01%, #1fc593de 34.3%, #7551c4ce 84.37% );
       display: inline-flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       text-transform: uppercase;
+
+
     }
     .screen-name {
       display: inline-block;
@@ -599,36 +603,57 @@ $l: 1720px;
       letter-spacing: 0.2rem;
       margin-bottom: 0.5rem;
     }
-    .not-verified {
-      background: linear-gradient(222.44deg, #fcdd79 16.01%, #c57d1f 34.3%, #c4516a 84.37% );
-      padding: 1rem;
-      border-radius: 1rem;
-      display: inline-block;
-      cursor: pointer;
-    }
 
     a {
       text-decoration: none;
       color: #fff;
     }
+
     .btn {
-      padding: 1rem;
-      border-radius: 1rem;
-      background: #fff;
-      color: #000;
-      text-decoration: none;
+      padding: 1.4rem 2rem;
+      border-radius: 4.5rem / 1rem;
       text-transform: uppercase;
-      font-size: 0.7rem;
-      margin-bottom: 1rem;
-      display: inline-flex;
-      white-space: nowrap;
+      color: #000;
+      background: #fff;
+      position: relative;
       cursor: pointer;
+      text-decoration: none;
+      font-size: 0.75rem;
+      overflow: hidden;
+      display: inline-flex ;
+      transform: translateZ(0);
 
       opacity: 0;
       animation: enter 2s ease 1 forwards;
       animation-delay: 200ms;
     }
+    .btn span {
+      position: relative;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      width: 400px;
+      height: 300px;
+      z-index: 0;
+      background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+      animation: go 3.8s infinite alternate;
+      opacity: 0.9;
+      filter: blur(24px);
+    }
+
+    .not-verified {
+      background: linear-gradient(222.44deg, #fcdd79d2 16.01%, #c57d1fd3 34.3%, #c4516ace 84.37% );
+      padding: 2rem 2.5rem;
+      border-radius: 4rem / 0.5rem;
+      display: inline-block;
+      cursor: pointer;
+    }
+
     .twitter {
+      position: relative;
       height: 1rem;
       display: inline-block;
       margin-right: 0.5rem;
@@ -1058,6 +1083,24 @@ $l: 1720px;
   left: 50%;
   transform: translate(-50%, -50%); 
   z-index: 1;
+}
+
+@keyframes go {
+  0% {
+    transform: translate(-300px, 100px);
+  }
+  20% {
+    transform: translate(-300px, 100px);
+  }
+  50% {
+    transform: translate(-300px, 100px);
+  }
+  90% {
+    transform: translate(0px, -300px);
+  }
+  100% {
+    transform: translate(0px, -300px);
+  }
 }
 </style>
 
