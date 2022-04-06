@@ -11,18 +11,13 @@
       <div class="fade-bg"></div> 
       <div class="early">
           <div v-if="!wallet">
-            <h1>Early Access Verify</h1>   
-            <span class="btn" @click="connectWallet()">
-              <span>Verify WALLET</span>
-            </span>
+            <h1>Early Access Verify</h1>
+            <SparkleBtn @hit="connectWallet()" text="Verify WALLET"/>
           </div>
           <div v-else> 
             <div v-if="!status && addressCheck" >
-              <h1>Early Access Verify</h1>   
-              <a :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
-                <img class="twitter" :src="twitter" >
-                <span>AUTHENTICATE WITH TWITTER</span>
-              </a>
+              <h1>Early Access Verify</h1>
+              <SparkleBtn :twitter="true" @hit="goToAuth()" text="AUTHENTICATE WITH TWITTER"/>
             </div>
             <div v-if="status === 'allow'">
               <h1>VERIFICATION SUCCESSFUL</h1>
@@ -32,7 +27,9 @@
               <h1>YOU’RE ON THE RAFFLE LIST</h1>
               <SparkleMessage :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />      
             </div>
-            <span @click="resetError()" v-if="status === 'used'" class="not-verified">{{failMessage}}</span>
+            <span @click="resetError()" v-if="status === 'used'" class="not-verified">
+              <ErrorMessage :text="failMessage"/>
+            </span>
           </div>
       </div>
       <div class="minting">
@@ -180,9 +177,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 import MinBanner from '@/components/MinBanner.vue';
+import SparkleMessage from '@/components/SparkleMessage.vue';
 import SparkleBtn from '@/components/SparkleBtn.vue';
 import ErrorMessage from '@/components/ErrorMessage.vue';
 
@@ -215,6 +213,7 @@ export default {
   name: 'Index',
   components: {
     MinBanner,
+    SparkleMessage,
     SparkleBtn,
     ErrorMessage,
   },
@@ -308,6 +307,9 @@ The Monkeyz expanded universe<br>
     },
     connectWallet(){
       this.$nuxt.$emit('connect')
+    },
+    goToAuth(){
+      window.location=`/.netlify/functions/auth?address=${this.wallet}`;
     },
     setStatus(userList, screenName){
       const list = userList || this.$route.query.list 
@@ -584,7 +586,6 @@ $l: 1720px;
     .verified {
       padding: 1.4rem 2rem;
       border-radius: 4.5rem / 1rem;
-      // background: linear-gradient(222.44deg, #79fcd2c0 16.01%, #1fc593de 34.3%, #7551c4ce 84.37% );
       display: inline-flex;
       justify-content: center;
       align-items: center;
@@ -645,10 +646,6 @@ $l: 1720px;
     }
 
     .not-verified {
-      background: linear-gradient(222.44deg, #fcdd79d2 16.01%, #c57d1fd3 34.3%, #c4516ace 84.37% );
-      padding: 2rem 2.5rem;
-      border-radius: 4rem / 0.5rem;
-      display: inline-block;
       cursor: pointer;
     }
 
