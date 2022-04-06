@@ -11,32 +11,25 @@
       <div class="fade-bg"></div> 
       <div class="early">
           <div v-if="!wallet">
-            <h1>Early Access Verify</h1>   
-            <span class="btn" @click="connectWallet()">Verify WALLET</span>
+            <h1>Early Access Verify</h1>
+            <SparkleBtn @hit="connectWallet()" text="Verify WALLET"/>
           </div>
           <div v-else> 
             <div v-if="!status && addressCheck" >
-              <h1>Early Access Verify</h1>   
-              <a :href="`/.netlify/functions/auth?address=${wallet}`" class="btn">
-                <img class="twitter" :src="twitter" >
-                <span>AUTHENTICATE WITH TWITTER</span>
-              </a>
+              <h1>Early Access Verify</h1>
+              <SparkleBtn :twitter="true" @hit="goToAuth()" text="AUTHENTICATE WITH TWITTER"/>
             </div>
             <div v-if="status === 'allow'">
-              <h1>VERIFICATION SUCCESSFUL</h1>   
-              <div class="verified">
-                <span class="mints">2 x Mint Slots</span>
-                <span class="screen-name">@{{screenName}}</span>
-              </div>
+              <h1>VERIFICATION SUCCESSFUL</h1>
+              <SparkleMessage title="2 x Mint Slots" :subtitle="'@'+screenName" />   
             </div>
             <div v-if="status === 'raffle'">
-              <h1>YOU’RE ON THE RAFFLE LIST</h1>   
-              <div class="verified">
-                <span class="mints">RAFFLE #{{raffleId}}</span>
-                <span class="screen-name">@{{screenName}}</span>
-              </div>
+              <h1>YOU’RE ON THE RAFFLE LIST</h1>
+              <SparkleMessage :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />      
             </div>
-            <span @click="resetError()" v-if="status === 'used'" class="not-verified">{{failMessage}}</span>
+            <span @click="resetError()" v-if="status === 'used'" class="not-verified">
+              <ErrorMessage :text="failMessage"/>
+            </span>
           </div>
       </div>
       <div class="minting">
@@ -69,7 +62,7 @@
   
 
     <section class="faq" id="faq">
-      <h2>FAQ</h2>
+      <h2>GMQs</h2>
       <div class="faq-list">
         <div @click="openfaq(item.id)"  class="faq-list__item" v-for="item in faq" :key="item.id">
           <h3 class="faq-item__question">{{item.q}}</h3>
@@ -184,9 +177,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 import MinBanner from '@/components/MinBanner.vue';
+import SparkleMessage from '@/components/SparkleMessage.vue';
+import SparkleBtn from '@/components/SparkleBtn.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
+
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
 import star from "@/assets/img/star-black.svg";
@@ -216,6 +213,9 @@ export default {
   name: 'Index',
   components: {
     MinBanner,
+    SparkleMessage,
+    SparkleBtn,
+    ErrorMessage,
   },
   data: () => {
     return {
@@ -227,44 +227,45 @@ export default {
       faq: [
         {
           id: 0,
-          q: 'What Is The Supply & Mint Price?',
-          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
-          active: true,
+          q: 'Roadmap',
+          a: `Our primary goal is delivering a collection to be proud of. With this said we realise launching a collection is just the beginning. Our aims for the next steps will be the following.<br><br>
+OG Membership<br>
+The GMF (Good Monkey Fund)<br>
+The FOM (Friends of Monkeyz)<br>
+The MV (Monkey Vault)<br>
+GM Limited Editions<br>
+The Monkeyz expanded universe<br>
+<br>One step at a time. We hope you join us as a Good Monkey.`,
+          active: false,
         },
         {
           id: 1,
-          q: 'Wen Monkeyz? Mint Date?',
-          a: "We are launching April 21st 2022.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
+          q: 'Supply & Mint Price',
+          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
           active: false,
         },
         {
           id: 2,
-          q: 'Early List & Public Mint?',
-          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
+          q: 'Mint Date',
+          a: "We are launching April 21st 2022.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
           active: false,
         },
         {
           id: 3,
-          q: 'Wen Merch?',
-          a: 'Merch Bundle tokens are now solely available on the secondary market.<br><br> Merch Redemption system live early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
+          q: 'Early List & Public Mint',
+          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
           active: false,
         },
         {
           id: 4,
-          q: 'What Is A Merch Bundle?',
-          a: 'A limited edition token. Max supply of 77. Primary sale sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a Good Monkeyz sticker Pack. Chance for an additional NFT drop on redemption ;). Worldwide shipping included. During minting holders also received a Mint Pass NFT',
+          q: 'Merch',
+          a: 'A limited edition token with a max supply of 77 sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a Good Monkeyz sticker Pack. Worldwide shipping included. During minting holders also received a Mint Pass NFT<br><br>Merch Bundle tokens are now solely available on the secondary market.<br><br> Merch Redemption system will be live in early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
           active: false,
         },
         {
           id: 5,
-          q: 'What Is A Mint Pass?',
-          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passes were minted with the OG Merch Bundle. Future mint passes will be available through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.',
-          active: false,
-        },
-        {
-          id: 6,
-          q: 'What Is A Booster Pack?',
-          a: 'Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed to minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
+          q: 'Mint Pass & Booster Pack',
+          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passes were minted with the OG Merch Bundle. Future mint passes will be available through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.<br><br>Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed to minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
           active: false,
         },
       ],
@@ -306,6 +307,9 @@ export default {
     },
     connectWallet(){
       this.$nuxt.$emit('connect')
+    },
+    goToAuth(){
+      window.location=`/.netlify/functions/auth?address=${this.wallet}`;
     },
     setStatus(userList, screenName){
       const list = userList || this.$route.query.list 
@@ -580,14 +584,15 @@ $l: 1720px;
     }
 
     .verified {
-      padding: 1.5rem 2.5rem;
-      background: linear-gradient(222.44deg, #79fcd2c0 16.01%, #1fc593de 34.3%, #7551c4ce 84.37% );
-      border-radius: 1.5rem;
+      padding: 1.4rem 2rem;
+      border-radius: 4.5rem / 1rem;
       display: inline-flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       text-transform: uppercase;
+
+
     }
     .screen-name {
       display: inline-block;
@@ -599,36 +604,53 @@ $l: 1720px;
       letter-spacing: 0.2rem;
       margin-bottom: 0.5rem;
     }
-    .not-verified {
-      background: linear-gradient(222.44deg, #fcdd79 16.01%, #c57d1f 34.3%, #c4516a 84.37% );
-      padding: 1rem;
-      border-radius: 1rem;
-      display: inline-block;
-      cursor: pointer;
-    }
 
     a {
       text-decoration: none;
       color: #fff;
     }
+
     .btn {
-      padding: 1rem;
-      border-radius: 1rem;
-      background: #fff;
-      color: #000;
-      text-decoration: none;
+      padding: 1.4rem 2rem;
+      border-radius: 4.5rem / 1rem;
       text-transform: uppercase;
-      font-size: 0.7rem;
-      margin-bottom: 1rem;
-      display: inline-flex;
-      white-space: nowrap;
+      color: #000;
+      background: #fff;
+      position: relative;
       cursor: pointer;
+      text-decoration: none;
+      font-size: 0.75rem;
+      overflow: hidden;
+      display: inline-flex ;
+      transform: translateZ(0);
 
       opacity: 0;
       animation: enter 2s ease 1 forwards;
       animation-delay: 200ms;
     }
+    .btn span {
+      position: relative;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      width: 400px;
+      height: 300px;
+      z-index: 0;
+      background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
+      animation: go 3.8s infinite alternate;
+      opacity: 0.9;
+      filter: blur(24px);
+    }
+
+    .not-verified {
+      cursor: pointer;
+    }
+
     .twitter {
+      position: relative;
       height: 1rem;
       display: inline-block;
       margin-right: 0.5rem;
@@ -1058,6 +1080,24 @@ $l: 1720px;
   left: 50%;
   transform: translate(-50%, -50%); 
   z-index: 1;
+}
+
+@keyframes go {
+  0% {
+    transform: translate(-300px, 100px);
+  }
+  20% {
+    transform: translate(-300px, 100px);
+  }
+  50% {
+    transform: translate(-300px, 100px);
+  }
+  90% {
+    transform: translate(0px, -300px);
+  }
+  100% {
+    transform: translate(0px, -300px);
+  }
 }
 </style>
 
