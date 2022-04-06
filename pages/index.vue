@@ -25,18 +25,12 @@
               </a>
             </div>
             <div v-if="status === 'allow'">
-              <h1>VERIFICATION SUCCESSFUL</h1>   
-              <div class="verified btn--sparkle">
-                <span class="mints">2 x Mint Slots</span>
-                <span class="screen-name">@{{screenName}}</span>
-              </div>
+              <h1>VERIFICATION SUCCESSFUL</h1>
+              <SparkleMessage title="2 x Mint Slots" :subtitle="'@'+screenName" />   
             </div>
             <div v-if="status === 'raffle'">
-              <h1>YOU’RE ON THE RAFFLE LIST</h1>   
-              <div class="verified btn--sparkle">
-                <span class="mints">RAFFLE #{{raffleId}}</span>
-                <span class="screen-name">@{{screenName}}</span>
-              </div>
+              <h1>YOU’RE ON THE RAFFLE LIST</h1>
+              <SparkleMessage :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />      
             </div>
             <span @click="resetError()" v-if="status === 'used'" class="not-verified">{{failMessage}}</span>
           </div>
@@ -189,6 +183,9 @@
 import { mapState } from 'vuex'
 
 import MinBanner from '@/components/MinBanner.vue';
+import SparkleBtn from '@/components/SparkleBtn.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
+
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
 import star from "@/assets/img/star-black.svg";
@@ -218,6 +215,8 @@ export default {
   name: 'Index',
   components: {
     MinBanner,
+    SparkleBtn,
+    ErrorMessage,
   },
   data: () => {
     return {
