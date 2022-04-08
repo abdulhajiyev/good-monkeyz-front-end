@@ -209,7 +209,7 @@ ${this.wallet}`
             window.scrollTo(0,0);
             await this.updateMerchOrder(message, signedMessage, burn.hash)
             console.log('PREWAIT burn tx', burn)
-            const burnTx = await burn.wait(2);
+            const burnTx = await burn.wait();
 
             if(burnTx.status === 1) {
                 const verifiedOrder = await this.confirmMerchOrder(message, signedMessage, burnTx.transactionHash)
