@@ -110,6 +110,11 @@ export default {
     this.$nuxt.$on('web3-active', () => {
       this.ngmiRedirect()
     })
+    setTimeout( () => {
+      if(!this.wallet){
+        this.$nuxt.$emit('connect', '/merch/redeem')
+      }
+    },1500)
   },
   methods: {
     async ngmiRedirect() {
@@ -146,6 +151,20 @@ export default {
           }) 
       })
       return await response.json();
+    },
+    async updateMerchOrder(message, signedMessage, txHash) {
+      const response = await fetch('/.netlify/functions/update-order', {
+          method: 'POST', 
+          cache: 'no-cache',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            message,
+            signedMessage,
+            txHash,
+          }) 
+      });
+
+      return await response.json(); 
     },
     async confirmMerchOrder(message, signedMessage, txHash) {
       const response = await fetch('/.netlify/functions/verify-order', {
@@ -188,7 +207,9 @@ ${this.wallet}`
             const burn = await connectedContract.burnToken(this.wallet, 0);
             this.pending = true;
             window.scrollTo(0,0);
-            const burnTx = await burn.wait();
+            await this.updateMerchOrder(message, signedMessage, burn.hash)
+            console.log('PREWAIT burn tx', burn)
+            const burnTx = await burn.wait(2);
 
             if(burnTx.status === 1) {
                 const verifiedOrder = await this.confirmMerchOrder(message, signedMessage, burnTx.transactionHash)

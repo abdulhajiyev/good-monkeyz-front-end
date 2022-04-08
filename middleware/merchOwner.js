@@ -11,12 +11,16 @@ import {
 
 export default async function ({ store, redirect }) {
     try {
+        console.log('WALLET:', store.state.wallet)
         const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
         const balBig = await connectedContract.balanceOf(store.state.wallet, TOKEN_ID_MERCH_BUNDLE);
         const bal = ethers.utils.formatUnits(balBig, 0)
 
-        if (bal < 1) {
+        const res = await (await fetch(`/.netlify/functions/reload-order?address=${store.state.wallet}`)).json()
+        const order = res.order;
+
+        if (bal < 1 && !order) {
             return redirect('/ngmi');
         }
     } catch(error){

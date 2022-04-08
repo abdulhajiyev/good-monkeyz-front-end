@@ -1,14 +1,21 @@
 <template>
   <div class="shop">
-    <MinBanner :account="wallet" :active="true" color="black" />
-    <div class="heading">
+    <div class="nav">
+      <MinBanner :account="wallet" :active="true" color="black" />
+    </div>
+    <div v-if="wallet" class="heading">
         <h1>You're in! LFG </h1> 
         <h2>You are eligible for the Good Monkeyz merch drop</h2>
     </div>
-    <div class="grid">
-      <div class="item">
+    <div v-if="wallet" class="grid">
+      <div v-if="bal>0" class="item">
         <video muted autoplay loop :src="monkey"></video>
         <nuxt-link to="/merch/options" class="btn">Redeem Item</nuxt-link>
+      </div>
+      <div v-if="order" class="item">
+        <video muted autoplay loop :src="monkey"></video>
+        <span v-if="order === 'pending'" to="/merch/options" class="btn">Pending Order</span>
+        <nuxt-link v-if="order === true" :to="`/merch/order?order=${orderNumber}`" class="btn">View Order</nuxt-link>
       </div>
     </div>
   </div>
@@ -39,22 +46,42 @@ export default {
   data: () => {
     return {
       monkey,
+      order: false,
+      bal: 0,
+      orderNumber: 0,
     }
   },
   computed: { 
     ...mapState(['wallet']),
   },
-  created(){
-    this.$nuxt.$on('web3-active', () => {
+  async created(){
+    
+    if(this.wallet){
+      await this.checkOrder(this.wallet)
+    } else {
+        setTimeout( () => {
+        if(!this.wallet){
+          this.$nuxt.$emit('connect', '/merch/redeem')
+        } else{
+          this.checkOrder(this.wallet)
+        }
+      },1500)
+    }
+
+    this.$nuxt.$on('web3-active', async () => {
+      await this.checkOrder(this.wallet)
       this.ngmiRedirect()
+      console.log('web 3 actyive');
     })
   },
   methods: {
     async ngmiRedirect() {
       try {
         const bal = await this.getBalance()
-        if (this.wallet && bal < 1) {
+        if (this.wallet && bal < 1 && !this.order) {
             return this.$router.push('/ngmi');
+        } else{
+          console.log('abc')
         }
       } catch(error){
         console.error(error);
@@ -66,11 +93,18 @@ export default {
         const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
         const balBig = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
+        this.bal = ethers.utils.formatUnits(balBig, 0);
         return ethers.utils.formatUnits(balBig, 0)
       } catch(error){
           console.error(error);
         return 0;
       }
+    },
+    async checkOrder(address){
+      const res = await (await fetch(`/.netlify/functions/reload-order?address=${address}`)).json()
+      this.bal = await this.getBalance();
+      this.order = res.order;
+      this.orderNumber = res.id;
     },
   }
 }

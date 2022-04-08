@@ -12,21 +12,21 @@ const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 exports.handler = async (event, context, callback) => {
     const body = JSON.parse(event.body);
     const message = body.message;
-    console.log(body)
     const signedMessage = body.signedMessage;
     const signerAddress = ethers.utils.verifyMessage(message, signedMessage);
-    console.log(signerAddress)
-    const insertOrder = await supabase
+    const txHash = body.txHash;
+
+    const updateOrder = await supabase
         .from('merch_orders')
-        .insert({ 
-            address: signerAddress,
-            message: message,
-            signed_message: signedMessage,
-            txHash: '',
-        })
-    console.log(insertOrder.error)
-    
-    if (insertOrder.data) {
+        .update(
+            {
+                txHash: txHash
+            })
+        .ilike('address', signerAddress)
+        .limit(1)
+        .single()
+
+    if (updateOrder.data) {
         return {
             statusCode: 200,
             body: JSON.stringify({success: true})
