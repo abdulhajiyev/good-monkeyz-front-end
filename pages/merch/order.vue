@@ -43,7 +43,7 @@ export default {
       twitter,
       balance: '',
       orderNumber: '',
-      shareLink: `https://twitter.com/share?text=I just burned the GM Merch Bundle&url=https://opensea.io/collection/good-monkeyz-limited-editions&hashtags=goodmonkeyz`,
+      shareLink: `https://twitter.com/share?text=GM Merch Bundle Incoming&url=https://opensea.io/collection/good-monkeyz-limited-editions&hashtags=goodmonkeyz`,
     }
   },
   computed: mapState(['wallet']),
