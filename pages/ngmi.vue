@@ -1,6 +1,6 @@
 <template>
   <div class="shop">
-       <MinBanner :account="wallet" :active="true" color="black" />
+    <div class="nav"><MinBanner :account="wallet" :active="true" color="black" /></div>
     <div class="heading">
         <h1>ERROR: NGMI!</h1>
         <h2>Ouu we’re sorry! But you need a Good Monkeyz NFT<br> Connect a wallet that holds a Good Monkeyz NFT</h2>
@@ -49,6 +49,11 @@ export default {
 main {
   background: #fff;
 }
+
+    .nav {
+      margin: 1.5rem;
+      position: relative;
+    }
 
 .heading {
     padding: 6rem 0 2rem;
