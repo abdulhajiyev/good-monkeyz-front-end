@@ -1,6 +1,6 @@
 <template>
   <div class="shop">
-    <MinBanner :account="wallet" :active="true" color="black" class="nav" />
+    <div clas="nav"><MinBanner :account="wallet" :active="true" color="black" class="nav" /></div>
     <div class="heading">
         <img :src="gmBlack" class="logo">
         <h1>Thank You!</h1> 
@@ -126,6 +126,11 @@ $l: 1720px;
 .scale-enter, .scale-leave-active { 
   opacity: 0;
   transform: scale(0.94);
+}
+
+.nav {
+  margin: 1.5rem;
+  position: relative;
 }
 
 .logo {

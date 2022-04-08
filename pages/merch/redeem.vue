@@ -92,7 +92,10 @@ $l: 1720px;
 main {
   background: #fff;
 }
-
+.nav {
+  margin: 1.5rem;
+  position: relative;
+}
 .grid {
   display: flex;
   justify-content: center;

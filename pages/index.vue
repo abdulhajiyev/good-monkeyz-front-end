@@ -467,6 +467,7 @@ $l: 1720px;
       height: 2.4rem;
     }
     .nav {
+      margin: 1.5rem;
       position: relative;
     }
 

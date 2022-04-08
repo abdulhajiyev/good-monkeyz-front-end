@@ -6,7 +6,7 @@
         <div class="mech-options">
             <p>Congratulations! You’ve unlocked the...</p>
             <div>
-              <h2 v-resize-text="{ratio: 0.8}">GOODMONKEYZ</h2>
+              <h2 v-resize-text="{ratio: 0.84}">GOODMONKEYZ</h2>
               <h2 v-resize-text="{ratio: 0.817}"> MERCH BUNDLE</h2>
             </div>
 
@@ -69,7 +69,7 @@ import gmBlack from "@/assets/img/gm-full.svg"
 
 import GMSHOPJSON from '@/utils/nftShop.json';
 
-import merchBg from '@/assets/img/merch-bg.jpg';
+import merchBg from '@/assets/img/hood.jpg';
 
 import { 
   MERCH_DROP_CONTRACT,
@@ -259,8 +259,13 @@ $l: 1720px;
 .merch {
   display: flex;
   justify-content: center;
-  padding-top: 5rem;
+  padding-top: 4rem;
   min-height: 95vh;
+  flex-direction: column;
+  
+  @media (min-width: $s) {
+    flex-direction: row;
+  }
 }
 
 .mech-options {
@@ -276,9 +281,12 @@ $l: 1720px;
   background: #ccc;
   background-size: cover;
   background-position: center;
-  display: none;
+  margin: 0 2rem 2rem 2rem;
+  min-height: 30vh;
+  box-sizing: border-box;
   @media (min-width: $s) {
-    display: block;
+    margin: 0;
+    min-height: 100%;
   }
 }
 
@@ -445,7 +453,6 @@ input:focus{
   .loader {
     display: block;
     font-size: 10px;
-    margin-right: 0.75rem;
     text-indent: -9999em;
     width: 5.3rem;
     height: 5.3rem;
