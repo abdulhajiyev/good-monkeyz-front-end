@@ -2,7 +2,7 @@
   <div class="shop">
     <div class="nav"><MinBanner :account="wallet" :active="true" color="black" /></div>
     <div class="heading">
-        <h1>ERROR: NGMI!</h1>
+        <h1>No merch token NGMI</h1>
         <h2>Ouu we’re sorry! But you need a Good Monkeyz NFT<br> Connect a wallet that holds a Good Monkeyz NFT</h2>
     </div>
     <div class="btns">
@@ -60,18 +60,35 @@ main {
     text-align: center;
 }
 .heading h1 {
-    font-size: 4rem;
+    font-size: 2rem;
     text-transform: uppercase;
     margin: 0;
+    max-width: 95%;
 }
+    @media (min-width: 600px){
+      .heading h1 {
+        font-size: 3rem;
+      }
+    }
+        @media (min-width: 1200px){
+      .heading h1 {
+        font-size: 4rem;
+      }
+    }
 .heading h2 {
     margin: 0;
     font-family: Helvetica, sans-serif;
     font-size: 1.0rem;
     font-weight: 300;
-    max-width: 40%;
+    max-width: 80%;
     margin: 0 auto;
 }
+
+    @media (min-width: 600px){
+      .heading h2 {
+        max-width: 40%;
+      }
+    }
 
     .btns {
       display: flex;  

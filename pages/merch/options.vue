@@ -391,7 +391,6 @@ input:focus{
     color: #fff;
     background: #000;
     text-align: center;
-    text-transform: uppercase;
     font-size: 0.75rem;
     cursor: pointer;
     position: relative;
