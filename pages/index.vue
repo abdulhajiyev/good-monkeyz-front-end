@@ -1,14 +1,10 @@
 <template>
   <div class="index">
     <section class="splash">
-      <div class="banner banner--top">
-        <span  class="marquee">GOOD MONKEYZ MINTING APRIL 21 2022<img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> </span>
-      </div>
-      <div class="nav">  
-        <MinBanner :account="wallet" :active="true" />
-      </div>
+
       <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
       <div class="fade-bg"></div> 
+
       <div class="early">
           <div v-if="!wallet">
             <Mint />
@@ -16,281 +12,34 @@
             <SparkleBtn @hit="connectWallet()" text="Verify WALLET"/>
           </div>
           <div v-else> 
-            <div v-if="!status && addressCheck" >
-              <h1>Early Access Verify</h1>
-              <SparkleBtn :twitter="true" @hit="goToAuth()" text="AUTHENTICATE WITH TWITTER"/>
-            </div>
-            <div v-if="status === 'allow'">
-              <h1>VERIFICATION SUCCESSFUL</h1>
-              <SparkleMessage title="2 x Mint Slots" :subtitle="'@'+screenName" />   
-            </div>
-            <div v-if="status === 'raffle'">
-              <h1>YOU’RE ON THE RAFFLE LIST</h1>
-              <SparkleMessage :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />      
-            </div>
-            <span @click="resetError()" v-if="status === 'used'" class="not-verified">
-              <ErrorMessage :text="failMessage"/>
-            </span>
+            <Mint />
           </div>
       </div>
-      <div class="minting">
-        <h3 >0 <img :src="divider"> 10,000</h3>
-        <h4>MINTING THURSDAY 21 APRIL 2022</h4>
-      </div>
-      <div class="banner banner--bottom">
-        <span  class="marquee">GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> </span>
-      </div>
-    </section>
-    <section class="monkeyz" id="about">
-      <div class="fade-bg fade--monkey"></div> 
-      <div class="lead">
-        <h2>Good Monkeyz are a collection of 10,000 generated NFTs living on the Ethereum blockchain</h2>
-        <p>Created from a combination of hundreds of different traits, all good! You’ll be able to find some very special 1/1 in the collection that we’ve collaborated on with our friends.</p>
-      </div>
-      <div></div>
-      <div class="monkeyz-scroll">
-        <div class="m-scroll m-scroll--1">
-          <img :src="m1" ><img :src="m1" ><img :src="m1" >
-        </div>
-        <div class="m-scroll m-scroll--2">
-          <img :src="m2" ><img :src="m2" ><img :src="m2" >
-        </div>
-        <div class="m-scroll m-scroll--3">
-          <img :src="m3" ><img :src="m3" ><img :src="m3" >
-        </div>
-      </div>
-    </section>
-  
-
-    <section class="faq" id="faq">
-      <h2>GMQs</h2>
-      <div class="faq-list">
-        <div @click="openfaq(item.id)"  class="faq-list__item" v-for="item in faq" :key="item.id">
-          <h3 class="faq-item__question">{{item.q}}</h3>
-          <span :class="{ active: item.active }" class="faq-item__close">&times;</span>
-          <Transition name="fade" mode="out-in">
-            <p :key="item.active" v-if="item.active" class="faq-item__answer" v-html="item.a"></p>
-          </Transition>
-        </div>
-      </div>
-    </section>
-
-    <section class="banner banner--middle">
-      <span class="marquee">MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ MEET THE GOOD MONKEYZ</span>
-    </section>
-
-
-    <section class="team" id="team">
-      <div class="monkey">
-        <img class="spotlight spotlight--charles" :src="spotlightCharles" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
-            <img :src="monkey1" >
-        </div>
-        <div class="monkey__info" >
-            <h3>CHARLESP</h3>
-            <h4>CREATIVE</h4>
-            <h5>@CHARLESPATTSON</h5>
-        </div>
-      </div>
-      <div class="monkey">
-        <img class="spotlight spotlight--sam" :src="spotlightSam" >
-        <div class="monkey__info monkey__info--right">
-            <h3>SAMMYB</h3>
-            <h4>DEVELOPMENT</h4>
-            <h5>@SAM_BILLINGHAM</h5>
-        </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="1"  data-rellax-percentage="0.5">
-            <img :src="monkey2" >
-        </div>
-      </div>
-       <div class="monkey" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="0.9"  data-rellax-percentage="0.5">
-            <img :src="monkey3" >
-        </div>
-        <div class="monkey__info" >
-            <h3>JULIAF</h3>
-            <h4>Operations</h4>
-            <h5>@JULIA91990</h5>
-        </div>
-      </div>
-
-      <div class="monkey">
-        <div class="monkey__info monkey__info--right">
-            <h3>DAMIANK</h3>
-            <h4>3D DESIGNER</h4>
-            <h5>@Damian_Kidd</h5>
-        </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
-            <img :src="monkey6" >
-        </div>
-      </div>
-
-      <div class="monkey" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="0.8"  data-rellax-percentage="0.5">
-            <img :src="monkey7" >
-        </div>
-        <div class="monkey__info" >
-            <h3>BENNYF</h3>
-            <h4>3D ARTIST</h4>
-            <h5>@BENFRYC</h5>
-        </div>
-      </div>
-
-      <div class="monkey">
-        <div class="monkey__info monkey__info--right">
-            <h3>SNENS</h3>
-            <h4>MODZ</h4>
-            <h5>@BaronSnens</h5>
-        </div>
-        <div class="monkey__avatar" v-rellax data-rellax-speed="1.1"  data-rellax-percentage="0.5">
-            <img :src="monkey4" >
-        </div>
-      </div>
-
-      <div class="monkey" >
-        <div class="monkey__avatar" v-rellax data-rellax-speed="0.8"  data-rellax-percentage="0.5">
-            <img :src="monkey5" >
-        </div>
-        <div class="monkey__info" >
-            <h3>SIO</h3>
-            <h4>MODZ</h4>
-            <h5>@selimimoberdorf</h5>
-        </div>
-      </div>
-    </section>
-
-    <section class="good-things">
-      <p>GOOD TIMES</p>
-      <p>GOOD VIBES</p>
-      <p>GOOD MONKEYZ</p>
-    </section>
     
-    <div class="gm-full">
-        
-        <div class="gm-spinner">
-          <img class="gm-in" :src="gmIn">
-          <img class="gm-out" :src="gmOut">
-        </div>
-
-        <img class="spotlight spotlight--footer" :src="spotlightFooter" >
-    </div>
+    </section>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
-import MinBanner from '@/components/MinBanner.vue';
 import Mint from '@/components/Mint.vue';
-import SparkleMessage from '@/components/SparkleMessage.vue';
-import SparkleBtn from '@/components/SparkleBtn.vue';
-import ErrorMessage from '@/components/ErrorMessage.vue';
 
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
-import star from "@/assets/img/star-black.svg";
 import twitter from "@/assets/img/twitter-black.svg"
-
-import m1 from "@/assets/img/row-1.png";
-import m2 from "@/assets/img/row-2.png";
-import m3 from "@/assets/img/row-3.png";
-
-import monkey1 from "@/assets/img/monkey-1.png";
-import monkey2 from "@/assets/img/monkey-2.png";
-import monkey3 from "@/assets/img/monkey-3.png";
-import monkey4 from "@/assets/img/monkey-4.png";
-import monkey5 from "@/assets/img/monkey-5.png";
-import monkey6 from "@/assets/img/monkey-6.png";
-import monkey7 from "@/assets/img/monkey-7.png";
-import gmOut from "@/assets/img/gm-outer.svg";
-import gmIn from "@/assets/img/gm-inner.svg";
-
-import spotlightFooter from "@/assets/img/spotlight-footer.png";
-import spotlightCharles from "@/assets/img/spotlight-charles.png";
-import spotlightSam from "@/assets/img/spotlight-sam.png";
-import spotlightHero from "@/assets/img/spotlight-hero.png";
 
 export default {
   transition: 'index',
   name: 'Index',
   components: {
-    MinBanner,
     Mint,
-    SparkleMessage,
-    SparkleBtn,
-    ErrorMessage,
   },
   data: () => {
     return {
       monkey,
       divider,
-      star,
       twitter,
-      m1,m2,m3,
-      faq: [
-        {
-          id: 0,
-          q: 'Roadmap',
-          a: `Our primary goal is delivering a collection to be proud of. With this said we realise launching a collection is just the beginning. Our aims for the next steps will be the following.<br><br>
-OG Membership<br>
-The GMF (Good Monkey Fund)<br>
-The FOM (Friends of Monkeyz)<br>
-The MV (Monkey Vault)<br>
-GM Limited Editions<br>
-The Monkeyz expanded universe<br>
-<br>One step at a time. We hope you join us as a Good Monkey.`,
-          active: false,
-        },
-        {
-          id: 1,
-          q: 'Supply & Mint Price',
-          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
-          active: false,
-        },
-        {
-          id: 2,
-          q: 'Mint Date',
-          a: "We are launching April 21st 2022.<br><br>NOTE: We will never have a stealth-launch, please be careful of scams.<br><br>Official launch details will be shared on our website, Discord, and our Twitter page.",
-          active: false,
-        },
-        {
-          id: 3,
-          q: 'Early List & Public Mint',
-          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
-          active: false,
-        },
-        {
-          id: 4,
-          q: 'Merch',
-          a: 'A limited edition token with a max supply of 77 sold out.<br><br> The NFT entitles the holder to 1 Hoodie, 1 cap or Beanie and a Good Monkeyz sticker Pack. Worldwide shipping included. During minting holders also received a Mint Pass NFT<br><br>Merch Bundle tokens are now solely available on the secondary market.<br><br> Merch Redemption system will be live in early April (due to a delay in cap production). <br><br> <a href="https://opensea.io/collection/good-monkeyz-limited-editions">Good Monkeyz Limited Editions</a>',
-          active: false,
-        },
-        {
-          id: 5,
-          q: 'Mint Pass & Booster Pack',
-          a: 'Mint passes can be exchanged for 1 Good Monkeyz NFT for 0ETH Fee (will still require gas). There are no limits on how many Mint passes an account can use. A Max supply of 250 Mint passes will be mintable. 77 Mint passes were minted with the OG Merch Bundle. Future mint passes will be available through limited edition drops and competitions.<br><br> Mint Passes can be used 1 hour before early access opens.<br><br>Booster packs contain 3 Good Monkeyz. There are a max supply of 250 booster packs. Initial distribution of 77 booster packs will be randomly distributed to minters on the early list.<br><br> Booster Packs can be used during or anytime after the Booster Party event. <br><br> Booster Pack monkeyz are hidden and dynamically revealed upon opening.',
-          active: false,
-        },
-      ],
-      monkey1,
-      monkey2,
-      monkey3,
-      monkey4,
-      monkey5,
-      monkey6,
-      monkey7,
-      gmOut,
-      gmIn,
-      spotlightFooter,
-      spotlightCharles,
-      spotlightSam,
-      spotlightHero,
-      screenName: '',
-      status: '',
-      addressCheck: false,
-      failMessage: '',
-      count: 0,
-      raffleId: null,
     }
   },
   computed: mapState(['wallet']),
