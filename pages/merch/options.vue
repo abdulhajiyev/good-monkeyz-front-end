@@ -17,6 +17,8 @@
                     <span @click="size = 'm'" :class="{'active' : size === 'm'}">Medium</span>
                     <span @click="size = 'l'" :class="{'active' : size === 'l'}">Large</span>
                     <span @click="size = 'xl'" :class="{'active' : size === 'xl'}">XLarge</span>
+                    <span @click="size = '2xl'" :class="{'active' : size === '2xl'}">2X Large</span>
+                    <span @click="size = '3xl'" :class="{'active' : size === '3xl'}">3X Large</span>
                 </div>
                 <label>Select your choice</label>
                 <div class="select-btns select-btns--2 ">
@@ -327,7 +329,7 @@ $l: 1720px;
     text-align: center;
     cursor: pointer;
   @media (min-width: $m) {
-    flex-basis: 24%;
+    flex-basis: 32%;
   }
 }
 .select-btns span.active {
