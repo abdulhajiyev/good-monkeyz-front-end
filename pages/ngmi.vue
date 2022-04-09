@@ -112,6 +112,7 @@ main {
       text-transform: uppercase;
       font-size: 0.8rem;
       margin-left: 0.25rem;
+      white-space: nowrap;
     }
 
     .btn img {
