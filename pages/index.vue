@@ -13,9 +13,6 @@
           <div v-if="!wallet">
             <h1>Early Access Minting</h1>
             <span class="btn" @click="connectWallet()">Verify WALLET</span>
-            <Squircle :height="1" >
-              thing
-            </Squircle>
           </div>
           <div v-else> 
             <Mint />
@@ -170,7 +167,6 @@ import { mapState } from 'vuex'
 
 import MinBanner from '@/components/MinBanner.vue';
 import Mint from '@/components/Mint.vue';
-import Squircle from '@/components/Squircle.vue'
 
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
@@ -202,7 +198,6 @@ export default {
   components: {
     MinBanner,
     Mint,
-    Squircle,
   },
   data: () => {
     return {
