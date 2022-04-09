@@ -33,6 +33,7 @@ exports.handler = async (event, context, callback) => {
     .from('merch_orders')
     .select()
     .is('verified', false)
+    .not('txHash', 'eq', '')
     .ilike('address', address)
     .limit(1)
     .single()
