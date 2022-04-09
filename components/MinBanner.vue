@@ -10,7 +10,7 @@
                 <nuxt-link :to="{path: '/', hash: 'about'}" >About</nuxt-link> 
                 <nuxt-link :to="{path: '/', hash: 'faq'}" >FAQ</nuxt-link> 
                 <nuxt-link :to="{path: '/', hash: 'team'}" >Team</nuxt-link> 
-                <!-- <span @click="goToMerch()" >Merch</span> -->
+                <span @click="goToMerch()" >Merch</span>
             </nav>
 
             <div v-if="!wallet" class="social">
@@ -73,27 +73,30 @@ $s: 660px;
 $m: 960px;
 $l: 1720px;
 
-
     nav {
         display: flex;
         justify-content: center;
-        padding-top: 3rem;
+        padding-top: 4rem;
         @media (min-width: $s) {
             padding-top: 0;
         }
     }
+
     nav a,
     nav span {
         color: #fff;
         text-transform: uppercase;
-        padding: 1rem 1.5rem;
+        padding: 0.75rem;
         text-decoration: none;
         font-size: 0.825rem;
         cursor: pointer;
+        @media (min-width: $s) {
+            padding: 1rem 1.5rem;
+        }
     }
     .logo {
         position: absolute;
-        left: 2rem;
+        left: 0;
         top: 1.5rem;
         padding-right: 2.5rem ;
         @media (min-width: $s) {
@@ -115,7 +118,6 @@ $l: 1720px;
         top: 0;
         left: 0;
         
-        padding: 1.5rem 0;
         display: flex;
         justify-content: center;
         z-index: 1;
@@ -125,7 +127,6 @@ $l: 1720px;
 
         @media (min-width: $s) {
             justify-content: space-between;
-            padding: 1.5rem;
                flex-direction: row;
         }
         opacity: 0;
@@ -181,7 +182,7 @@ $l: 1720px;
     .user-area {
         position: absolute;
         top: 1.5rem;
-        right: 1.5rem;
+        right: 0;
         padding-right: 2rem;
         @media (min-width: $s) {
             position: relative;

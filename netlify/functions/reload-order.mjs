@@ -15,29 +15,42 @@ import {
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 
 const getTx = (hash) => new Promise((resolve, reject) => {
-    const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-    const interval = setInterval( async () => {
-        receipt = await provider.getTransactionReceipt(hash)
-        if (receipt) {
-            clearInterval(interval);
-            resolve(receipt);
-        }
-    }, 1000)
-  });
+  const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+  const interval = setInterval( async () => {
+      receipt = await provider.getTransactionReceipt(hash)
+      if (receipt) {
+          clearInterval(interval);
+          resolve(receipt);
+      }
+  }, 1000)
+});
 
 exports.handler = async (event, context, callback) => {
-    const body = JSON.parse(event.body);
-    const message = body.message;
-    const signedMessage = body.signedMessage;
-    const burnTxHash = body.txHash;
-    console.log(body)
-    
-    const signerAddress = ethers.utils.verifyMessage(message, signedMessage);
-    const addressFromMessage = message.replace(/\n|\r/g, "").split("Wallet address:").pop().trim()
-    console.log(signerAddress)
-    console.log(addressFromMessage)
-    
-    let receipt = await getTx(burnTxHash)
+
+  const address = event.queryStringParameters.address
+
+  const unverifiedOrder = await supabase
+    .from('merch_orders')
+    .select()
+    .is('verified', false)
+    .ilike('address', address)
+    .limit(1)
+    .single()
+  
+  const verifiedOrder = await supabase
+    .from('merch_orders')
+    .select()
+    .is('verified', true)
+    .ilike('address', address)
+    .order('id', { ascending: false })
+    .limit(1)
+    .single()
+
+    console.log(unverifiedOrder.data, verifiedOrder.data)
+
+  if (unverifiedOrder.data) {
+      console.log('ORDER FOUND-needs reload')
+    let receipt = await getTx(unverifiedOrder.data.txHash)
     receipt = receipt
     const abi = [ "event GmBurned(address _address, uint256 _id)" ];
     const iface = new ethers.utils.Interface(abi);
@@ -52,11 +65,8 @@ exports.handler = async (event, context, callback) => {
       }
     }
     
-    console.log(signerAddress.toLowerCase())
-    console.log(addressFromMessage.toLowerCase())
-    console.log(addressFromEvent.toLowerCase())
 
-    if(signerAddress.toLowerCase() === addressFromMessage.toLowerCase() && signerAddress.toLowerCase() === addressFromEvent.toLowerCase()){
+    if(address.toLowerCase() === addressFromEvent.toLowerCase()){
       console.log('match')
 
       const verifiedOrder = await supabase
@@ -64,7 +74,7 @@ exports.handler = async (event, context, callback) => {
         .update({ 
             verified: true
         })
-        .ilike('address', signerAddress)
+        .ilike('address', address)
         .limit(1)
         .single()
 
@@ -74,15 +84,25 @@ exports.handler = async (event, context, callback) => {
           statusCode: 200,
           body: JSON.stringify(
             {
-              success: true,
+              order: true,
               orderNumber: verifiedOrder.data.id
             })
         }
       }
     }
-
     return {
-      statusCode: 500,
-      body: JSON.stringify({success: false})
+      statusCode: 200,
+      body: JSON.stringify({order: 'pending'})
     }
+  }
+  if (verifiedOrder.data) {
+    return{
+      statusCode: 200,
+      body: JSON.stringify({order: true, id: verifiedOrder.data.id})
+    }
+  }
+  return {
+      statusCode: 200,
+      body: JSON.stringify({order: false})
+  }   
 }
