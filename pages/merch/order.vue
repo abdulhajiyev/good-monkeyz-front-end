@@ -58,7 +58,8 @@ export default {
     async ngmiRedirect() {
         try {
             const bal = await this.getBalance()
-            if (this.wallet && bal < 1) {
+            const order = await this.checkOrder(this.wallet)
+            if (this.wallet && bal < 1 && !order) {
                 return this.$router.push('/ngmi');
             }
         } catch(error){
@@ -77,6 +78,10 @@ export default {
             console.error(error);
           return 0;
         }
+    },
+    async checkOrder(address){
+      const res = await (await fetch(`/.netlify/functions/reload-order?address=${address}`)).json()
+      return res.order;
     },
         fireConfetti(){
        const jsConfetti = new JSConfetti()
