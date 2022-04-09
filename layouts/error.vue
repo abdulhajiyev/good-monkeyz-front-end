@@ -1,6 +1,6 @@
 <template>
   <div class="shop">
-       <MinBanner :account="wallet" :active="true" color="black" />
+    <div class="nav"><MinBanner :account="wallet" :active="true" color="black" /></div>
     <div class="heading">
         <h1>ERROR: NGMI!</h1>
         <h2>Monkey you look lost?</h2>
@@ -52,7 +52,10 @@ props: ['error'],
 main {
   background: #fff;
 }
-
+    .nav {
+      margin: 1.5rem;
+      position: relative;
+    }
 .heading {
     padding: 6rem 0 2rem;
     text-align: center;

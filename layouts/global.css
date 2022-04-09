@@ -39,8 +39,8 @@ html {
   width: 240%;
   height: 220%;
   z-index: -1;
-  background: linear-gradient(222.44deg, #FC9D79 16.01%, #D91EA4 26.09%, #A31FC5 34.3%, #7651C4 44.37%, #2CDAB0 72.36%, #FFF6B4 87.66%);
-  filter: blur(2px) brightness(105%);
+  background: linear-gradient(222.44deg, #fc9c79e7 16.01%, #d91ea4d8 26.09%, #a41fc5cb 34.3%, #7551c4ce 44.37%, #2cdab1c4 72.36%, #fff6b4be 87.66%);
+  filter: blur(1px) brightness(105%);
   transform: translate(-40%, -50%);
   animation: sparkle 3s infinite alternate;
 }
@@ -48,19 +48,19 @@ html {
 @keyframes sparkle {
   0% {
     transform: translate(-40%, -50%);
-    filter: blur(2px) brightness(105%);
+    filter: blur(3px) brightness(105%);
   }
   50% {
     transform: translate(-40%, -50%);
-    filter: blur(2px) brightness(105%);
+    filter: blur(3px) brightness(105%);
   }
   90% {
     transform: translate(-55%, -30%);
-    filter: blur(2px) brightness(120%);
+    filter: blur(3px) brightness(120%);
   }
   100% {
     transform: translate(-55%, -30%);
-    filter: blur(2px) brightness(120%);
+    filter: blur(3px) brightness(120%);
   }
 }
 .btn--sparkle .subtitle {
