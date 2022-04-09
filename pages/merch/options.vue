@@ -77,7 +77,8 @@ import {
   MERCH_DROP_CONTRACT,
   INFURA_PROJECT_ID,
   NETWORK_NAME,
-  TOKEN_ID_MERCH_BUNDLE 
+  TOKEN_ID_MERCH_BUNDLE,
+  CHAIN_ID
 } from '@/utils/constants';
 
 Vue.use(VueResizeText)
@@ -184,15 +185,21 @@ export default {
     },
     async ordeMerch() {
 
+      try {
+
         const provider = this.$provider();
         const signer = provider.getSigner();
+        const { chainId } = await provider.getNetwork()
+      
+        if (chainId !== CHAIN_ID) throw new Error('WRONG NETWORK - Select ETH MAINNET');
+
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
         // connectedContract.on("GmBurned", (tokenId) => {
         //     console.log('NEW MERCH BUNDLE MINTED %s', tokenId) 
         //     // this.getcontractData();
         // });
 
-        try {
+        
             const message = `Merch Bundle: 
   Size: ${this.size.toUpperCase()}
   Choice: ${this.choice.toUpperCase()}
