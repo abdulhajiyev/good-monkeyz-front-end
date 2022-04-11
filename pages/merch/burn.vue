@@ -9,6 +9,7 @@
             </div>
             <p>Burn Merch Token To complete Order</p>
             <p>This process should only be done when in contact with support</p>
+            <p>Wallet: {{ wallet }}</p>
             <span class="btn" @click="ordeMerch()">Complete</span>
             {{msg}}
         </div>
@@ -59,7 +60,7 @@ export default {
   created() {
     setTimeout( () => {
       if(!this.wallet){
-        this.$nuxt.$emit('connect', '/merch/complete')
+        this.$nuxt.$emit('connect', '/merch/burn')
       }
     },1500)
   },
