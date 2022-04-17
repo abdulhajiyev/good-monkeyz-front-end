@@ -3,11 +3,12 @@
     <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
     <div class="fade-bg"></div> 
     <div class="minting">
+        <span class="zerozero" ref="zerozero">00</span>
         <div v-if="!wallet">
           <h1>Allow List Minting in Progress</h1>
           <h3>{{amountMinted}} <img :src="divider"> 10,000</h3>
           <SparkleBtn @hit="connectWallet()" text="Connect WALLET to Mint"/>
-          <h4>RAFFLE LIST MINTING NEXT IN 24:43:02</h4>
+          <h4>RAFFLE LIST MINTING NEXT IN <span v-html="countdown">DD HH MM SS</span></h4>
         </div>
         <div v-else> 
           <Mint />
@@ -18,12 +19,22 @@
 
 <script>
 import { mapState } from 'vuex';
+import { ethers } from 'ethers';
 
 import Mint from '@/components/Mint.vue';
 
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
 import twitter from "@/assets/img/twitter-black.svg"
+
+
+import { 
+    INFURA_PROJECT_ID,
+    NETWORK_NAME,
+    MONKEY_CONTRACT,
+} from '@/utils/constants';
+
+import GMPFP from '@/utils/GoodMonkeyz.json';
 
 export default {
   transition: 'index',
@@ -36,11 +47,14 @@ export default {
       monkey,
       divider,
       twitter,
-      amountMinted: '10,000',
+      amountMinted: '~',
+      zeroWidth: '',
+      countdown: '',
     }
   },
   computed: mapState(['wallet']),
   created() {
+    this.getcontractData() 
     this.setStatus();
     if(this.wallet) {
       this.checkByAddress(this.wallet);
@@ -48,16 +62,31 @@ export default {
     this.$nuxt.$on('web3-active', () => {
       this.checkByAddress(this.wallet);
     })
+    this.countdownF();
+    
+    setInterval(()=> {
+      this.countdownF();
+      
+    }, 1000)
+  },
+  mounted() {
+    if(!this.open){
+      this.zeroWidth = this.$refs.zerozero.offsetWidth;
+      setTimeout( () => {
+        this.zeroWidth = this.$refs.zerozero.offsetWidth;
+      }, 2000)
+    }
   },
   methods: {
-    openfaq(id){
-      this.faq[id].active = !this.faq[id].active;
-    },
     connectWallet(){
       this.$nuxt.$emit('connect')
     },
-    goToAuth(){
-      window.location=`/.netlify/functions/auth?address=${this.wallet}`;
+    async getcontractData() {
+      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
+
+      const totalSupply = await monkeyContract.totalSupply();
+      this.amountMinted = Number(ethers.utils.formatUnits(totalSupply, 0)).toLocaleString() 
     },
     setStatus(userList, screenName){
       const list = userList || this.$route.query.list 
@@ -89,6 +118,22 @@ export default {
     resetError() {
       this.failMessage = ''
       this.status = ''
+    },
+    countdownF() {
+      const countDownDate = new Date( Date.UTC(2022, 3, 22, 13, 37, 0, 0)).getTime();
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((distance % (1000 * 60)) / (1000) );
+
+      if(seconds.toString().length === 1) {
+        seconds = `0${seconds}`
+      }
+
+      this.countdown = `${days}D ${hours}H ${minutes}M <span class="seconds" style="min-width: ${this.zeroWidth}px; " ">${seconds}</span>S`;
     },
   }
 }
@@ -128,7 +173,10 @@ $l: 1720px;
   transform: translate(-50%, -50%);
   filter: grayscale(10%);
   z-index: 0;
-  width: 190%;
+  width: 230%;
+  @media (min-width: $s) {
+    width: 180%;
+  }
   @media (min-width: $m) {
     top: auto;
     bottom: 0;
@@ -147,7 +195,7 @@ $l: 1720px;
   width: 100%;
   top: 0;
   left: 0;
-  background: linear-gradient(270deg, #0a0606 14.4%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(270deg, #0a0606 19.4%, rgba(0, 0, 0, 0) 100%);
   z-index: 0;
   @media (min-width: $m) {
     background: linear-gradient(270deg, #0a0606 44.4%, rgba(0, 0, 0, 0.4) 100%);
@@ -164,34 +212,75 @@ $l: 1720px;
     font-size: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 0.25rem;
+    margin: 0 0 2rem;
   }
   h3 {
     font-size: 2.5rem;
-    margin: 0 0 0.5rem;
+    margin: 0 0 1rem;
   }
   h4 {
     font-size: 0.6rem;
-    margin: 0;
+    margin: 1rem 0;
     letter-spacing: 0.25rem;
   }
   img {
     height: 2.5rem;
     transform: translateY(10px);
+    
   }
 
   @media (min-width: $s) {
+    h1 {
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25rem;
+      margin: 0 0 2rem;
+    }
     h3 {
-      font-size: 3.5rem;
+      font-size: 4rem;
+      margin: 2rem 0;
     }
     h4 {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
+      margin: 2rem 0;
     }
     img {
       height: 3.5rem;
     }
   }
+    @media (min-width: $s) {
+    h1 {
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25rem;
+      margin: 0 0 2rem;
+    }
+    h3 {
+      font-size: 6rem;
+      margin: 2rem 0;
+    }
+    h4 {
+      font-size: 0.8rem;
+      margin: 2rem 0;
+    }
+    img {
+      height: 5.5rem;
+    }
+  }
 }
 
+.countdown  >>> .seconds {
+    display: inline-block;
+    text-align: right;
+    margin-right: 0.15rem;
+}
+
+.zerozero {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
 </style>
 

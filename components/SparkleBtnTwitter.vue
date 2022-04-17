@@ -39,6 +39,7 @@
 <style scoped>
     .grad-note {
         position: relative;
+         user-select: none;
     }
     svg {
         max-width: 85%;
@@ -47,7 +48,7 @@
         /* cursor: pointer; */
     }
     .bg {
-        animation: move 2.6s ease-in-out forwards infinite alternate;
+        animation: move 1.8s ease-in-out forwards infinite alternate;
     }
 
     .content {
@@ -66,6 +67,9 @@
     .content img {
         height: 1.5rem;
         margin-right: 1rem;
+    }
+    .content span {
+        transform: translateY(-2px);
     }
 
 

@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 3, 21, 13, 37, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 3, 21, 14, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 
@@ -166,7 +166,7 @@ h1,
 @media (min-width: 800px){
     h1,
     .zerozero  {
-        font-size: 5,5rem;
+        font-size: 5.5rem;
     }
 }
 @media (min-width: 1200px){
