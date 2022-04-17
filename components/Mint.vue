@@ -62,6 +62,11 @@
                 <SparkleBtnTwitter @hit="openTweet()" />
             </div>
         </div>
+        <transition name="fade">
+            <div v-show="errorMessage" class="error">
+                <span>{{errorMessage}}</span>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -105,6 +110,7 @@
                 prizes: [],
                 monkeyz: [],
                 twitterURL: `https://twitter.com/share?text=I just minted Good Monkeyz&url=https://goodmonkeyz.art`,
+                errorMessage: '',
             }
         },
         components: {
@@ -224,7 +230,7 @@
                         throw new Error('TX Failed :( ');
                     }
                 } catch (error) {
-                    this.errorMessage = error
+                    this.errorMessage = this.formatError(error)
                     setTimeout( ()=> {
                         this.errorMessage = '';
                     }, 5500)
@@ -254,33 +260,26 @@
                     
                     const overrides = { value: ethers.utils.parseEther( String( TOTAL ) )};
                     const nftTxn = await connectedContract.mint(AMOUNT, overrides)
-                    console.log('TX', nftTxn.hash)
+                    console.log(nftTxn)
                     this.txHash = nftTxn.hash
                     const result =  await nftTxn.wait();
   
-                    let tokens;
-                    try {
-                        const e = result.events.filter( x => x.event === 'GMMinted')
-                        tokens = e.map(x => {
-                            return ethers.utils.formatUnits(x.args[1], 0); 
-                        });
-                    } catch (error){
-                
-                        console.log(error)
-                    }
+                    const tokens = result.events
+                        .filter( result => result.event === 'GMMinted')
+                        .map(event => ethers.utils.formatUnits(event.args[1], 0));
 
                     if(result.status === 1) {
                         this.minted = true;
                         this.monkeyz = tokens
                         this.fireConfetti()
                         const won = await this.checkPrize()
-                        console.log(won)
                         this.prizes = won ? won.prizes : []
                     } else {
                         throw new Error('TX Failed :( ');
                     }
                 } catch (error) {
-                    this.errorMessage = error
+                    // console.log(error)
+                    this.errorMessage = this.formatError(error)
                     setTimeout( ()=> {
                         this.errorMessage = '';
                     }, 5500)
@@ -344,7 +343,14 @@
                     confettiRadius: 8,
                 });
                 }, 2400)
-            }
+            },
+            formatError(error){
+                console.log(error.message);
+                console.log(error.message.includes('insufficient'));
+               if (error.message) {
+                    return `${error.message.substring(0, 50)}...`
+                }
+            },
         }
     }
 </script>
@@ -354,6 +360,9 @@ $s: 660px;
 $m: 960px;
 $l: 1720px;
 
+    .minting {
+        position: relative;
+    }
     h1 {
         font-size: 1rem;
         text-transform: uppercase;
@@ -628,4 +637,24 @@ $l: 1720px;
     transform: rotate(360deg);
   }
 }
+
+ .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
+  .error {
+    padding: 1.2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    background: linear-gradient(222.44deg, #fc7979 16.01%, #D91EA4 36.09%, #A31FC5 64.3%, #c45151 84.37%);
+    max-width: 80%;
+    border-radius: 0.3rem;
+    font-size: 0.75rem;
+  }
 </style>

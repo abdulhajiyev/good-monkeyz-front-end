@@ -68,6 +68,13 @@ export default {
       this.countdownF();
       
     }, 1000)
+
+    const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+    const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
+    monkeyContract.on("GMMinted", (tokenId) => {
+      console.log('NEW MERCH BUNDLE MINTED %s', tokenId) 
+      this.getcontractData();
+    });
   },
   mounted() {
     if(!this.open){
