@@ -4,8 +4,9 @@
             <span class="btn" @click="setShopURL()">SET MERCH ADDRESS</span>
             <span class="btn" @click="flipPass()">PASS {{monkeyPass ? 'OPEN' : 'CLOSED'}}</span>
             <span class="btn" @click="flipAllow()">ALLOW {{ monkeyAllow ? 'OPEN' : 'CLOSED'}}</span>
-            <span class="btn" @click="flipPUBLIC()">PUBLIC {{monkeyPublic ? 'OPEN' : 'CLOSED'}}</span>
+            <span class="btn" @click="flipPublic()">PUBLIC {{monkeyPublic ? 'OPEN' : 'CLOSED'}}</span>
             <span class="btn" @click="flipBooster()">BOOSTER {{monkeyBooster ? 'OPEN' : 'CLOSED'}}</span>
+            <span class="btn" @click="withdraw()">Withdraw</span>
         </div>
         <div class="data">
             <h2>MONKEY Contract</h2>
@@ -78,7 +79,7 @@ export default {
     withdraw(){
         const provider = this.$provider();
         const signer = provider.getSigner();
-        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
+        const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMSHOPJSON.abi, signer);
 
         connectedContract.withdraw()
     },
@@ -125,7 +126,7 @@ export default {
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
       await monkeyContract.flipBoosterState();
-    }
+    },
 
   }
 }

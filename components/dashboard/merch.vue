@@ -62,6 +62,15 @@ export default {
           },
           {
               name: 'Mint Pass',
+          },
+          {
+              name: 'Booster Pack',
+          },
+          {
+              name: 'OG Badge',
+          },
+          {
+              name: 'Mystery Box',
           }
     ],
     allowList: [],
@@ -98,8 +107,8 @@ export default {
 
       const tx =  await connectedContract.mintAdmin(
         this.wallet,
-        1,
-        10
+        4,
+        1337
       );
       console.log(tx);
     },
@@ -145,7 +154,7 @@ export default {
             const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
             const tx = await connectedContract.createMerchItem(
-                  250,
+                  1337,
                   ethers.utils.parseEther('0.1'),
                   ethers.utils.parseEther('0.000')
                 )

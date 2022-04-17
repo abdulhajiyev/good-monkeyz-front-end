@@ -111,12 +111,10 @@ export default {
     }, 1000)
   },
   mounted() {
-    if(!this.open){
       this.zeroWidth = this.$refs.zerozero.offsetWidth;
       setTimeout( () => {
         this.zeroWidth = this.$refs.zerozero.offsetWidth;
-      }, 2000)
-    }
+      }, 1000)
   },
   methods: {
     async getAmountMinted() {
