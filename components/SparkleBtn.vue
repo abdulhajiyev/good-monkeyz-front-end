@@ -1,7 +1,6 @@
 <template>
     <div class="grad-btn" @click="$emit('hit')">
         <div class="content">
-            <img v-if="twitter" class="twitter" :src="twitterImg" >
             <span class="title">{{text}}</span>
         </div>
             <svg :width="w" :height="h" viewBox="0 0 330 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,11 +58,15 @@
     .grad-btn {
         position: relative;
         cursor: pointer;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
     }
     svg {
         max-width: 90%;
         z-index: 1;
         position: relative;
+        cursor: pointer;
     }
     .white {
         z-index: 0;
@@ -75,6 +78,7 @@
     }
 
     .content {
+        cursor: pointer;
         position: absolute;
         top: 50%;
         left: 50%;

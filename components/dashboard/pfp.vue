@@ -6,6 +6,8 @@
             <span class="btn" @click="flipAllow()">ALLOW {{ monkeyAllow ? 'OPEN' : 'CLOSED'}}</span>
             <span class="btn" @click="flipPublic()">PUBLIC {{monkeyPublic ? 'OPEN' : 'CLOSED'}}</span>
             <span class="btn" @click="flipBooster()">BOOSTER {{monkeyBooster ? 'OPEN' : 'CLOSED'}}</span>
+            <span class="btn" @click="setBaseURI()">setBaseURI</span>
+            <span class="btn" @click="setContractURI()">setContractURI</span>
             <span class="btn" @click="withdraw()">Withdraw</span>
         </div>
         <div class="data">
@@ -56,7 +58,6 @@ export default {
   created() {
       this.getcontractData();
       this.getMonkeyData();
-
   },
   methods: {
     formatEth(bigNum) {
@@ -91,6 +92,10 @@ export default {
       this.monkeyPublic = await monkeyContract.PUBLIC()
       this.monkeyAllow = await monkeyContract.ALLOW()
       this.monkeyBooster = await monkeyContract.BOOSTER()
+
+      const uri = await monkeyContract.tokenURI(94)
+      console.log(uri)
+
     },
     async setShopURL() {
       const provider = this.$provider();
@@ -127,7 +132,21 @@ export default {
 
       await monkeyContract.flipBoosterState();
     },
+    async setBaseURI() {
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
+      await monkeyContract.setBaseURI('ipfs://QmP7bT4mmkojocnJjiJzCwb2F514kZM9bihfD7EoUauTYy/');
+    },
+    async setContractURI() {
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
+
+      await monkeyContract.setContractURI('https://sambillingham.github.io/test-json/contract_meta.json');
+    },
+  
   }
 }
 </script>

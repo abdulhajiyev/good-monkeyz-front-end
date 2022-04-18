@@ -106,9 +106,9 @@ export default {
       const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
       const tx =  await connectedContract.mintAdmin(
-        this.wallet,
-        4,
-        1337
+        '0xd3d7db39e933A86D15A135a8Cc8dd8E14Ed6C616',
+        1,
+        1
       );
       console.log(tx);
     },

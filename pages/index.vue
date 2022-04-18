@@ -1,8 +1,11 @@
 <template>
   <div class="index">
     <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
-    <div class="fade-bg"></div> 
-    <div class="minting">
+    <div class="fade-bg"></div>
+    <section class="countdown" v-if="!open">
+      <Countdown />
+    </section>
+    <div v-else class="minting">
         <span class="zerozero" ref="zerozero">00</span>
         <div v-if="!wallet">
           <h1>Allow List Minting in Progress</h1>
@@ -14,6 +17,7 @@
           <Mint />
         </div>
     </div>
+    <MintPass v-if="mintPassReady && !mintPassHidden " @hide="mintPassHidden = true" class="mint-pass" />
   </div>
 </template>
 
@@ -22,18 +26,22 @@ import { mapState } from 'vuex';
 import { ethers } from 'ethers';
 
 import Mint from '@/components/Mint.vue';
+import MintPass from '@/components/MintPass.vue';
+import Countdown from '@/components/MainCountdown.vue'
 
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
 import twitter from "@/assets/img/twitter-black.svg"
 
-
 import { 
     INFURA_PROJECT_ID,
     NETWORK_NAME,
     MONKEY_CONTRACT,
+    MERCH_DROP_CONTRACT,
+    TOKEN_ID_MINT_PASS,
 } from '@/utils/constants';
 
+import GMSHOPJSON from '@/utils/nftShop.json';
 import GMPFP from '@/utils/GoodMonkeyz.json';
 
 export default {
@@ -41,26 +49,34 @@ export default {
   name: 'Index',
   components: {
     Mint,
+    MintPass,
+    Countdown,
   },
   data: () => {
     return {
+      open: false,
       monkey,
       divider,
       twitter,
       amountMinted: '~',
       zeroWidth: '',
       countdown: '',
+      mintPassReady: false,
+      mintPassHidden: false,
     }
   },
   computed: mapState(['wallet']),
   created() {
     this.getcontractData() 
+    this.getMintPassBal()
     this.setStatus();
     if(this.wallet) {
       this.checkByAddress(this.wallet);
     }
     this.$nuxt.$on('web3-active', () => {
       this.checkByAddress(this.wallet);
+      this.getcontractData()
+      this.getMintPassBal()
     })
     this.countdownF();
     
@@ -77,12 +93,12 @@ export default {
     });
   },
   mounted() {
-    if(!this.open){
-      this.zeroWidth = this.$refs.zerozero.offsetWidth;
-      setTimeout( () => {
-        this.zeroWidth = this.$refs.zerozero.offsetWidth;
-      }, 2000)
-    }
+    // if(!this.open){
+    //   this.zeroWidth = this.$refs.zerozero.offsetWidth;
+    //   setTimeout( () => {
+    //     this.zeroWidth = this.$refs.zerozero.offsetWidth;
+    //   }, 2000)
+    // }
   },
   methods: {
     connectWallet(){
@@ -91,9 +107,19 @@ export default {
     async getcontractData() {
       const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
-
       const totalSupply = await monkeyContract.totalSupply();
       this.amountMinted = Number(ethers.utils.formatUnits(totalSupply, 0)).toLocaleString() 
+      this.open = await monkeyContract.ALLOW();
+    },
+    async getMintPassBal() {
+      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
+      const balBig = await merchContract.balanceOf(this.wallet, TOKEN_ID_MINT_PASS);
+      const bal = ethers.utils.formatUnits(balBig, 0)
+      if (bal > 0) {
+        this.mintPassReady = await monkeyContract.MINTPASS();
+      }
     },
     setStatus(userList, screenName){
       const list = userList || this.$route.query.list 
@@ -127,7 +153,7 @@ export default {
       this.status = ''
     },
     countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 3, 22, 13, 37, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 3, 22, 14, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 
@@ -160,7 +186,8 @@ $l: 1720px;
   opacity: 0;
 }
 
-.index {
+.index,
+.countdown {
   background: #000;
   overflow: hidden;
   min-height: 100vh;
@@ -171,7 +198,24 @@ $l: 1720px;
   justify-content: center;
   align-items: center;
 }
+.countdown {
+  background: transparent;
+}
 
+.mint-pass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  display: flex;
+  // opacity: 0;
+  will-change: opacity;
+  transition: opacity 200ms ease-in;
+}
 
 .video-bg {
   position: absolute;
