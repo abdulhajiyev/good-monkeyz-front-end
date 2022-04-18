@@ -1,10 +1,6 @@
 <template>
     <div class="mint"> 
         <div v-if="!minted">
-            <!-- <button @click="mintWithPass()"> Mint With Pass</button> -->
-            <!-- <button @click="mintPublic()"> Mint</button> -->
-            <!-- <button @click="mintBooster()"> Mint With Pass</button> -->
-            
             <section v-if="!txHash">
                 <h1>Thank You For Minting Good Monkeyz</h1>
                 <div  class="mint-ammount">
@@ -22,7 +18,7 @@
                     </span>
                 </div>
                 
-                <SparkleBtn class="mint-btn" @hit="mint()" :text="`mint ${amount} Good Monkeyz`"/>
+                <SparkleBtn class="mint-btn" @hit="mintAllow()" :text="`mint ${amount} Good Monkeyz`"/>
             </section>
             <section class="pending" v-else>
                 <div class="in-progress">
@@ -31,7 +27,6 @@
                 </div>
                 <a target="_blank" :href="`https://etherscan.io/tx/${txHash}`">Minting in Progress</a>
             </section>
-            {{signature}}
         </div>
         <div v-else>
             <h2>Welcome To Good Monkeyz</h2>
@@ -77,13 +72,11 @@
 
     import { 
         MONKEY_CONTRACT,
-        MERCH_DROP_CONTRACT,
         TOKEN_ID_BOOSTER_PACK,
         TOKEN_ID_OG_BADGE,
         TOKEN_ID_MYSTERY_BOX,
     } from '@/utils/constants';
 
-    import GMSHOPJSON from '@/utils/nftShop.json';
     import GMPFP from '@/utils/GoodMonkeyz.json';
 
     import monkey from '@/assets/img/placeholder.gif'
@@ -161,6 +154,9 @@
         },
         created() {
             this.checkByAddress(this.wallet);
+            this.$nuxt.$on('web3-active', () => {
+                this.checkByAddress(this.wallet);
+            })
         },
         methods: {
             async checkByAddress(address){
@@ -169,10 +165,14 @@
                 console.log(res)
                 if ( res != null ) {
                     this.signature = res.signature
+                    console.log('SIGNATURE', this.signature)
                 }
             },
+            
             async mintAllow() {
                 try {
+                    if(!this.signature) throw new Error('Address Not Allow Listed');
+
                     const provider = this.$provider();
                     const signer = provider.getSigner();
                     const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
@@ -187,48 +187,26 @@
                     
                     this.txHash = nftTxn.hash
                     const result =  await nftTxn.wait();
+                     
+                    const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
+                    const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
+                    const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
+                    const tokens = []
 
-                    console.log(result)
-                
+                    for(let i=0; i < amount; i++) {
+                        tokens.push(id+i)
+                    }
+
                     if(result.status === 1) {
                         this.minted = true;
+                        this.monkeyz = tokens
+                        this.fireConfetti()
+                        const won = await this.checkPrize()
+                        this.prizes = won ? won.prizes : []
                     } else {
                         throw new Error('TX Failed :( ');
                     }
-                } catch (error) {
-                    this.errorMessage = error
-                    setTimeout( ()=> {
-                        this.errorMessage = '';
-                    }, 5500)
-                }
-            },
-            async mintWithPass(){
-                try {
-                    const provider = this.$provider();
-                    const signer = provider.getSigner();
-                    const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
-                    const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
-                    
-                    console.log(MONKEY_CONTRACT)
-                    const approved = await merchContract.isApprovedForAll(this.wallet, MONKEY_CONTRACT);
-                    console.log(approved);
 
-                    if (!approved) {
-                        const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true);
-                        approval.wait()
-                        console.log(approval)
-                    }
-                    
-                    const tx = await monkeyContract.mintWithPass()
-                    const result = await tx.wait();
-                
-                    if(result.status === 1) {
-                        console.log('mint', result)
-                        this.minted = true;
-                    } else {
-                        console.log('fail', result)
-                        throw new Error('TX Failed :( ');
-                    }
                 } catch (error) {
                     this.errorMessage = this.formatError(error)
                     setTimeout( ()=> {
@@ -236,18 +214,6 @@
                     }, 5500)
                 }
             },
-            // mint() {
-            //     this.txHash = 'abc'
-            //     setTimeout( () => {
-            //         this.minted = true;
-            //         this.fireConfetti()
-            //         this.monkeyz = [54,55]
-                    
-            //         setTimeout( () => {
-            //             this.prizes = [3,2,4]    
-            //         }, 3000)
-            //     }, 5000)
-            // },
             async mint() {
                 try {
                     const provider = this.$provider();
@@ -260,13 +226,18 @@
                     
                     const overrides = { value: ethers.utils.parseEther( String( TOTAL ) )};
                     const nftTxn = await connectedContract.mint(AMOUNT, overrides)
-                    console.log(nftTxn)
                     this.txHash = nftTxn.hash
                     const result =  await nftTxn.wait();
-  
-                    const tokens = result.events
-                        .filter( result => result.event === 'GMMinted')
-                        .map(event => ethers.utils.formatUnits(event.args[1], 0));
+                     
+                    const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
+                    console.log(gmMinted)
+                    const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
+                    const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
+                    const tokens = []
+
+                    for(let i=0; i < amount; i++) {
+                        tokens.push(id+i)
+                    }
 
                     if(result.status === 1) {
                         this.minted = true;
@@ -346,10 +317,41 @@
             },
             formatError(error){
                 console.log(error.message);
-                console.log(error.message.includes('insufficient'));
-               if (error.message) {
-                    return `${error.message.substring(0, 50)}...`
+                console.log(error.message.includes('NOT OPEN'))
+
+                if (error.message.includes('insufficient') ){
+                    return `Insufficient ETH In Wallet`
                 }
+
+                if (error.message.includes('MINTING ALLOW LIST - NOT OPEN') ){
+                    return `ALLOW MINTING - NOT OPEN`
+                }
+                if (error.message.includes('MINTING - NOT OPEN"') ){
+                    return `GENERAL MINTING - NOT OPEN`
+                }
+                if (error.message.includes('ABOVE MAX MONKEYZ') ){
+                    return `ABOVE MAX MONKEYZ`
+                }
+                if (error.message.includes('Public Allocation Sold out"') ){
+                    return `Public Allocation Sold out`
+                }
+                if (error.message.includes('Not enough') ){
+                    return `INCORRECT ETH VALUE`
+                }
+                if (error.message.includes('ALLOW list Sold out') ){
+                    return `ALLOW list Sold out`
+                }
+                if (error.message.includes('Address is not allowlisted') ){
+                    return `Address is not allowlisted`
+                }
+                if (error.message.includes('ABOVE MAX MINTS RESERVED') ){
+                    return `ABOVE MAX RESERVED MINTS`
+                }
+                if (error.message.includes('ALLOW list Sold out') ){
+                    return `ALLOW list Sold out`
+                }
+
+                return `${error.message.substring(0, 50)}...`
             },
         }
     }

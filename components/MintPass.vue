@@ -41,7 +41,7 @@
                     <h3 class="gm-mint__title">GM Mystery Box</h3>
                 </div>
             </div>
-            <h3 v-if="!hasPrizes">YOU MINTED {{amount}} GOOD MONKEYZ</h3>
+            <h3 v-if="!hasPrizes">YOU MINTED A GOOD MONKEYZ</h3>
             <h3 v-else>{{prizeString}}</h3>
             <div class="share">
                 <SparkleBtnTwitter @hit="openTweet()" />
@@ -173,9 +173,9 @@
                     const signer = provider.getSigner();
                     const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
                     
-                    const overrides = {gasPrice: ethers.utils.parseUnits('70', 'gwei'), gasLimit: 1000000};
-                    const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true, overrides);
-                    approval.wait()
+                    // const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 100000};
+                    const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true);
+                    await approval.wait()
                     this.approved = true;
                 } catch (error) {
                     this.errorMessage = this.formatError(error)
@@ -192,14 +192,15 @@
                     const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
                     
                     if (!this.approved) {
-                        const overrides = {gasPrice: ethers.utils.parseUnits('70', 'gwei'), gasLimit: 1000000};
-                        const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true,overrides);
+                        const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 1000000};
+                        const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true, overrides);
                         approval.wait()
                         console.log(approval)
                         this.approved = true;
                     }
                     
-                    const nftTxn = await monkeyContract.mintWithPass()
+                    const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 200000};
+                    const nftTxn = await monkeyContract.mintWithPass(overrides)
 
                     console.log(nftTxn)
                     this.txHash = nftTxn.hash
@@ -220,6 +221,7 @@
                     }
 
                 } catch (error) {
+                    this.txHash = ''
                     this.errorMessage = this.formatError(error)
                     setTimeout( ()=> {
                         this.errorMessage = '';
@@ -238,17 +240,7 @@
                 const json = await response.json()
                 return json
             },
-            plus() {
-                if(this.amount === 1){
-                    this.amount++
-                }
-                
-            },
-            minus() {
-                if(this.amount === 2){
-                    this.amount--
-                }
-            },
+
             openTweet(){
                 window.open(this.twitterURL, "_blank");
             },

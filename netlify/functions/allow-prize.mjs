@@ -23,7 +23,7 @@ import GMSHOPJSON from '@/utils/nftShop.json';
 
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 
-const overrides = {gasPrice: ethers.utils.parseUnits('70', 'gwei'), gasLimit: 1000000};
+const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 500000};
 
 const getTx = (hash) => new Promise((resolve, reject) => {
     const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
@@ -90,13 +90,39 @@ async function ogBadgePrize(address) {
 }
 
 async function getTokenIds(receipt) {
-  const abi = [ "event GMMinted(address _address, uint256 _id)" ];
+  const abi = [ "event GMMinted(address _address, uint256 _id, uint256 _amount)" ];
   const iface = new ethers.utils.Interface(abi);
+
+  // return receipt.logs
+  //   .filter(x =>  x.topics.length <=1)
+  //   .map(x => {
+  //     console.log(iface.parseLog(x))
+  //    return (iface.parseLog(x)).args[1]
+  //   })
+  //   .map(x => ethers.utils.formatUnits(x, 0))
+  const l = receipt.logs.filter(x =>  x.topics.length <=1)
+  let filtered;
+
+  l.forEach( x =>  {
+    try {
+      const log = iface.parseLog(x)
+      if (log) filtered = log  
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  console.log('filtered', filtered);
   
-  return receipt.logs
-    .filter(x =>  x.topics.length <=1)
-    .map(x => (iface.parseLog(x)).args[1])
-    .map(x => ethers.utils.formatUnits(x, 0))
+  const ids = [] 
+  const id = parseInt(ethers.utils.formatUnits(filtered.args[1],0))
+  const amount = parseInt(ethers.utils.formatUnits(filtered.args[2],0))
+
+  for(let i=0; i < amount; i++) {
+    ids.push(id+i)
+  }
+ 
+  console.log('IDS: ', ids)
+  return ids
 }
 
 const returnFail = () => {
@@ -130,7 +156,7 @@ exports.handler = async (event, context, callback) => {
     }
     
     const ogPrize = await ogBadgePrize(MINTER_ADDRESS)
-    if(tokenCount >= 2 && ogPrize){
+    if(tokenCount >= 2 && ogPrize ){
       prizes.push(3)
     }
     console.log('PRIZES: ',  prizes)

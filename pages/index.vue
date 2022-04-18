@@ -7,13 +7,15 @@
     </section>
     <div v-else class="minting">
         <span class="zerozero" ref="zerozero">00</span>
-        <div v-if="!wallet">
+        <div v-if="!ready || !wallet || status !== 'allow' ">
           <h1>Allow List Minting in Progress</h1>
           <h3>{{amountMinted}} <img :src="divider"> 10,000</h3>
-          <SparkleBtn @hit="connectWallet()" text="Connect WALLET to Mint"/>
+          <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
+          <SparkleBtn class="continue" v-else-if="wallet && !ready && status !== 'raffle'" @hit="setReady()" text="Continue to Mint"/>
           <h4>RAFFLE LIST MINTING NEXT IN <span v-html="countdown">DD HH MM SS</span></h4>
+          <SparkleMessage class="raffle" v-if="status == 'raffle'" :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />
         </div>
-        <div v-else> 
+        <div v-else>
           <Mint />
         </div>
     </div>
@@ -63,10 +65,15 @@ export default {
       countdown: '',
       mintPassReady: false,
       mintPassHidden: false,
+      status: false,
+      ready: false,
     }
   },
   computed: mapState(['wallet']),
   created() {
+    const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+    const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
+
     this.getcontractData() 
     this.getMintPassBal()
     this.setStatus();
@@ -78,6 +85,7 @@ export default {
       this.getcontractData()
       this.getMintPassBal()
     })
+
     this.countdownF();
     
     setInterval(()=> {
@@ -85,10 +93,14 @@ export default {
       
     }, 1000)
 
-    const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-    const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
+    monkeyContract.on("MintPassStatus", () => {
+      this.getMintPassBal();
+    });
+    monkeyContract.on("AllowStatus", async () => {
+      this.open = await monkeyContract.ALLOW();
+    });
+
     monkeyContract.on("GMMinted", (tokenId) => {
-      console.log('NEW MERCH BUNDLE MINTED %s', tokenId) 
       this.getcontractData();
     });
   },
@@ -121,6 +133,9 @@ export default {
         this.mintPassReady = await monkeyContract.MINTPASS();
       }
     },
+    setReady() {
+      this.ready = true;
+    },
     setStatus(userList, screenName){
       const list = userList || this.$route.query.list 
       
@@ -144,9 +159,19 @@ export default {
       if ( res != null ) {
         this.setStatus(res.list, res.screenName)
         this.raffleId = res.raffleId || null
+        if(res.list === false )this.addToRaffle(address)
+      }   
+      
+    },
+    async addToRaffle(address){
+      console.log('CHECK', address)
+      const res = await (await fetch(`/.netlify/functions/rl-add?address=${address}`)).json()
+      if ( res != null ) {
+        console.log(res)
+        this.setStatus(res.list, res.screenName)
+        this.raffleId = res.raffleId || ''
         console.log(res)
       }
-      this.addressCheck = true;
     },
     resetError() {
       this.failMessage = ''
@@ -232,12 +257,12 @@ $l: 1720px;
     top: auto;
     bottom: 0;
     left: 0;
-    width: 80%;
+    width: 60%;
     transform: translate(-30%, 20%);
   }
   /* // */
   opacity: 0;
-  animation: enter-fade 6s ease 1 forwards;
+  animation: enter-fade 7s ease 1 forwards;
 }
 
 .fade-bg {
@@ -246,10 +271,10 @@ $l: 1720px;
   width: 100%;
   top: 0;
   left: 0;
-  background: linear-gradient(270deg, #0a0606 19.4%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0.98) 46.4%, rgba(0, 0, 0, 0.52) 100%);
   z-index: 0;
   @media (min-width: $m) {
-    background: linear-gradient(270deg, #0a0606 44.4%, rgba(0, 0, 0, 0.4) 100%);
+    background: linear-gradient(240deg, #0a0606 56.4%, rgba(0, 0, 0, 0.52) 100%);
   }
 }
 
@@ -264,15 +289,40 @@ $l: 1720px;
     text-transform: uppercase;
     letter-spacing: 0.25rem;
     margin: 0 0 2rem;
+    
+    //
+    opacity: 0;
+    animation: enter-up-scale 1s 350ms 1 forwards ease ;
   }
+
   h3 {
     font-size: 2.5rem;
     margin: 0 0 1rem;
+
+    //
+    opacity: 0;
+    animation: enter-up-scale 1s 650ms 1 forwards ease ;
   }
+
+  .continue {
+    //
+    opacity: 0;
+    animation: enter-up-scale 1s 850ms 1 forwards ease ;
+  }
+
   h4 {
     font-size: 0.6rem;
     margin: 1rem 0;
     letter-spacing: 0.25rem;
+    
+    //
+    opacity: 0;
+    animation: enter-up-scale 1s 1150ms 1 forwards ease ;
+  }
+   .raffle {
+    //
+    opacity: 0;
+    animation: enter-up-scale 1s 1150ms 1 forwards ease ;
   }
   img {
     height: 2.5rem;

@@ -29,7 +29,6 @@ import {
   TOKEN_ID_MERCH_BUNDLE
 } from '@/utils/constants';
 
-import GMSHOPJSON from '@/utils/nftShop.json';
 import GMPFP from '@/utils/GoodMonkeyz.json';
 
 export default {
@@ -56,31 +55,16 @@ export default {
     ...mapState(['wallet', 'provider']),
   },
   created() {
-      this.getcontractData();
       this.getMonkeyData();
   },
   methods: {
     formatEth(bigNum) {
         return parseFloat(ethers.utils.formatEther(bigNum)).toFixed(2);
     },
-    async getcontractData() {
-      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-      const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-      this.merchCount =  await connectedContract.getMerchCount();
-      this.bal = await provider.getBalance(connectedContract.address);
-      // this.deployerBal = await provider.getBalance('0x179a304E5E87dA8D059fC65bE11d7635b4Ea9f69');
-      // this.vaultBal = await provider.getBalance('goodmonkeyz.eth');
-
-        for (let index = 0; index < this.merchCount; index++) {
-            this.merch.push(await connectedContract.merch(index))
-        }
-        console.log(this.merch)
-  
-    },
     withdraw(){
         const provider = this.$provider();
         const signer = provider.getSigner();
-        const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMSHOPJSON.abi, signer);
+        const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
         connectedContract.withdraw()
     },
@@ -92,9 +76,6 @@ export default {
       this.monkeyPublic = await monkeyContract.PUBLIC()
       this.monkeyAllow = await monkeyContract.ALLOW()
       this.monkeyBooster = await monkeyContract.BOOSTER()
-
-      const uri = await monkeyContract.tokenURI(94)
-      console.log(uri)
 
     },
     async setShopURL() {
@@ -137,7 +118,7 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      await monkeyContract.setBaseURI('ipfs://QmP7bT4mmkojocnJjiJzCwb2F514kZM9bihfD7EoUauTYy/');
+      await monkeyContract.setBaseURI('ipfs://QmcLTV9TN2CTzqN6bYG5wcCf6tkQ2Y8bMNCNZvGRmjDNwb/');
     },
     async setContractURI() {
       const provider = this.$provider();
