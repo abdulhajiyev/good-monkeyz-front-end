@@ -186,9 +186,15 @@
                     const SIGNATURE = this.signature;
                     const PRICE = this.price;
                     const AMOUNT = this.amount;
-                    const TOTAL = PRICE * AMOUNT;
+                    let totalPrice;
+
+                    if(AMOUNT === 2){
+                        totalPrice = ethers.utils.parseEther( String( 0.1337 ) )
+                    } else {
+                        totalPrice = ethers.utils.parseEther( String( PRICE ) ).mul(AMOUNT);
+                    }
                     
-                    const overrides = { value: ethers.utils.parseEther( String( TOTAL ) )};
+                    const overrides = { value: totalPrice };
                     const nftTxn = await connectedContract.mintAllow(AMOUNT, SIGNATURE ,overrides)
                     
                     this.txHash = nftTxn.hash
@@ -230,17 +236,16 @@
 
                     const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-                    const PRICE = this.price;
+                    const PRICE = ethers.utils.parseEther( String( this.price ) )
                     const AMOUNT = this.amount;
-                    const TOTAL = PRICE * AMOUNT;
+                    const TOTAL = PRICE.mul(AMOUNT);
                     
-                    const overrides = { value: ethers.utils.parseEther( String( TOTAL ) )};
+                    const overrides = { value: TOTAL };
                     const nftTxn = await connectedContract.mint(AMOUNT, overrides)
                     this.txHash = nftTxn.hash
                     const result =  await nftTxn.wait();
                      
                     const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
-                    console.log(gmMinted)
                     const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
                     const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
                     const tokens = []
@@ -282,7 +287,6 @@
                 if(this.amount === 1){
                     this.amount++
                 }
-                
             },
             minus() {
                 if(this.amount === 2){
