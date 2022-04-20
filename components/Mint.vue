@@ -366,7 +366,7 @@
                     return `ALLOW list Sold out`
                 }
 
-                return `${error.message.substring(0, 50)}...`
+                return `${error.message.substring(0, 60)}...`
             },
         }
     }
