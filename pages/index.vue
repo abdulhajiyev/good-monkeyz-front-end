@@ -75,10 +75,10 @@ export default {
     const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
 
     this.getcontractData() 
-    this.getMintPassBal()
     this.setStatus();
     if(this.wallet) {
       this.checkByAddress(this.wallet);
+      this.getMintPassBal()
     }
     this.$nuxt.$on('web3-active', () => {
       this.checkByAddress(this.wallet);
