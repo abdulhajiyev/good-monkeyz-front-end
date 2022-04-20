@@ -47,7 +47,7 @@
                     <h3 class="gm-mint__title">GM Boost Bar</h3>
                 </div>
                 <div v-if="hasMysteryPrize" class="gm-mint">
-                    <img class="gm-mint__monkey" :src="booster">
+                    <img class="gm-mint__monkey" :src="box">
                     <h3 class="gm-mint__title">GM Mystery Box</h3>
                 </div>
             </div>
@@ -83,6 +83,7 @@
     import star from '@/assets/img/star.svg'
     import gmBadge from '@/assets/img/gm-og.gif'
     import booster from '@/assets/img/gm-booster.gif'
+    import box from '@/assets/img/mystery-item.gif'
     import gmBlack from "@/assets/img/gm-full.svg"
 
     import SparkleBtnTwitter from '@/components/SparkleBtnTwitter.vue'
@@ -100,6 +101,7 @@
                 star,
                 gmBadge,
                 booster,
+                box,
                 prizes: [],
                 monkeyz: [],
                 twitterURL: `https://twitter.com/share?text=I just minted Good Monkeyz&url=https://goodmonkeyz.art`,
