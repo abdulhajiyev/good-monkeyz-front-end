@@ -176,7 +176,6 @@
                     const signer = provider.getSigner();
                     const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
                     
-                    // const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 100000};
                     const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true);
                     await approval.wait()
                     this.approved = true;
