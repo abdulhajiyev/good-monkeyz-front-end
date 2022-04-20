@@ -2,6 +2,8 @@
     <div class="interface"> 
         <div class="options">
             <span class="btn" @click="setShopURL()">SET MERCH ADDRESS</span>
+            <span class="btn" @click="setProvenance()">SET Provenance</span>
+            <span class="btn" @click="generateIndex()">Generate Index</span>
             <span class="btn" @click="flipPass()">PASS {{monkeyPass ? 'OPEN' : 'CLOSED'}}</span>
             <span class="btn" @click="flipAllow()">ALLOW {{ monkeyAllow ? 'OPEN' : 'CLOSED'}}</span>
             <span class="btn" @click="flipPublic()">PUBLIC {{monkeyPublic ? 'OPEN' : 'CLOSED'}}</span>
@@ -9,10 +11,36 @@
             <span class="btn" @click="setBaseURI()">setBaseURI</span>
             <span class="btn" @click="setContractURI()">setContractURI</span>
             <span class="btn" @click="withdraw()">Withdraw</span>
+
+            --
+            <span class="btn" @click="setNewPrice()">setNewPrice</span>
+            <span class="btn" @click="setNewAllowMax()">setNewAllowMax</span>
+            <span class="btn" @click="setNewPublicMax()">setNewPublicMax</span>
         </div>
         <div class="data">
+            <span class="bal">Contract: {{formatEth(bal)}}Ξ</span>
             <h2>MONKEY Contract</h2>
             <h3>{{monkeyContract}} [{{networkName}}]</h3>
+            
+            <h3>contractUri: </h3><span class="uri">{{contractUri}}</span >
+            <h3>baseURI: </h3><span class="uri">{{baseURI}}</span >
+
+
+            <h3>provenanceHash: {{provenanceHash}}</h3>
+            <h3>prizeListHash: {{prizeListHash}}</h3>
+
+            <h3>Starting Index: {{startingIndex}}</h3>
+            <h3>Prize Index: {{prizeIndex}}</h3>
+
+            <h3>GMEditionsAddress: {{GMEditionsAddress}} {{merchAddressMatch ? 'MATCH' : 'NO MATCH' }}</h3>
+
+            <h3>PublicMinting Max Per TX: {{publicMintMax}} </h3>
+            <h3>AllowMinting Max per Wallet: {{allowMintMax}} </h3>
+
+            <h3>Price {{price}} </h3>
+            <h3>double Price: {{doublePrice}} </h3>
+
+
         </div>
     </div>
 </template>
@@ -49,6 +77,18 @@ export default {
       provider: null,
       signer: null,
       connectedMonkey: null,
+      startingIndex: null,
+      prizeIndex: null,
+      GMEditionsAddress: null,
+      merchAddressMatch: null,
+      price: null, 
+      doublePrice: null,
+      provenanceHash: null,
+      prizeListHash: null,
+      contractUri: null,
+      baseURI: null,
+      allowMintMax: null,
+      publicMintMax: null,
     }
   },
   computed: {
@@ -71,12 +111,62 @@ export default {
     async getMonkeyData() {
       const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
+      this.bal = await provider.getBalance(monkeyContract.address);
 
       this.monkeyPass = await monkeyContract.MINTPASS()
       this.monkeyPublic = await monkeyContract.PUBLIC()
       this.monkeyAllow = await monkeyContract.ALLOW()
       this.monkeyBooster = await monkeyContract.BOOSTER()
+      
+      this.startingIndex = await monkeyContract.startingIndex()
+      this.prizeIndex = await monkeyContract.prizeIndex()
 
+      this.prizeIndex = await monkeyContract.prizeIndex()
+      this.GMEditionsAddress = await monkeyContract.GMEditionsAddress()
+      this.merchAddressMatch = this.GMEditionsAddress === MERCH_DROP_CONTRACT
+
+      this.publicMintMax = await monkeyContract.publicMintMax()
+      this.allowMintMax = await monkeyContract.allowMintMax()
+
+      this.price = await monkeyContract.price();
+      this.doublePrice = await monkeyContract.doublePrice();
+
+      this.provenanceHash = await monkeyContract.provenanceHash();
+      this.prizeListHash = await monkeyContract.prizeListHash();
+      this.contractUri = await monkeyContract.contractURI();
+      this.baseURI = await monkeyContract.tokenURI(1);
+    },
+    async setProvenance(){
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
+
+      const _provenanceHash = 'abc'
+      const _prizeListHash = 'def'
+      await monkeyContract.setProvenance(_provenanceHash, _prizeListHash);
+    },
+    async setNewPrice(){
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
+
+      const _price = ethers.utils.parseEther('0.10')
+      const _doublePrice = ethers.utils.parseEther('0.2')
+      await monkeyContract.setNewPrice(_price, _doublePrice);
+    },
+    async setNewPublicMax(){
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
+
+      await monkeyContract.setNewPublicMax(5);
+    },
+    async setNewAllowMax(){
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
+
+      await monkeyContract.setNewAllowMax(4);
     },
     async setShopURL() {
       const provider = this.$provider();
@@ -118,16 +208,22 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      await monkeyContract.setBaseURI('ipfs://QmcLTV9TN2CTzqN6bYG5wcCf6tkQ2Y8bMNCNZvGRmjDNwb/');
+      await monkeyContract.setBaseURI('ipfs://QmPpYDfHmXU8e5cbQvJ4JpB8dexmfzNb5XD8MXdWwxkVaQ/');
     },
     async setContractURI() {
       const provider = this.$provider();
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      await monkeyContract.setContractURI('https://sambillingham.github.io/test-json/contract_meta.json');
+      await monkeyContract.setContractURI('');
     },
-  
+    async generateIndex() {
+      const provider = this.$provider();
+      const signer = provider.getSigner();
+      const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
+
+      await monkeyContract.genStartingIndex();
+    }
   }
 }
 </script>
@@ -161,6 +257,10 @@ h3 {
 ul {
     list-style: none;
     padding: 0;
+}
+.uri {
+  display: block;
+  font-size: 11px;
 }
 
 .admin {
