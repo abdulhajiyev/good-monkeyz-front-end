@@ -26,17 +26,18 @@ console.log(event.queryStringParameters)
     .limit(1)
     .single()
   let res;
-  if (allowList.data) {
-    res =  {
-      list: 'allow',
-      screenName: allowList.data.screen_name,
-    }
-  }
+
   if (raffleList.data) {
     res =  {
       list: 'raffle',
       screenName: raffleList.data.screen_name,
       raffleId: raffleList.data.id || null
+    }
+  }
+  if (allowList.data) {
+    res =  {
+      list: 'allow',
+      screenName: allowList.data.screen_name,
     }
   }
   if (res) {
