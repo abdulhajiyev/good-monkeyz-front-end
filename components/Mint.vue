@@ -106,7 +106,7 @@
                 box,
                 prizes: [],
                 monkeyz: [],
-                twitterURL: `https://twitter.com/share?text=I just minted Good Monkeyz&url=https://goodmonkeyz.art`,
+                twitterURL: `https://twitter.com/share?text=I just minted @GoodMonkeyz&url=https://goodmonkeyz.art&hashtags=goodmonkeyz`,
                 errorMessage: '',
             }
         },
