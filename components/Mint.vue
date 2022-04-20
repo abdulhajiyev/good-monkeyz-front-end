@@ -273,16 +273,22 @@
                 }
             },
             async checkPrize(){
-                const response = await fetch('/.netlify/functions/allow-prize', {
-                    method: 'POST', 
-                    cache: 'no-cache',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        txHash: this.txHash,
-                    })
-                });
-                const json = await response.json()
-                return json
+                try {
+                    const response = await fetch('/.netlify/functions/allow-prize', {
+                        method: 'POST', 
+                        cache: 'no-cache',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            txHash: this.txHash,
+                        })
+                    });
+                    const json = await response.json()
+                    return json
+                }
+                catch(error){
+                    await fetch(`/.netlify/functions/prize-tx?hash=${this.txHash}`);
+                    return false;
+                }
             },
             plus() {
                 if(this.amount === 1){

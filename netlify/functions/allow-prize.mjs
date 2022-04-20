@@ -23,7 +23,7 @@ import GMSHOPJSON from '@/utils/nftShop.json';
 
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 
-const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 500000};
+const overrides = {gasPrice: ethers.utils.parseUnits('55', 'gwei'), gasLimit: 150000};
 
 const getTx = (hash) => new Promise((resolve, reject) => {
     const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
@@ -33,7 +33,7 @@ const getTx = (hash) => new Promise((resolve, reject) => {
             clearInterval(interval);
             resolve(receipt);
         }
-    }, 1000)
+    }, 400)
   });
 
 const sendPrizes = async (prizes, to) => {
@@ -46,10 +46,20 @@ const sendPrizes = async (prizes, to) => {
   const prizesCount = new Array(prizes.length).fill(1)
   
   console.log('PRIZES!', prizes, prizesCount)
+  let tx;
 
-  const tx = await merchContract.safeBatchTransferFrom(MONKEY_KING.address, to, prizes, prizesCount, '0x', overrides)
-  console.log(tx)
-  return tx.hash
+  try {
+    tx = await merchContract.safeBatchTransferFrom(MONKEY_KING.address, to, prizes, prizesCount, '0x', overrides)
+    return tx.hash
+  } catch (error){
+    const og = await supabase
+      .from('failed_prizes')
+      .insert({ 
+          to,
+          prizes
+      })
+    return 'transaction-failed'
+  }
 }
 
 async function getPrizes(tokenIds) {
@@ -65,7 +75,7 @@ async function getPrizes(tokenIds) {
   if (prizes.some( x => x.error )) return false
   return prizes.map(x => x.data.prize ).filter( x => x != null)
 }
-async function ogBadgePrize(address) {
+async function ogBadgePrize(address, burnEvent) {
   const exist = await supabase
     .from('gm-og')
     .select()
@@ -80,8 +90,9 @@ async function ogBadgePrize(address) {
     .insert({ 
         address: address,
     })
-
-  if (!og.error && og.data[0].id <= 777){
+  
+    console.log(burnEvent)
+  if (!og.error && og.data[0].id <= 670 || !og.error && burnEvent){
     return true
   } else {
     return false
@@ -90,39 +101,64 @@ async function ogBadgePrize(address) {
 }
 
 async function getTokenIds(receipt) {
-  const abi = [ "event GMMinted(address _address, uint256 _id, uint256 _amount)" ];
+  const abi = [ 
+    "event GMMinted(address _address, uint256 _id, uint256 _amount)",
+    "event GmBurned(address _address, uint256 _id)"];
   const iface = new ethers.utils.Interface(abi);
 
-  // return receipt.logs
-  //   .filter(x =>  x.topics.length <=1)
-  //   .map(x => {
-  //     console.log(iface.parseLog(x))
-  //    return (iface.parseLog(x)).args[1]
-  //   })
-  //   .map(x => ethers.utils.formatUnits(x, 0))
-  const l = receipt.logs.filter(x =>  x.topics.length <=1)
-  let filtered;
+  let events = [];
 
-  l.forEach( x =>  {
+  receipt.logs.forEach( x =>  {
     try {
       const log = iface.parseLog(x)
-      if (log) filtered = log  
+      if (log) events.push(log)
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   })
-  console.log('filtered', filtered);
-  
+  const mintEvent = events.filter(x => x.name === 'GMMinted')[0]
   const ids = [] 
-  const id = parseInt(ethers.utils.formatUnits(filtered.args[1],0))
-  const amount = parseInt(ethers.utils.formatUnits(filtered.args[2],0))
+  const id = parseInt(ethers.utils.formatUnits(mintEvent.args[1],0))
+  const amount = parseInt(ethers.utils.formatUnits(mintEvent.args[2],0))
 
   for(let i=0; i < amount; i++) {
     ids.push(id+i)
   }
- 
+  
   console.log('IDS: ', ids)
   return ids
+}
+
+async function checkForBurnTx(receipt) {
+  const abi = [ 
+    "event GMMinted(address _address, uint256 _id, uint256 _amount)",
+    "event GmBurned(address _address, uint256 _id)"];
+  const iface = new ethers.utils.Interface(abi);
+
+  let events = [];
+
+  receipt.logs.forEach( x =>  {
+    try {
+      const log = iface.parseLog(x)
+      if (log) events.push(log)
+    } catch (error) {
+      // console.log(error)
+    }
+  })
+  const burnEvent = events.filter(x => x.name === 'GmBurned')[0]
+
+  if (burnEvent) {
+    const address = burnEvent.args[0]
+    const id = ethers.utils.formatUnits(burnEvent.args[1],0)
+  
+    return {
+      burned: true,
+      id,
+      address
+    }
+  } else {
+    return false
+  }
 }
 
 const returnFail = () => {
@@ -146,6 +182,8 @@ exports.handler = async (event, context, callback) => {
     }
 
     const tokenIds = await getTokenIds(receipt)
+    const burnEvent = await checkForBurnTx(receipt);
+
     console.log('tokenis', tokenIds)
     const tokenCount = tokenIds.length || 0
 
@@ -155,8 +193,8 @@ exports.handler = async (event, context, callback) => {
       prizes = prizes.concat(specialPrizes)
     }
     
-    const ogPrize = await ogBadgePrize(MINTER_ADDRESS)
-    if(tokenCount >= 2 && ogPrize ){
+    const ogPrize = await ogBadgePrize(MINTER_ADDRESS,burnEvent)
+    if(tokenCount >= 2 && ogPrize || burnEvent && ogPrize){
       prizes.push(3)
     }
     console.log('PRIZES: ',  prizes)
