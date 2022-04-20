@@ -107,8 +107,8 @@ export default {
 
       const tx =  await connectedContract.mintAdmin(
         '0xd3d7db39e933A86D15A135a8Cc8dd8E14Ed6C616',
-        1,
-        1
+        2,
+        99
       );
       console.log(tx);
     },
