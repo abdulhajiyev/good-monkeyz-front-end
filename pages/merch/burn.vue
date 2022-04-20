@@ -1,54 +1,20 @@
 <template>
   <div class="shop">
-    <MinBanner :account="wallet" :active="true" color="black" />
     
     <div class="merch">
         <div class="mech-options">
-            <p>Congratulations! You’ve unlocked the...</p>
             <div>
               <h2 v-resize-text="{ratio: 0.84}">GOODMONKEYZ</h2>
-              <h2 v-resize-text="{ratio: 0.817}"> MERCH BUNDLE</h2>
+              <h2 v-resize-text="{ratio: 0.825}"> MERCH BUNDLE</h2>
             </div>
-
-            <div class="merch-options__form">
-                <label>Select your size</label>
-                <div class="select-btns">
-                    <span @click="size = 's'" :class="{'active' : size === 's'}">Small</span>
-                    <span @click="size = 'm'" :class="{'active' : size === 'm'}">Medium</span>
-                    <span @click="size = 'l'" :class="{'active' : size === 'l'}">Large</span>
-                    <span @click="size = 'xl'" :class="{'active' : size === 'xl'}">XLarge</span>
-                    <span @click="size = '2xl'" :class="{'active' : size === '2xl'}">2X Large</span>
-                    <span @click="size = '3xl'" :class="{'active' : size === '3xl'}">3X Large</span>
-                </div>
-                <label>Select your choice</label>
-                <div class="select-btns select-btns--2 ">
-                    <span @click="choice = 'cap'" :class="{'active' : choice === 'cap'}">Cap</span>
-                    <span @click="choice = 'beanie'" :class="{'active' : choice === 'beanie'}">Beanie</span>
-                </div>
-                <label>Delivery Information</label> 
-                <div>
-                    <input v-model="name" type="text" placeholder="Name">
-                    <input v-model="address" type="text" placeholder="Shipping Address">
-                    <input v-model="email" type="email" placeholder="Email">
-                </div>
-                <button class="btn" :disabled="!formReady" @click="ordeMerch()">Complete</button>
-            </div>
-
+            <p>Burn Merch Token To complete Order</p>
+            <p>This process should only be done when in contact with support</p>
+            <p>Wallet: {{ wallet }}</p>
+            <span class="btn" @click="ordeMerch()">Complete</span>
+            {{msg}}
         </div>
-        <div class="merch-showcase" :style="{ 'background-image': `url(${merchBg})`}">
-        </div>
-        
     </div>
     <div class="border-bottom"></div>
-    <div class="backdrop" :class="{'active': pending }">
-      <div class="modal" @click.stop>
-        <h2>Order In Progress</h2>
-        <div class="in-progress">
-          <span class="loader"></span>
-          <img :src="gmBlack" class="logo">
-        </div>
-      </div>
-    </div>
     <transition name="fade">
       <div v-show="errorMessage" class="error">
         <span>{{errorMessage}}</span>
@@ -62,175 +28,60 @@ import { ethers } from 'ethers';
 import { mapState} from 'vuex'
 
 import VueResizeText from 'vue-resize-text';
-import Vue from 'vue'
 
-import MinBanner from '@/components/MinBanner.vue';
+import Vue from 'vue'
 
 import gmBlack from "@/assets/img/gm-full.svg"
 
 import GMSHOPJSON from '@/utils/nftShop.json';
 
-import merchBg from '@/assets/img/hood.jpg';
-
 import { 
   MERCH_DROP_CONTRACT,
-  INFURA_PROJECT_ID,
-  NETWORK_NAME,
-  TOKEN_ID_MERCH_BUNDLE,
   CHAIN_ID
 } from '@/utils/constants';
 
 Vue.use(VueResizeText)
 
 export default {
-  transition: 'scale',
-  name: 'Redeem',
-  middleware: 'merchOwner',
+  name: 'complete',
   components: {
-    MinBanner,
   },
+  transition: 'scale',
   data: () => {
     return {
       gmBlack,
-      merchBg,
-      pending: false,
-      size: 'm',
-      choice: 'cap',
-      name: '',
-      address: '',
-      email: '',
-      errorMessage: '',
+      msg: '',
+      errorMessage: ''
     }
   },
   computed: { 
     ...mapState(['wallet']),
-    formReady() {
-      return this.address !== '' && this.email !== '';
-    }
   },
   created() {
-    this.$nuxt.$on('web3-active', () => {
-      this.ngmiRedirect()
-    })
     setTimeout( () => {
       if(!this.wallet){
-        this.$nuxt.$emit('connect', '/merch/redeem')
+        this.$nuxt.$emit('connect', '/merch/burn')
       }
     },1500)
   },
   methods: {
-    async ngmiRedirect() {
-        try {
-            const bal = await this.getBalance()
-            if (this.wallet && bal < 1) {
-                return this.$router.push('/ngmi');
-            }
-        } catch(error){
-            console.error(error);
-            return 0;
-        }
-    },
-    async getBalance() {
-      
-     try {
-          const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
-          const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
-          const balBig = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
-          return ethers.utils.formatUnits(balBig, 0)
-        } catch(error){
-            console.error(error);
-          return 0;
-        }
-    },
-    async insertMerchOrder(message, signedMessage) {
-      const response = await fetch('/.netlify/functions/insert-order', {
-          method: 'POST',
-          cache: 'no-cache',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            message,
-            signedMessage
-          }) 
-      })
-      return await response.json();
-    },
-    async updateMerchOrder(message, signedMessage, txHash) {
-      const response = await fetch('/.netlify/functions/update-order', {
-          method: 'POST', 
-          cache: 'no-cache',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            message,
-            signedMessage,
-            txHash,
-          }) 
-      });
 
-      return await response.json(); 
-    },
-    async confirmMerchOrder(message, signedMessage, txHash) {
-      const response = await fetch('/.netlify/functions/verify-order', {
-          method: 'POST', 
-          cache: 'no-cache',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            message,
-            signedMessage,
-            txHash,
-          }) 
-      });
-
-      return await response.json(); 
-    },
     async ordeMerch() {
 
       try {
-
         const provider = this.$provider();
         const signer = provider.getSigner();
         const { chainId } = await provider.getNetwork()
       
         if (chainId !== CHAIN_ID) throw new Error('WRONG NETWORK - Select ETH MAINNET');
 
-        const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
-        // connectedContract.on("GmBurned", (tokenId) => {
-        //     console.log('NEW MERCH BUNDLE MINTED %s', tokenId) 
-        //     // this.getcontractData();
-        // });
-
-        
-            const message = `Merch Bundle: 
-  Size: ${this.size.toUpperCase()}
-  Choice: ${this.choice.toUpperCase()}
-  Name: ${this.name}
-  Address: ${this.address}
-  Email: ${this.email}
-Wallet address:
-${this.wallet}`
-                
-            const signedMessage =  await signer.signMessage(message);
-            const order = await this.insertMerchOrder(message, signedMessage)
-            console.log(order)
-            if (!order.success) throw new Error('Order not Initiated')
+            const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
             const burn = await connectedContract.burnToken(this.wallet, 0);
-            this.pending = true;
-            window.scrollTo(0,0);
-            await this.updateMerchOrder(message, signedMessage, burn.hash)
-            console.log('PREWAIT burn tx', burn)
             const burnTx = await burn.wait();
 
             if(burnTx.status === 1) {
-                const verifiedOrder = await this.confirmMerchOrder(message, signedMessage, burnTx.transactionHash)
-                console.log(verifiedOrder)
-                if (verifiedOrder.success) {
-                    const orderNumber = verifiedOrder.orderNumber
-                    this.$router.push(`/merch/order?order=${orderNumber}`)
-                } else {
-                  this.pending = false;
-                  throw new Error('Burn Could not be verfied - Please contact Support');
-                }
+              this.msg = "Order Complete"
             } else {
-              this.pending = false;
               throw new Error('Burn Transaction Failed');
             }
         } catch(error) {

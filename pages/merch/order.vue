@@ -5,7 +5,7 @@
         <img :src="gmBlack" class="logo">
         <h1>Thank You!</h1> 
         <h2>Order Number {{orderNumber}} Complete</h2>
-        <p>You’ll recieve an email with further instructions around delivery date and time</p> 
+        <p>You’ll receive an email with further instructions around delivery date and time</p> 
         <a :href="shareLink" class="btn"><img :src="twitter">Share On Twitter</a>
     </div>
   </div>
