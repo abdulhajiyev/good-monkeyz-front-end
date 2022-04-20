@@ -139,7 +139,7 @@ export default {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
 
-        const URI = 'https://ipfs.io/ipfs/QmabkU1KMUrusjGrZK6z6bqmRMQ2RXiGqQAFTVQrmMx7E2/{id}.json'
+        const URI = 'ipfs://QmYub1BLEvEd1ZLj9nFWwbfcNmgoqE3NrhwXPZ9mZfoCDz/{id}.json'
         const tx = await connectedContract.setURI(URI)
         console.log(tx)
 
@@ -155,7 +155,7 @@ export default {
 
             const tx = await connectedContract.createMerchItem(
                   1337,
-                  ethers.utils.parseEther('0.1'),
+                  ethers.utils.parseEther('1'),
                   ethers.utils.parseEther('0.000')
                 )
             console.log(tx)
@@ -263,7 +263,9 @@ ul {
     font-family: 'Courier New', Courier, monospace;
     display: flex;
     flex-wrap: wrap;
-    max-width: 800px;
+    max-width: 900px;
+    justify-self: center;
+    align-self: center;
 }
 .data {
     border:  1px dotted #000;

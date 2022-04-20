@@ -74,8 +74,6 @@ export default {
       monkeyAllow: false,
       monkeyPublic: false,
       monkeyBooster: false,
-      provider: null,
-      signer: null,
       connectedMonkey: null,
       startingIndex: null,
       prizeIndex: null,
@@ -141,8 +139,8 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      const _provenanceHash = 'abc'
-      const _prizeListHash = 'def'
+      const _provenanceHash = '48c50aa8d9203259291d330020c4478a57e80d111d15c4cec709b693b76ee50d'
+      const _prizeListHash = 'df41a7dc64c25db15edf491d7b835d2a923990e1bf00bff59df9624658ffac3d'
       await monkeyContract.setProvenance(_provenanceHash, _prizeListHash);
     },
     async setNewPrice(){
@@ -150,8 +148,8 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      const _price = ethers.utils.parseEther('0.10')
-      const _doublePrice = ethers.utils.parseEther('0.2')
+      const _price = ethers.utils.parseEther('0.077')
+      const _doublePrice = ethers.utils.parseEther('0.1337')
       await monkeyContract.setNewPrice(_price, _doublePrice);
     },
     async setNewPublicMax(){
@@ -159,14 +157,17 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      await monkeyContract.setNewPublicMax(5);
+      await monkeyContract.setNewPublicMax(2);
     },
     async setNewAllowMax(){
+
+      // SETTING HIGHER THAN TWO WILL ALL UNLIMITED MINTING FOR ALLOWLIST
+
       const provider = this.$provider();
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      await monkeyContract.setNewAllowMax(4);
+      await monkeyContract.setNewAllowMax(2);
     },
     async setShopURL() {
       const provider = this.$provider();
@@ -276,7 +277,9 @@ ul {
     font-family: 'Courier New', Courier, monospace;
     display: flex;
     flex-wrap: wrap;
-    max-width: 800px;
+    max-width: 900px;
+    justify-self: center;
+    align-self: center;
 }
 .data {
     border:  1px dotted #000;
