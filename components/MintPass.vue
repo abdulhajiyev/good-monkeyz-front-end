@@ -189,27 +189,38 @@
                 try {
                     const provider = this.$provider();
                     const signer = provider.getSigner();
+                    const { chainId } = await provider.getNetwork()
+
+                    if (chainId !== CHAIN_ID) {
+                        throw new Error('WRONG NETWORK - Select ETH MAINNET');
+                    }
+
                     const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
                     const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
                     
                     if (!this.approved) {
-                        const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 1000000};
+                        const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei'), gasLimit: 75000};
                         const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true, overrides);
                         approval.wait()
                         console.log(approval)
                         this.approved = true;
                     }
                     
-                    const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 200000};
+                    const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei'), gasLimit: 130000};
                     const nftTxn = await monkeyContract.mintWithPass(overrides)
 
                     console.log(nftTxn)
                     this.txHash = nftTxn.hash
                     const result =  await nftTxn.wait();
   
-                    const tokens = result.events
-                        .filter( result => result.event === 'GMMinted')
-                        .map(event => ethers.utils.formatUnits(event.args[1], 0));
+                    const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
+                    const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
+                    const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
+                    const tokens = []
+
+                    for(let i=0; i < amount; i++) {
+                        tokens.push(id+i)
+                    }
 
                     if(result.status === 1) {
                         this.minted = true;
