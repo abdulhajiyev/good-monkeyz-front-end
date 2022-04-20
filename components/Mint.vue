@@ -75,6 +75,7 @@
         TOKEN_ID_BOOSTER_PACK,
         TOKEN_ID_OG_BADGE,
         TOKEN_ID_MYSTERY_BOX,
+        CHAIN_ID,
     } from '@/utils/constants';
 
     import GMPFP from '@/utils/GoodMonkeyz.json';
@@ -177,6 +178,9 @@
 
                     const provider = this.$provider();
                     const signer = provider.getSigner();
+                    const { chainId } = await provider.getNetwork()
+                    if (chainId !== CHAIN_ID) throw new Error('WRONG NETWORK - Select ETH MAINNET');
+
                     const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
                     const SIGNATURE = this.signature;
@@ -220,6 +224,10 @@
                 try {
                     const provider = this.$provider();
                     const signer = provider.getSigner();
+                    
+                    const { chainId } = await provider.getNetwork()
+                    if (chainId !== CHAIN_ID) throw new Error('WRONG NETWORK - Select ETH MAINNET');
+
                     const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
                     const PRICE = this.price;

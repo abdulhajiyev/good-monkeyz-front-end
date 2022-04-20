@@ -67,7 +67,8 @@
         TOKEN_ID_OG_BADGE,
         TOKEN_ID_MYSTERY_BOX,
         NETWORK_NAME,
-        INFURA_PROJECT_ID
+        INFURA_PROJECT_ID,
+        CHAIN_ID
     } from '@/utils/constants';
 
     import GMSHOPJSON from '@/utils/nftShop.json';
