@@ -161,8 +161,6 @@ export default {
     },
     async setNewAllowMax(){
 
-      // SETTING HIGHER THAN TWO WILL ALL UNLIMITED MINTING FOR ALLOWLIST
-
       const provider = this.$provider();
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
