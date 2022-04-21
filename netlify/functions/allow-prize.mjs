@@ -23,7 +23,7 @@ import GMSHOPJSON from '@/utils/nftShop.json';
 
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 
-const overrides = {gasPrice: ethers.utils.parseUnits('55', 'gwei'), gasLimit: 100000};
+const overrides = {gasPrice: ethers.utils.parseUnits('50', 'gwei'), gasLimit: 100000};
 
 const getTx = (hash) => new Promise((resolve, reject) => {
     const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
