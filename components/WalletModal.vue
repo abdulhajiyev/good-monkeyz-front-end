@@ -83,7 +83,7 @@
         width: 100vw;
         backdrop-filter: blur(8px);
         background: rgba(0,0,0,0.6);
-        z-index: 2;
+        z-index: 100;
         display: flex;
         opacity: 0;
         pointer-events: none;
@@ -119,6 +119,7 @@
         margin: auto;
         border-radius: 1rem;
         text-align: center;
+        max-width: 90%;
     }
 
     .btn {
@@ -144,6 +145,7 @@
         background: linear-gradient(91.63deg, #EF682C -3.26%, #FFF59D 102.88%);
     }
     .wallet-connect {
+        white-space: nowrap;
         background: linear-gradient(91.51deg, #AB57FF 0%, #0025F4 100%);
     }
 </style>

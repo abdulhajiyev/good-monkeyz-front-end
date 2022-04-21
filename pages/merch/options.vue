@@ -62,7 +62,6 @@ import { ethers } from 'ethers';
 import { mapState} from 'vuex'
 
 import VueResizeText from 'vue-resize-text';
-
 import Vue from 'vue'
 
 import MinBanner from '@/components/MinBanner.vue';

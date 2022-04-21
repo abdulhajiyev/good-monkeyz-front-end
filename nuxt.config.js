@@ -14,7 +14,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Community lead project consisting of 10,000 Good Monkeyz NFTs — collection coming April 2022 🙈🙉🙊🐵🐒 ' },
+      { hid: 'description', name: 'description', content: 'The Good Monkeyz are a collection of 10,000 unique PFPs that display a broad range of diverse traits — every Monkeyz is a Good Monkeyz. Each Good Monkeyz NFT grants you access to private club membership and additional benefits.' },
       { name: 'format-detection', content: 'telephone=no' },
       {
         name: 'apple-mobile-web-app-capable',
@@ -26,7 +26,7 @@ export default {
       },
       { hid: 'og-type', property: 'og:type', content: 'website' },
       { hid: 'og-title', property: 'og:title', content: 'Good Monkeyz' },
-      { hid: 'og-desc', property: 'og:description', content: 'Community lead project consisting of 10,000 Good Monkeyz NFTs — collection coming April 2022 🙈🙉🙊🐵🐒 ' },
+      { hid: 'og-desc', property: 'og:description', content: 'The Good Monkeyz are a collection of 10,000 unique PFPs that display a broad range of diverse traits — every Monkeyz is a Good Monkeyz. Each Good Monkeyz NFT grants you access to private club membership and additional benefits. ' },
       { hid: 'og-image', property: 'og:image',
           content: 'https://goodmonkeyz.art/social.jpg'
       },

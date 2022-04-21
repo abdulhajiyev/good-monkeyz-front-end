@@ -17,12 +17,26 @@ export default ({ app }, inject) => {
         )
         return prov;
     });
-    inject('newMMprovider', () => { 
+    inject('newMMprovider',  () => { 
         prov = new ethers.providers.Web3Provider(window.ethereum);
+        const anyProv = new ethers.providers.Web3Provider(window.ethereum, "any");
+        anyProv.on("network", (newNetwork, oldNetwork) => {
+            if (oldNetwork)  window.location.reload();
+        });
        return prov;
     });
     inject('provider', () => { 
-        console.log(prov)
+        console.log('provider - ', prov)
+
+        try {
+            const anyProv = new ethers.providers.Web3Provider(window.ethereum, "any");
+            anyProv.on("network", (newNetwork, oldNetwork) => {
+                if (oldNetwork)  window.location.reload();
+            });
+        } catch (error){
+            console.log(error)
+        }
+
        return prov;
     });
 }
