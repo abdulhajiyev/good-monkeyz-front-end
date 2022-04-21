@@ -41,7 +41,7 @@
                 </div>
                 <div v-if="hasBadgePrize" class="gm-mint">
                     <img class="gm-mint__monkey" :src="gmBadge">
-                    <h3 class="gm-mint__title"> GM OG Badge</h3>
+                    <h3 class="gm-mint__title">Good Collective Membership</h3>
                 </div>
                 <div v-if="hasBoosterPrize" class="gm-mint">
                     <img class="gm-mint__monkey" :src="booster">
@@ -133,19 +133,19 @@
             },
             prizeString () {
                 if (this.hasBadgePrize & this.hasBoosterPrize & this.hasMysteryPrize) {
-                    return 'WOW! YOU LUCKY! YOU FOUND A BOOSTER BAR + OG BADGE + A MYSTERY BOX!'
+                    return 'WOW! YOU LUCKY! YOU FOUND A BOOSTER BAR + GOOD COLLECTIVE BADGE + A MYSTERY BOX!'
                 }
                 else if (this.hasBadgePrize & this.hasBoosterPrize) {
-                    return 'WOW! YOU FOUND A BOOSTER BAR + OG BADGE TOO!'
+                    return 'WOW! YOU FOUND A BOOSTER BAR + GOOD COLLECTIVE BADGE TOO!'
                 }
                 else if (this.hasBadgePrize & this.hasMysteryPrize) {
-                    return 'WOW! YOU FOUND A MYSTERY BOX + OG BADGE TOO!'
+                    return 'WOW! YOU FOUND A MYSTERY BOX + GOOD COLLECTIVE BADGE TOO!'
                 }
                 else if (this.hasBoosterPrize & this.hasMysteryPrize) {
                     return 'WOW! YOU FOUND A BOOSTER BAR + A MYSTERY BOX TOO!'
                 }
                 else if(this.hasBadgePrize){
-                    return 'WOW! YOU FOUND AN OG BADGE TOO!'
+                    return 'WOW! YOU FOUND AN GOOD COLLECTIVE BADGE TOO!'
                 }
                 else if (this.hasBoosterPrize) {
                     return 'WOW! YOU FOUND A BOOSTER BAR TOO!'
