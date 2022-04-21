@@ -208,7 +208,7 @@
                         this.approved = true;
                     }
                     
-                    const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei'), gasLimit: 130000};
+                    const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei'), gasLimit: 300000};
                     const nftTxn = await monkeyContract.mintWithPass(overrides)
 
                     console.log(nftTxn)
