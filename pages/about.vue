@@ -25,7 +25,8 @@
             </div>
             <div v-if="status === 'raffle'">
               <h1>YOU’RE ON THE RAFFLE LIST</h1>
-              <SparkleMessage :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />      
+              <SparkleMessage :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />
+              <SparkleBtn :twitter="true" @hit="goToAuth()" text="AUTHENTICATE WITH TWITTER"/>
             </div>
             <span @click="resetError()" v-if="status === 'used'" class="not-verified">
               <ErrorMessage :text="failMessage"/>
