@@ -42,7 +42,7 @@
                     const { ethereum } = window;
 
                     if (!ethereum) {
-                        return;
+                        window.location = 'https://metamask.app.link/dapp/goodmonkeyz.art';
                     }
                     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
                     // const chainId = await ethereum.request({ method: 'eth_chainId' });
