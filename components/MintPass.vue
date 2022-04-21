@@ -2,11 +2,12 @@
     <div > 
         <div class="mint" v-if="!minted">
             <section class="mint__pass-modal" v-if="!txHash">
-                <img @click="$emit('hide')" class="close" :src="closeIcon" >
+                
                 <h1>You Have A Mint Pass!</h1>
                 <div class="mint__pass-img" >
                     <img class="" :src="pass">
                     <span v-if="!approved" @click="aprovePass()" class="btn" >Approve Pass</span>
+                    <img @click="$emit('hide')" class="close" :src="closeIcon" >
                 </div>   
                 <SparkleBtn class="mint-btn" :class="{ 'not-approved': approved === false }" @hit="mintWithPass()" :text="`mint With Pass`"/>
             </section>
@@ -311,13 +312,18 @@ $l: 1720px;
 
     .close {
         position: absolute;
-        top: 2rem;
-        right: 2rem;
-        height: 2rem;
-        width: 2rem;
+        top: 1.5rem;
+        right: 1.5rem;
+        height: 2.5rem;
+        width: 2.5rem;
         cursor: pointer;
+        transform: translate(-50%, 50%);
+        background: rgb(255, 255, 255, 0.1);
+        border-radius: 50% !important;
+
         opacity: 0;
         animation: enter-up-scale 1s 500ms 1 forwards ease ;
+        z-index: 1000;
     }
 
     .mint {
