@@ -2,6 +2,9 @@
   <div class="index">
     <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
     <div class="fade-bg"></div>
+      <div class="nav">  
+      <ConnectBanner :account="wallet"  :showConnect="!open"/>
+    </div>
     <section class="countdown" v-if="!open">
       <Countdown />
     </section>
@@ -30,6 +33,7 @@ import { ethers } from 'ethers';
 import Mint from '@/components/Mint.vue';
 import MintPass from '@/components/MintPass.vue';
 import Countdown from '@/components/MainCountdown.vue'
+import ConnectBanner from '@/components/ConnectBanner.vue';
 
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
@@ -53,6 +57,7 @@ export default {
     Mint,
     MintPass,
     Countdown,
+    ConnectBanner,
   },
   data: () => {
     return {
@@ -210,6 +215,16 @@ $l: 1720px;
 .index-enter, .index-leave-active { 
   opacity: 0;
 }
+
+  .nav {
+    padding: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    z-index: 1000;
+
+  }
 
 .index,
 .countdown {
