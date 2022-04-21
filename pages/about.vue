@@ -306,7 +306,7 @@ The Monkeyz expanded universe<br>
       this.faq[id].active = !this.faq[id].active;
     },
     connectWallet(){
-      this.$nuxt.$emit('connect')
+      this.$nuxt.$emit('connect', '/about')
     },
     goToAuth(){
       window.location=`/.netlify/functions/auth?address=${this.wallet}`;
