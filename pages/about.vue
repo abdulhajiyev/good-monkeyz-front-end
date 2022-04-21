@@ -11,7 +11,6 @@
       <div class="fade-bg"></div> 
       <div class="early">
           <div v-if="!wallet">
-            <Mint />
             <h1>Early Access Verify</h1>
             <SparkleBtn @hit="connectWallet()" text="Verify WALLET"/>
           </div>
@@ -34,8 +33,8 @@
           </div>
       </div>
       <div class="minting">
-        <h3 >0 <img :src="divider"> 10,000</h3>
-        <h4>MINTING THURSDAY 21 APRIL 2022</h4>
+        <!-- <h3 >0 <img :src="divider"> 10,000</h3>
+        <h4>MINTING THURSDAY 21 APRIL 2022</h4> -->
       </div>
       <div class="banner banner--bottom">
         <span  class="marquee">GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> </span>
@@ -181,7 +180,6 @@
 import { mapState } from 'vuex';
 
 import MinBanner from '@/components/MinBanner.vue';
-import Mint from '@/components/Mint.vue';
 import SparkleMessage from '@/components/SparkleMessage.vue';
 import SparkleBtn from '@/components/SparkleBtn.vue';
 import ErrorMessage from '@/components/ErrorMessage.vue';
@@ -215,7 +213,6 @@ export default {
   name: 'Index',
   components: {
     MinBanner,
-    Mint,
     SparkleMessage,
     SparkleBtn,
     ErrorMessage,
