@@ -12,11 +12,13 @@
         <span class="zerozero" ref="zerozero">00</span>
         <div v-if="!ready || !wallet || status !== 'allow' ">
           <h1>Allow List Minting in Progress</h1>
-          <h3>{{amountMinted}} <img :src="divider"> 10,000</h3>
+          <h3 class="remain">
+            <span class="num">{{amountMinted}} <img :src="divider"> 10,000</span>
+            <span class="note">Remaining</span>
+          </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
-          <SparkleBtn class="continue" v-else-if="wallet && !ready && status !== 'raffle'" @hit="setReady()" text="Continue to Mint"/>
-          <h4>RAFFLE LIST MINTING NEXT IN <span v-html="countdown">DD HH MM SS</span></h4>
-          <SparkleMessage class="raffle" v-if="status == 'raffle'" :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />
+          <SparkleBtn class="continue" v-else-if="wallet && !ready && status === 'allow'" @hit="setReady()" text="Continue to Mint"/>
+          <h4>PUBLIC MINTING NEXT IN <span v-html="countdown">DD HH MM SS</span></h4>
         </div>
         <div v-else>
           <Mint />
@@ -125,7 +127,7 @@ export default {
       const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
       const totalSupply = await monkeyContract.totalSupply();
-      this.amountMinted = Number(ethers.utils.formatUnits(totalSupply, 0)).toLocaleString() 
+      this.amountMinted = Number(9000 - ethers.utils.formatUnits(totalSupply, 0)).toLocaleString() 
       this.open = await monkeyContract.ALLOW();
     },
     async getMintPassBal() {
@@ -183,11 +185,11 @@ export default {
       this.status = ''
     },
     countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 3, 22, 14, 0, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 3, 22, 15, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      // const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       let seconds = Math.floor((distance % (1000 * 60)) / (1000) );
@@ -196,7 +198,7 @@ export default {
         seconds = `0${seconds}`
       }
 
-      this.countdown = `${days}D ${hours}H ${minutes}M <span class="seconds" style="min-width: ${this.zeroWidth}px; " ">${seconds}</span>S`;
+      this.countdown = `${hours}H ${minutes}M <span class="seconds" style="min-width: ${this.zeroWidth}px; " ">${seconds}</span>S`;
     },
   }
 }
@@ -207,6 +209,29 @@ export default {
 $s: 660px;
 $m: 960px;
 $l: 1720px;
+
+.remain{
+  display: flex;
+  flex-direction: column;
+}
+.note {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  align-self: center;
+  letter-spacing: 0.1rem;
+
+  @media (min-width: $s) {
+    font-size: 0.65rem;
+    letter-spacing: 0.15rem;
+  }
+
+  @media (min-width: $m) {
+    font-size: 0.75rem;
+    letter-spacing: 0.2rem;
+  }
+}
+
+
 
 
 .index-enter-active, .index-leave-active { 
