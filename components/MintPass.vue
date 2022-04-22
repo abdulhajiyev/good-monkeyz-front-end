@@ -68,7 +68,7 @@
         TOKEN_ID_OG_BADGE,
         TOKEN_ID_MYSTERY_BOX,
         NETWORK_NAME,
-        INFURA_PROJECT_ID,
+        ALCHEMY_API,
         CHAIN_ID
     } from '@/utils/constants';
 

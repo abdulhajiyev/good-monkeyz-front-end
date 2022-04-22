@@ -10,7 +10,7 @@ const {
 } = process.env;
 
 import { 
-  INFURA_PROJECT_ID,
+  ALCHEMY_API,
   NETWORK_NAME,
   MONKEY_CONTRACT,
   MERCH_DROP_CONTRACT,

@@ -52,7 +52,7 @@ import { ethers } from 'ethers';
 import { 
   MERCH_DROP_CONTRACT,
   MONKEY_CONTRACT,
-  INFURA_PROJECT_ID,
+  ALCHEMY_API,
   NETWORK_NAME,
   TOKEN_ID_MERCH_BUNDLE
 } from '@/utils/constants';

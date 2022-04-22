@@ -2,7 +2,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import { ethers } from 'ethers';
 
 import { 
-    INFURA_PROJECT_ID,
+    ALCHEMY_API,
     CHAIN_ID,
 } from '@/utils/constants';
 
@@ -11,7 +11,7 @@ export default ({ app }, inject) => {
     inject('newWCprovider', () => { 
         prov = new ethers.providers.Web3Provider(
             new WalletConnectProvider({
-                infuraId: INFURA_PROJECT_ID,
+                infuraId: ALCHEMY_API,
                 chainId: CHAIN_ID,
             })
         )

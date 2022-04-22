@@ -44,7 +44,7 @@ import JSConfetti from 'js-confetti'
 
 import { 
   MERCH_DROP_CONTRACT,
-  INFURA_PROJECT_ID,
+  ALCHEMY_API,
   NETWORK_NAME,
   TOKEN_ID_MERCH_BUNDLE 
 } from '@/utils/constants';

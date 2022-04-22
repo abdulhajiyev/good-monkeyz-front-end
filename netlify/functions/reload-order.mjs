@@ -8,7 +8,7 @@ const {
 } = process.env;
 
 import { 
-  INFURA_PROJECT_ID,
+  ALCHEMY_API,
   NETWORK_NAME,
 } from '@/utils/constants';
 
