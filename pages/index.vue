@@ -3,29 +3,28 @@
     <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
     <div class="fade-bg"></div>
       <div class="nav">  
-      <ConnectBanner :account="wallet"  :showConnect="!open"/>
+      <ConnectBanner :account="wallet" :showConnect="!open"/>
     </div>
     <section class="countdown" v-if="!open">
       <Countdown />
     </section>
     <div v-else class="minting">
         <span class="zerozero" ref="zerozero">00</span>
-        <div v-if="!ready || !wallet || status !== 'allow' ">
-          <h1>Allow List Minting in Progress</h1>
+        <div v-if="!ready || !wallet ">
+          <h1>Minting in Progress</h1>
           <h3 class="remain">
             <!-- <span class="num">{{amountMinted}}</span> -->
             <!-- <span class="note">Remaining of 10,000</span> -->
-            <span class="note">Ξ0.077 For Each Mint</span>
+            <span class="note">Ξ0.033 For Each Mint</span>
           </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
-          <SparkleBtn class="continue" v-else-if="wallet && !ready && status === 'allow'" @hit="setReady()" text="Continue to Mint"/>
-          <h4>PUBLIC MINTING IN <span v-html="countdown">DD HH MM SS</span></h4>
+          <SparkleBtn class="continue" v-else-if="wallet && !ready" @hit="setReady()" text="Continue to Mint"/>
         </div>
         <div v-else>
           <Mint />
         </div>
     </div>
-    <MintPass v-if="mintPassReady && !mintPassHidden " @hide="mintPassHidden = true" class="mint-pass" />
+    <MintPass v-if="mintPassReady && !mintPassHidden" @hide="mintPassHidden = true" class="mint-pass" />
   </div>
 </template>
 
@@ -66,6 +65,7 @@ export default {
   data: () => {
     return {
       open: false,
+      openPublic: false,
       monkey,
       divider,
       twitter,
@@ -124,6 +124,9 @@ export default {
   methods: {
     connectWallet(){
       this.$nuxt.$emit('connect')
+      this.$nuxt.$on('web3-active', () => {
+        this.ready = true;
+      });
     },
     async getcontractData() {
       const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
@@ -132,6 +135,7 @@ export default {
       const total = 9000 + parseInt( ethers.utils.formatUnits(await monkeyContract.mintPassUsed(), 0))
       this.amountMinted = Number( total - currentSupply ).toLocaleString() 
       this.open = await monkeyContract.ALLOW();
+      // this.openPublic = await monkeyContract.PUBLIC();
     },
     async getMintPassBal() {
       const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
