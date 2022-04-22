@@ -3,9 +3,9 @@
     <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
     <div class="fade-bg"></div>
       <div class="nav">  
-      <ConnectBanner :account="wallet" :showConnect="!open"/>
+      <ConnectBanner :account="wallet" :showConnect="!openPublic"/>
     </div>
-    <section class="countdown" v-if="!open">
+    <section class="countdown" v-if="!openPublic">
       <Countdown />
     </section>
     <div v-else class="minting">
@@ -135,7 +135,7 @@ export default {
       const total = 9000 + parseInt( ethers.utils.formatUnits(await monkeyContract.mintPassUsed(), 0))
       this.amountMinted = Number( total - currentSupply ).toLocaleString() 
       this.open = await monkeyContract.ALLOW();
-      // this.openPublic = await monkeyContract.PUBLIC();
+      this.openPublic = await monkeyContract.PUBLIC();
     },
     async getMintPassBal() {
       const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
