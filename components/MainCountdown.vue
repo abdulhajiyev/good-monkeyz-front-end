@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 3, 21, 14, 0, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 3, 22, 16, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 

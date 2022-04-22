@@ -148,8 +148,8 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      const _price = ethers.utils.parseEther('0.077')
-      const _doublePrice = ethers.utils.parseEther('0.1337')
+      const _price = ethers.utils.parseEther('0.033')
+      const _doublePrice = ethers.utils.parseEther('0.066')
       await monkeyContract.setNewPrice(_price, _doublePrice);
     },
     async setNewPublicMax(){
@@ -157,7 +157,7 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      await monkeyContract.setNewPublicMax(2);
+      await monkeyContract.setNewPublicMax(7);
     },
     async setNewAllowMax(){
 

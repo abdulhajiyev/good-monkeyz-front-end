@@ -18,8 +18,7 @@
                     </span>
                 </div>
                 
-                <SparkleBtn class="mint-btn" @hit="mintAllow()" :text="`mint ${amount} Good Monkeyz`"/>
-                <!-- <SparkleBtn class="mint-btn" @hit="mint()" :text="`mint ${amount} Good Monkeyz`"/> -->
+                <SparkleBtn class="mint-btn" @hit="mint()" :text="`mint ${amount} Good Monkeyz`"/>
             </section>
             <section class="pending" v-else>
                 <div class="in-progress">
@@ -93,7 +92,7 @@
     export default {
         data:  () => {
             return {
-                price: 0.077,
+                price: 0.033,
                 amount: 2,
                 gmBlack,
                 monkeyPlaceholder: monkey,
@@ -291,12 +290,12 @@
                 }
             },
             plus() {
-                if(this.amount === 1){
+                if( this.amount < 7){
                     this.amount++
                 }
             },
             minus() {
-                if(this.amount === 2){
+                if(this.amount > 1 ){
                     this.amount--
                 }
             },
