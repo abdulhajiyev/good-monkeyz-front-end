@@ -14,7 +14,8 @@
           <h1>Allow List Minting in Progress</h1>
           <h3 class="remain">
             <span class="num">{{amountMinted}}</span>
-            <span class="note">Remaining</span>
+            <span class="note">Remaining of 10,000</span>
+            <span class="note">Ξ0.077 For Each Mint</span>
           </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
           <SparkleBtn class="continue" v-else-if="wallet && !ready && status === 'allow'" @hit="setReady()" text="Continue to Mint"/>
@@ -126,8 +127,9 @@ export default {
     async getcontractData() {
       const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
-      const totalSupply = await monkeyContract.totalSupply();
-      this.amountMinted = Number(9000 - ethers.utils.formatUnits(totalSupply, 0)).toLocaleString() 
+      const currentSupply = parseInt(ethers.utils.formatUnits(await monkeyContract.totalSupply(), 0));
+      const total = 9000 + parseInt( ethers.utils.formatUnits(await monkeyContract.mintPassUsed(), 0))
+      this.amountMinted = Number( total - currentSupply ).toLocaleString() 
       this.open = await monkeyContract.ALLOW();
     },
     async getMintPassBal() {
