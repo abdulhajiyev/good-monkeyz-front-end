@@ -13,8 +13,8 @@
         <div v-if="!ready || !wallet || status !== 'allow' ">
           <h1>Allow List Minting in Progress</h1>
           <h3 class="remain">
-            <span class="num">{{amountMinted}}</span>
-            <span class="note">Remaining of 10,000</span>
+            <!-- <span class="num">{{amountMinted}}</span> -->
+            <!-- <span class="note">Remaining of 10,000</span> -->
             <span class="note">Ξ0.077 For Each Mint</span>
           </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
