@@ -18,7 +18,7 @@
           </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
           <SparkleBtn class="continue" v-else-if="wallet && !ready && status === 'allow'" @hit="setReady()" text="Continue to Mint"/>
-          <h4>PUBLIC MINTING NEXT IN <span v-html="countdown">DD HH MM SS</span></h4>
+          <h4>PUBLIC MINTING IN <span v-html="countdown">DD HH MM SS</span></h4>
         </div>
         <div v-else>
           <Mint />
