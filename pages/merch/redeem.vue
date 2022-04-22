@@ -90,7 +90,7 @@ export default {
     },
     async getBalance() {
      try {
-        const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+        const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
         const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
         const balBig = await connectedContract.balanceOf(this.wallet, TOKEN_ID_MERCH_BUNDLE);
         this.bal = ethers.utils.formatUnits(balBig, 0);

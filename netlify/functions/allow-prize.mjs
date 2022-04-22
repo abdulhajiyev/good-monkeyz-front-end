@@ -26,7 +26,7 @@ const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 const overrides = {gasPrice: ethers.utils.parseUnits('75', 'gwei'), gasLimit: 100000};
 
 const getTx = (hash) => new Promise((resolve, reject) => {
-    const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+    const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
     const interval = setInterval( async () => {
         receipt = await provider.getTransactionReceipt(hash)
         if (receipt) {
@@ -39,7 +39,7 @@ const getTx = (hash) => new Promise((resolve, reject) => {
 const sendPrizes = async (prizes, to) => {
   if(prizes.length <= 0) return false
 
-  const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);  
+  const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;  
   const MONKEY_KING = new ethers.Wallet(PRIVATE_KEY_MONKEY_PROD, provider);
   const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, MONKEY_KING);
 

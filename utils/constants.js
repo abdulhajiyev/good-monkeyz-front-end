@@ -1,4 +1,6 @@
 export const INFURA_PROJECT_ID = 'b79b2af3b60447c8b444158b3ebe21eb';
+export const ALCHEMY_API = 'l0PhFI7tshM4JaYckzq5f5rCHep0XDCc'
+
 export const TOKEN_ID_MERCH_BUNDLE = 0;
 export const TOKEN_ID_MINT_PASS = 1;
 export const TOKEN_ID_BOOSTER_PACK = 2;

@@ -167,7 +167,7 @@
                 }
             },
             async checkForPassApproval(){
-                const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+                const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
                 const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
                 this.approved = await merchContract.isApprovedForAll(this.wallet, MONKEY_CONTRACT);
             },
