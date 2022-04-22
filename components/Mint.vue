@@ -290,12 +290,12 @@
                 }
             },
             plus() {
-                if(this.amount === 1){
+                if( this.amount < 7){
                     this.amount++
                 }
             },
             minus() {
-                if(this.amount === 2){
+                if(this.amount > 1 ){
                     this.amount--
                 }
             },
