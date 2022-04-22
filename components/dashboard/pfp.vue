@@ -107,7 +107,7 @@ export default {
         connectedContract.withdraw()
     },
     async getMonkeyData() {
-      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
       this.bal = await provider.getBalance(monkeyContract.address);
 

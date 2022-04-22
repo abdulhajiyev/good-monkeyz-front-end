@@ -15,7 +15,7 @@ import {
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 
 const getTx = (hash) => new Promise((resolve, reject) => {
-  const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+  const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
   const interval = setInterval( async () => {
       receipt = await provider.getTransactionReceipt(hash)
       if (receipt) {

@@ -43,7 +43,8 @@ import divider from "@/assets/img/divider.svg";
 import twitter from "@/assets/img/twitter-black.svg"
 
 import { 
-    INFURA_PROJECT_ID,
+    // INFURA_PROJECT_ID,
+    ALCHEMY_API,
     NETWORK_NAME,
     MONKEY_CONTRACT,
     MERCH_DROP_CONTRACT,
@@ -79,7 +80,7 @@ export default {
   },
   computed: mapState(['wallet']),
   created() {
-    const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+    const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
     const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
 
     this.getcontractData() 
@@ -125,7 +126,7 @@ export default {
       this.$nuxt.$emit('connect')
     },
     async getcontractData() {
-      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
       const currentSupply = parseInt(ethers.utils.formatUnits(await monkeyContract.totalSupply(), 0));
       const total = 9000 + parseInt( ethers.utils.formatUnits(await monkeyContract.mintPassUsed(), 0))
@@ -133,7 +134,7 @@ export default {
       this.open = await monkeyContract.ALLOW();
     },
     async getMintPassBal() {
-      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
       const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
       const balBig = await merchContract.balanceOf(this.wallet, TOKEN_ID_MINT_PASS);

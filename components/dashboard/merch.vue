@@ -113,7 +113,7 @@ export default {
       console.log(tx);
     },
     async getcontractData() {
-      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
       const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
       this.merchCount =  await connectedContract.getMerchCount();
       this.bal = await provider.getBalance(connectedContract.address);
@@ -194,7 +194,7 @@ export default {
         }
      },
     async getAllowList(){
-      const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+      const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
       const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
 
       const list = await (await fetch(`/.netlify/functions/allow-list`)).json()
