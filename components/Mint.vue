@@ -92,7 +92,7 @@
     export default {
         data:  () => {
             return {
-                price: 0.077,
+                price: 0.033,
                 amount: 2,
                 gmBlack,
                 monkeyPlaceholder: monkey,
