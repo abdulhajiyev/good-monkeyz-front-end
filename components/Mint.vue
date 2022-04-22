@@ -18,8 +18,7 @@
                     </span>
                 </div>
                 
-                <SparkleBtn class="mint-btn" @hit="mintAllow()" :text="`mint ${amount} Good Monkeyz`"/>
-                <!-- <SparkleBtn class="mint-btn" @hit="mint()" :text="`mint ${amount} Good Monkeyz`"/> -->
+                <SparkleBtn class="mint-btn" @hit="mint()" :text="`mint ${amount} Good Monkeyz`"/>
             </section>
             <section class="pending" v-else>
                 <div class="in-progress">
