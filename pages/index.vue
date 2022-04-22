@@ -185,7 +185,7 @@ export default {
       this.status = ''
     },
     countdownF() {
-      const countDownDate = new Date( Date.UTC(2022, 3, 22, 15, 0, 0, 0)).getTime();
+      const countDownDate = new Date( Date.UTC(2022, 3, 22, 16, 0, 0, 0)).getTime();
       const now = new Date().getTime();
       const distance = countDownDate - now;
 
