@@ -157,7 +157,7 @@ export default {
       const signer = provider.getSigner();
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
 
-      await monkeyContract.setNewPublicMax(2);
+      await monkeyContract.setNewPublicMax(7);
     },
     async setNewAllowMax(){
 
