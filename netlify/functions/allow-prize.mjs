@@ -194,7 +194,7 @@ exports.handler = async (event, context, callback) => {
     }
     
     const ogPrize = await ogBadgePrize(MINTER_ADDRESS,burnEvent)
-    if(tokenCount >= 2 && ogPrize || burnEvent && ogPrize){
+    if(ogPrize){
       prizes.push(3)
     }
     console.log('PRIZES: ',  prizes)
