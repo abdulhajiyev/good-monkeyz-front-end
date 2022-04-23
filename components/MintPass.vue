@@ -208,7 +208,7 @@
                         this.approved = true;
                     }
                     
-                    const overrides = {gasLimit: 175000};
+                    const overrides = {gasLimit: 150000};
                     const nftTxn = await monkeyContract.mintWithPass(overrides)
 
                     console.log(nftTxn)
