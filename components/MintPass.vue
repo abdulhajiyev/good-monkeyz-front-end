@@ -201,14 +201,14 @@
                     const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, signer);
                     
                     if (!this.approved) {
-                        const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei'), gasLimit: 75000};
-                        const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true, overrides);
+                        // const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei')};
+                        const approval = await merchContract.setApprovalForAll(MONKEY_CONTRACT, true);
                         approval.wait()
                         console.log(approval)
                         this.approved = true;
                     }
                     
-                    const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei'), gasLimit: 300000};
+                    const overrides = {gasLimit: 175000};
                     const nftTxn = await monkeyContract.mintWithPass(overrides)
 
                     console.log(nftTxn)
