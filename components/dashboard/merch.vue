@@ -117,8 +117,8 @@ export default {
       const connectedContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
       this.merchCount =  await connectedContract.getMerchCount();
       this.bal = await provider.getBalance(connectedContract.address);
-      // this.deployerBal = await provider.getBalance('0x179a304E5E87dA8D059fC65bE11d7635b4Ea9f69');
-      // this.vaultBal = await provider.getBalance('goodmonkeyz.eth');
+      this.deployerBal = await provider.getBalance('0x179a304E5E87dA8D059fC65bE11d7635b4Ea9f69');
+      this.vaultBal = await provider.getBalance('goodmonkeyz.eth');
 
         for (let index = 0; index < this.merchCount; index++) {
             this.merch.push(await connectedContract.merch(index))
