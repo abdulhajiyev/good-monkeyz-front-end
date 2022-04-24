@@ -23,7 +23,7 @@ import GMSHOPJSON from '@/utils/nftShop.json';
 
 const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
 
-const overrides = {gasPrice: ethers.utils.parseUnits('45', 'gwei'), gasLimit: 100000};
+const overrides = {gasPrice: ethers.utils.parseUnits('60', 'gwei'), gasLimit: 100000};
 
 const getTx = (hash) => new Promise((resolve, reject) => {
     const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);;
