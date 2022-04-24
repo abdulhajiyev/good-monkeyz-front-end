@@ -29,8 +29,8 @@
             <h3>provenanceHash: {{provenanceHash}}</h3>
             <h3>prizeListHash: {{prizeListHash}}</h3>
 
-            <h3>Starting Index: {{startingIndex}}</h3>
-            <h3>Prize Index: {{prizeIndex}}</h3>
+            <!-- <h3>Starting Index: {{startingIndex}}</h3> -->
+            <!-- <h3>Prize Index: {{prizeIndex}}</h3> -->
 
             <h3>GMEditionsAddress: {{GMEditionsAddress}} {{merchAddressMatch ? 'MATCH' : 'NO MATCH' }}</h3>
 
