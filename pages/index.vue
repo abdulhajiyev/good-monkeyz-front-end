@@ -3,7 +3,8 @@
     <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
     <div class="fade-bg"></div>
       <div class="nav">  
-      <ConnectBanner :account="wallet" :showConnect="!openPublic"/>
+      <!-- <ConnectBanner :account="wallet" :showConnect="!openPublic"/> -->
+      <MinBanner :account="wallet" :active="true"/>
     </div>
     <section class="countdown" v-if="!openPublic">
       <Countdown />
@@ -15,7 +16,7 @@
           <h3 class="remain">
             <!-- <span class="num">{{amountMinted}}</span> -->
             <!-- <span class="note">Remaining of 10,000</span> -->
-            <span class="note">Ξ0.033 For Each Mint</span>
+            <span class="note">Ξ0.033 per mint</span>
           </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
           <SparkleBtn class="continue" v-else-if="wallet && !ready" @hit="setReady()" text="Continue to Mint"/>
