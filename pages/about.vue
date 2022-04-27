@@ -11,26 +11,11 @@
       <div class="fade-bg"></div> 
       <div class="early">
           <div v-if="!wallet">
-            <h1>Early Access Verify</h1>
-            <SparkleBtn @hit="connectWallet()" text="Verify WALLET"/>
+            <h1>Good Monkeyz</h1>
+            <SparkleBtn @hit="connectWallet()" text="Connect Wallet"/>
           </div>
           <div v-else> 
-            <div v-if="!status && addressCheck" >
-              <h1>Early Access Verify</h1>
-              <SparkleBtn :twitter="true" @hit="goToAuth()" text="AUTHENTICATE WITH TWITTER"/>
-            </div>
-            <div v-if="status === 'allow'">
-              <h1>VERIFICATION SUCCESSFUL</h1>
-              <SparkleMessage title="2 x Mint Slots" :subtitle="'@'+screenName" />   
-            </div>
-            <div v-if="status === 'raffle'">
-              <h1>YOU’RE ON THE RAFFLE LIST</h1>
-              <SparkleMessage :title="'RAFFLE #'+raffleId" :subtitle="'@'+screenName" />
-              <SparkleBtn :twitter="true" @hit="goToAuth()" text="AUTHENTICATE WITH TWITTER"/>
-            </div>
-            <span @click="resetError()" v-if="status === 'used'" class="not-verified">
-              <ErrorMessage :text="failMessage"/>
-            </span>
+            <SparkleBtn :twitter="true" @hit="goToMint()" text="Minting Live"/>
           </div>
       </div>
       <div class="minting">
@@ -181,9 +166,7 @@
 import { mapState } from 'vuex';
 
 import MinBanner from '@/components/MinBanner.vue';
-import SparkleMessage from '@/components/SparkleMessage.vue';
 import SparkleBtn from '@/components/SparkleBtn.vue';
-import ErrorMessage from '@/components/ErrorMessage.vue';
 
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
@@ -214,9 +197,7 @@ export default {
   name: 'Index',
   components: {
     MinBanner,
-    SparkleMessage,
     SparkleBtn,
-    ErrorMessage,
   },
   data: () => {
     return {
@@ -242,7 +223,7 @@ The Monkeyz expanded universe<br>
         {
           id: 1,
           q: 'Supply & Mint Price',
-          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.077 ETH',
+          a: 'A Maximum of 10,000 Good Monkeyz will be available on the Ethereum Blockchain. Mint price is 0.033 ETH',
           active: false,
         },
         {
@@ -254,7 +235,7 @@ The Monkeyz expanded universe<br>
         {
           id: 3,
           q: 'Early List & Public Mint',
-          a: '3500 Early list Spaces - Everyone on the list has a reserved space to mint up to 2 GoodMonkeyz NFTs.<br><br> 2000 (plus any remaining unminted from Early List) monkey available for Public Mint.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs.',
+          a: '9000 monkeyz available for general Minting.<br><br> 250 Mint Passes.<br><br> 250 Booster Packs (3monkeyz).',
           active: false,
         },
         {
@@ -303,6 +284,9 @@ The Monkeyz expanded universe<br>
     })
   },
   methods: {
+    goToMint() {
+      this.$router.push('/')
+    },
     openfaq(id){
       this.faq[id].active = !this.faq[id].active;
     },
