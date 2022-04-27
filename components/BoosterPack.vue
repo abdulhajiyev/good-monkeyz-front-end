@@ -253,11 +253,13 @@
                                 this.removePlaceholder = true
                             }, 3000)
                             
-                            this.monkeyz = mkzData    
+                            this.monkeyz = mkzData
+                            await this.sendMonkeyzData(this.wallet, mkzData.map(x => x.id), true)
                         } else {
                             this.monkeyz = mkzData.map(m =>  {
                                 return { id: '?'}
                             })
+                            await this.sendMonkeyzData(this.wallet, this.monkeyz, false)
                         }
                         this.minted = true;
                         this.fireConfetti()
@@ -296,6 +298,20 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         txHash: this.txHash,
+                    })
+                });
+                const json = await response.json()
+                return json
+            },
+            async sendMonkeyzData(address, monkeyz, shown){
+                const response = await fetch('/.netlify/functions/store-actual-reveal', {
+                    method: 'POST', 
+                    cache: 'no-cache',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        address,
+                        monkeyz,
+                        shown
                     })
                 });
                 const json = await response.json()
