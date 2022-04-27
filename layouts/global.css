@@ -134,3 +134,25 @@ html {
     transform: scale(1);
   }
 }
+
+
+@keyframes enter-up-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
+  }
+  80% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes leave-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

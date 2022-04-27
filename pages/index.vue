@@ -3,7 +3,7 @@
     <video class="video-bg" width="55%" autoplay muted loop playsinline :src="monkey"></video> 
     <div class="fade-bg"></div>
       <div class="nav">  
-      <ConnectBanner :account="wallet" :showConnect="!openPublic"/>
+      <MinBanner :account="wallet" :active="true"/>
     </div>
     <section class="countdown" v-if="!openPublic">
       <Countdown />
@@ -25,6 +25,7 @@
         </div>
     </div>
     <MintPass v-if="mintPassReady && !mintPassHidden" @hide="mintPassHidden = true" class="mint-pass" />
+    <BoosterPack v-if="boosterReady && !boosterHidden" @hide="boosterHidden = true" class="mint-pass" />
   </div>
 </template>
 
@@ -34,8 +35,9 @@ import { ethers } from 'ethers';
 
 import Mint from '@/components/Mint.vue';
 import MintPass from '@/components/MintPass.vue';
+import BoosterPack from '@/components/BoosterPack.vue';
 import Countdown from '@/components/MainCountdown.vue'
-import ConnectBanner from '@/components/ConnectBanner.vue';
+import MinBanner from '@/components/MinBanner.vue';
 
 import monkey from "@/assets/video/mm-med.mp4";
 import divider from "@/assets/img/divider.svg";
@@ -48,6 +50,7 @@ import {
     MONKEY_CONTRACT,
     MERCH_DROP_CONTRACT,
     TOKEN_ID_MINT_PASS,
+    TOKEN_ID_BOOSTER_PACK,
 } from '@/utils/constants';
 
 import GMSHOPJSON from '@/utils/nftShop.json';
@@ -58,9 +61,10 @@ export default {
   name: 'Index',
   components: {
     Mint,
+    MinBanner,
     MintPass,
+    BoosterPack,
     Countdown,
-    ConnectBanner,
   },
   data: () => {
     return {
@@ -74,7 +78,8 @@ export default {
       countdown: '',
       mintPassReady: false,
       mintPassHidden: false,
-      status: false,
+      boosterHidden: false,
+      boosterReady: false,
       ready: false,
     }
   },
@@ -84,15 +89,12 @@ export default {
     const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
 
     this.getcontractData() 
-    this.setStatus();
     if(this.wallet) {
-      this.checkByAddress(this.wallet);
-      this.getMintPassBal()
+      this.getLTDBalances()
     }
     this.$nuxt.$on('web3-active', () => {
-      this.checkByAddress(this.wallet);
       this.getcontractData()
-      this.getMintPassBal()
+      this.getLTDBalances()
     })
 
     this.countdownF();
@@ -102,8 +104,8 @@ export default {
       
     }, 1000)
 
-    monkeyContract.on("MintPassStatus", () => {
-      this.getMintPassBal();
+    monkeyContract.on("BoostStatus", () => {
+      this.getLTDBalances();
     });
     monkeyContract.on("AllowStatus", async () => {
       this.open = await monkeyContract.ALLOW();
@@ -137,55 +139,21 @@ export default {
       this.open = await monkeyContract.ALLOW();
       this.openPublic = await monkeyContract.PUBLIC();
     },
-    async getMintPassBal() {
+    async getLTDBalances() {
       const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
       const merchContract = new ethers.Contract(MERCH_DROP_CONTRACT, GMSHOPJSON.abi, provider);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
-      const balBig = await merchContract.balanceOf(this.wallet, TOKEN_ID_MINT_PASS);
-      const bal = ethers.utils.formatUnits(balBig, 0)
-      if (bal > 0) {
+      const balBig = await merchContract.balanceOfBatch([this.wallet, this.wallet], [TOKEN_ID_MINT_PASS, TOKEN_ID_BOOSTER_PACK]);
+      const bal = balBig.map( bal => ethers.utils.formatUnits(bal, 0))
+      if (bal[0] > 0) {
         this.mintPassReady = await monkeyContract.MINTPASS();
+      }
+      if (bal[1] > 0) {
+        this.boosterReady = await monkeyContract.BOOSTER();
       }
     },
     setReady() {
       this.ready = true;
-    },
-    setStatus(userList, screenName){
-      const list = userList || this.$route.query.list 
-      
-      if(list === 'allow'){
-        this.status = 'allow';
-      } 
-      
-      if (list === 'raffle') {
-        this.status = 'raffle';;
-      } 
-      
-      if (list === 'false') {
-        this.status = 'used';
-        this.failMessage =  'Twitter Account is already linked to another Address';
-      }
-
-      this.screenName = screenName || this.$route.query.screen_name;
-    },
-    async checkByAddress(address){
-      const res = await (await fetch(`/.netlify/functions/check-allow-list?address=${address}`)).json()
-      if ( res != null ) {
-        this.setStatus(res.list, res.screenName)
-        this.raffleId = res.raffleId || null
-        if(res.list === false )this.addToRaffle(address)
-      }   
-      
-    },
-    async addToRaffle(address){
-      console.log('CHECK', address)
-      const res = await (await fetch(`/.netlify/functions/rl-add?address=${address}`)).json()
-      if ( res != null ) {
-        console.log(res)
-        this.setStatus(res.list, res.screenName)
-        this.raffleId = res.raffleId || ''
-        console.log(res)
-      }
     },
     resetError() {
       this.failMessage = ''
@@ -280,7 +248,7 @@ $l: 1720px;
   left: 0;
   height: 100vh;
   width: 100vw;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
   background: rgba(0,0,0,0.6);
   z-index: 100;
   display: flex;
