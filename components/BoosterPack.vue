@@ -200,7 +200,7 @@
                     const image = new Image()
                     image.onload = resolve()
                     image.onerror = resolve()
-                    image.src = src
+                    image.src = `https://goodmonkeyz.mypinata.cloud/ipfs/${src}`
                 })
             },
             async mintWithPass(){
