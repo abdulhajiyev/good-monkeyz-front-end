@@ -226,9 +226,9 @@
                     try {
                         const gasEstimate =  await monkeyContract.estimateGas.mintWithBoosterPack()
                         const gasFormat =  parseInt(ethers.utils.formatUnits(gasEstimate,0))
-                        gas = (gasFormat * 1.4).toFixed(0)
+                        gas = (gasFormat * 1.1).toFixed(0)
                     } catch(error) {
-                        gas = 175000
+                        gas = 120000
                     }
                     const overrides = {gasLimit: gas};
                     const nftTxn = await monkeyContract.mintWithBoosterPack(overrides)
