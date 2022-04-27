@@ -238,8 +238,10 @@
                     this.confirmations = 1
                     await nftTxn.wait(2);
                     this.confirmations = 2
-                    const result = await nftTxn.wait(3);
+                    await nftTxn.wait(3);
                     this.confirmations = 3
+                    const result = await nftTxn.wait(4);
+                    this.confirmations = 4
                     
                     if(result.status === 1) {
                         const {data: mkzData} = (await this.boosterReveal())
