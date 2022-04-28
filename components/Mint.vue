@@ -26,14 +26,19 @@
                     <img :src="gmBlack" class="logo">
                 </div>
                 <a target="_blank" :href="`https://etherscan.io/tx/${txHash}`">Minting in Progress</a>
+                <span v-if="confirmations > 0" class="confirmations">confirmations: {{confirmations}}</span>
             </section>
         </div>
         <div v-else>
             <h2>Welcome To Good Monkeyz</h2>
             <div class="monkeyz">
-                <div v-for="monkey in monkeyz" :key="monkey" class="gm-mint">
-                    <img class="gm-mint__monkey" :src="monkeyPlaceholder">
-                    <h3 class="gm-mint__title"> Good Monkeyz #{{monkey}}</h3>
+                 <div v-for="(monkey, index) in monkeyz" :key="monkey.id" class="gm-mint"  :class="`gm-mint--${index}`">
+                    <div>
+                        <img v-if="correctOwner" class="gm-mint__monkey gm-mint__monkey--preview" :src="`https://goodmonkeyz.mypinata.cloud/ipfs/${monkey.data}`">  
+                        <img class="gm-mint__monkey" :class="[removePlaceholder ? `gm-mint__monkey--placeholder-out--${index}` : '']" :src="monkeyPlaceholder">  
+
+                    </div>
+                    <h3 class="gm-mint__title"> Good Monkeyz #{{monkey.id}}</h3>
                 </div>
                 <div v-if="hasPrizes" class="gm-mint__star">
                     <img :src="star">
@@ -76,6 +81,8 @@
         TOKEN_ID_OG_BADGE,
         TOKEN_ID_MYSTERY_BOX,
         CHAIN_ID,
+        INFURA_PROJECT_ID,
+        NETWORK_NAME,
     } from '@/utils/constants';
 
     import GMPFP from '@/utils/GoodMonkeyz.json';
@@ -93,12 +100,11 @@
         data:  () => {
             return {
                 price: 0.033,
-                amount: 2,
+                amount: 3,
                 gmBlack,
                 monkeyPlaceholder: monkey,
                 minted: false,
                 txHash: false,
-                signature: '',
                 star,
                 gmBadge,
                 booster,
@@ -107,6 +113,9 @@
                 monkeyz: [],
                 twitterURL: `https://twitter.com/share?text=I just minted @GoodMonkeyz&url=https://goodmonkeyz.art&hashtags=goodmonkeyz`,
                 errorMessage: '',
+                confirmations: 0,
+                correctOwner: null,
+                removePlaceholder: null
             }
         },
         components: {
@@ -156,75 +165,41 @@
             }
         },
         created() {
-            this.checkByAddress(this.wallet);
-            this.$nuxt.$on('web3-active', () => {
-                this.checkByAddress(this.wallet);
-            })
         },
         methods: {
-            async checkByAddress(address){
-                console.log('CHECK', address)
-                const res = await (await fetch(`/.netlify/functions/get-allow-list-single?address=${this.wallet}`)).json()
-                console.log(res)
-                if ( res != null ) {
-                    this.signature = res.signature
-                    console.log('SIGNATURE', this.signature)
-                }
+            mintAgain () {
+                this.confirmations = 1
+                this.txHash = null
+                this.minted = false
             },
+            async checkOwner(data, connectUser) {
+                const provider = new ethers.providers.InfuraProvider(NETWORK_NAME, INFURA_PROJECT_ID);
+                const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
             
-            async mintAllow() {
-                try {
-                    if(!this.signature) throw new Error('Address Not Allow Listed');
+                const owners = await Promise.all(data.map(token => monkeyContract.ownerOf(token.id)));
+                const sameOwner = owners.every( (x, i, arr) => x === arr[0]) 
 
-                    const provider = this.$provider();
-                    const signer = provider.getSigner();
-                    const { chainId } = await provider.getNetwork()
-                    if (chainId !== CHAIN_ID) throw new Error('WRONG NETWORK - Select ETH MAINNET');
-
-                    const connectedContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, signer);
-
-                    const SIGNATURE = this.signature;
-                    const PRICE = this.price;
-                    const AMOUNT = this.amount;
-                    let totalPrice;
-
-                    if(AMOUNT === 2){
-                        totalPrice = ethers.utils.parseEther( String( 0.1337 ) )
-                    } else {
-                        totalPrice = ethers.utils.parseEther( String( PRICE ) ).mul(AMOUNT);
-                    }
-                    
-                    const overrides = { value: totalPrice };
-                    const nftTxn = await connectedContract.mintAllow(AMOUNT, SIGNATURE ,overrides)
-                    
-                    this.txHash = nftTxn.hash
-                    const result =  await nftTxn.wait();
-                     
-                    const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
-                    const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
-                    const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
-                    const tokens = []
-
-                    for(let i=0; i < amount; i++) {
-                        tokens.push(id+i)
-                    }
-
-                    if(result.status === 1) {
-                        this.minted = true;
-                        this.monkeyz = tokens
-                        this.fireConfetti()
-                        const won = await this.checkPrize()
-                        this.prizes = won ? won.prizes : []
-                    } else {
-                        throw new Error('TX Failed :( ');
-                    }
-
-                } catch (error) {
-                    this.errorMessage = this.formatError(error)
-                    setTimeout( ()=> {
-                        this.errorMessage = '';
-                    }, 5500)
-                }
+                return sameOwner && owners[0].toLowerCase() === connectUser.toLowerCase()
+            },
+            preloadImage(src) { 
+                return new Promise((resolve, reject)=> {
+                    const image = new Image()
+                    image.onload = resolve()
+                    image.onerror = resolve()
+                    image.src = `https://goodmonkeyz.mypinata.cloud/ipfs/${src}`
+                })
+            },
+            async mintReveal(){
+                const response = await fetch('/.netlify/functions/minting-reveal', {
+                    method: 'POST', 
+                    cache: 'no-cache',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        txHash: this.txHash,
+                    })
+                });
+                const json = await response.json()
+                return json
             },
             async mint() {
                 try {
@@ -242,21 +217,47 @@
                     
                     const overrides = { value: TOTAL };
                     const nftTxn = await connectedContract.mint(AMOUNT, overrides)
-                    this.txHash = nftTxn.hash
-                    const result =  await nftTxn.wait();
-                     
-                    const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
-                    const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
-                    const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
-                    const tokens = []
 
-                    for(let i=0; i < amount; i++) {
-                        tokens.push(id+i)
-                    }
+                    this.txHash = nftTxn.hash
+                    await nftTxn.wait();
+                    this.confirmations = 1
+                    await nftTxn.wait(2);
+                    this.confirmations = 2
+                    await nftTxn.wait(3);
+                    this.confirmations = 3
+                    const result = await nftTxn.wait(4);
+                    this.confirmations = 4
+                     
+                    // const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
+                    // const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
+                    // const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
+                    // const tokens = []
+
+                    // for(let i=0; i < amount; i++) {
+                    //     tokens.push(id+i)
+                    // }
 
                     if(result.status === 1) {
+                        const {data: mkzData} = (await this.mintReveal())
+                        const correctOwner = await this.checkOwner(mkzData, this.wallet)
+
+                        if(correctOwner){
+                            await Promise.all(mkzData.map(x => this.preloadImage(x.data)))
+
+                            this.correctOwner = true
+                            setTimeout( () => {
+                                this.removePlaceholder = true
+                            }, 3000)
+                            
+                            this.monkeyz = mkzData
+                            console.log(mkzData)
+                        } else {
+                            this.monkeyz = mkzData.map(m =>  {
+                                return { id: '?'}
+                            })
+                        }
+
                         this.minted = true;
-                        this.monkeyz = tokens
                         this.fireConfetti()
                         const won = await this.checkPrize()
                         this.prizes = won ? won.prizes : []
@@ -264,7 +265,8 @@
                         throw new Error('TX Failed :( ');
                     }
                 } catch (error) {
-                    // console.log(error)
+                    this.txHash = ''
+                    this.confirmations = 0
                     this.errorMessage = this.formatError(error)
                     setTimeout( ()=> {
                         this.errorMessage = '';
@@ -576,7 +578,7 @@ $l: 1720px;
     letter-spacing: 0.01rem;
     font-size: 0.6rem;
     @media (min-width: $s) {
-        font-size: 0.75rem;
+        font-size: 0.75em;
     }
 }
 
@@ -598,6 +600,27 @@ $l: 1720px;
       opacity: 0;
       animation: enter-up-scale 1s 700ms 1 forwards ease ;
   }
+
+      .pending a,
+  .confirmations {
+      display: block;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      margin-top: 2rem;
+    text-decoration: none;
+      letter-spacing: 0.3rem;
+      color: #fff;
+
+      opacity: 0;
+      animation: enter-up-scale 1s 700ms 1 forwards ease ;
+  }
+
+.confirmations {
+    font-size: 0.55rem;
+    letter-spacing: 0.1rem;
+      animation: enter-up-scale 1s 3400ms 1 forwards ease ;
+  }
+
 
   .in-progress {
     position: relative;
@@ -679,4 +702,42 @@ $l: 1720px;
     border-radius: 0.3rem;
     font-size: 0.75rem;
   }
+
+
+
+  .gm-mint__monkey--preview {
+    position: absolute;
+    left: 0;
+top: 0;
+    padding: 0.75rem;
+    border-radius: 1rem;
+}
+.gm-mint__monkey--placeholder-out--0 {
+    opacity: 1;
+    animation: leave-fade 1s 700ms 1 forwards ease !important ;
+}
+.gm-mint__monkey--placeholder-out--1 {
+    opacity: 1;
+    animation: leave-fade 1s 1.1s 1 forwards ease !important ;
+}
+.gm-mint__monkey--placeholder-out--2 {
+    opacity: 1;
+    animation: leave-fade 1s 1.5s 1 forwards ease !important ;
+}
+.gm-mint__monkey--placeholder-out--3 {
+    opacity: 1;
+    animation: leave-fade 1s 1.9s 1 forwards ease !important ;
+}
+.gm-mint__monkey--placeholder-out--4 {
+    opacity: 1;
+    animation: leave-fade 1s 2.3s 1 forwards ease !important ;
+}
+.gm-mint__monkey--placeholder-out--5 {
+    opacity: 1;
+    animation: leave-fade 1s 2.7s 1 forwards ease !important ;
+}
+.gm-mint__monkey--placeholder-out--6 {
+    opacity: 1;
+    animation: leave-fade 1s 3.1s 1 forwards ease !important ;
+}
 </style>
