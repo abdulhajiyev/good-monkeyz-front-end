@@ -16,7 +16,7 @@
             <div v-if="!wallet" class="social">
                 <a href="https://twitter.com/GoodMonkeyz"><img class="twitter" :src="twitter" ></a>
                 <a href="https://www.instagram.com/goodmonkeyz/"><img class="insta" :src="insta" ></a>
-                <a href="https://discord.gg/ztNYjaVCjp"><img class="discord" :src="discord"></a>
+                <a href="https://discord.com/invite/goodmonkeyz"><img class="discord" :src="discord"></a>
                 <a href="https://opensea.io/collection/goodmonkeyz"><img class="opensea" :src="opensea"></a>
             </div>
             <span v-else class="user-area">
