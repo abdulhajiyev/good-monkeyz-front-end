@@ -193,11 +193,11 @@ exports.handler = async (event, context, callback) => {
       prizes = prizes.concat(specialPrizes)
     }
     
-    const ogPrize = await ogBadgePrize(MINTER_ADDRESS,burnEvent)
-    if(ogPrize){
-      prizes.push(3)
-    }
-    console.log('PRIZES: ',  prizes)
+    // const ogPrize = await ogBadgePrize(MINTER_ADDRESS,burnEvent)
+    // if(ogPrize){
+    //   prizes.push(3)
+    // }
+    // console.log('PRIZES: ',  prizes)
 
     const txHash = await sendPrizes(prizes, MINTER_ADDRESS);
     console.log(txHash)
