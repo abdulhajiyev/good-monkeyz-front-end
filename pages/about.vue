@@ -2,7 +2,7 @@
   <div class="index">
     <section class="splash">
       <div class="banner banner--top">
-        <span  class="marquee">GOOD MONKEYZ MINTING APRIL 21 2022<img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> </span>
+        <span  class="marquee">PUBLIC MINTING COMPLETE<img :src="star"> PUBLIC MINTING COMPLETE <img :src="star"> PUBLIC MINTING COMPLETE <img :src="star"> PUBLIC MINTING COMPLETE <img :src="star"> </span>
       </div>
       <div class="nav">  
         <MinBanner :account="wallet" :active="true" />
@@ -12,10 +12,11 @@
       <div class="early">
           <div v-if="!wallet">
             <h1>Good Monkeyz</h1>
-            <SparkleBtn @hit="connectWallet()" text="Connect Wallet"/>
+            <!-- <SparkleBtn @hit="connectWallet()" text="Connect Wallet"/> -->
           </div>
-          <div v-else> 
-            <SparkleBtn :twitter="true" @hit="goToMint()" text="Minting Live"/>
+          <div v-else>
+            <h1>Good Monkeyz</h1>
+            <!-- <SparkleBtn :twitter="true" @hit="goToMint()" text="Minting Live"/> -->
           </div>
       </div>
       <div class="minting">
@@ -23,7 +24,7 @@
         <h4>MINTING THURSDAY 21 APRIL 2022</h4> -->
       </div>
       <div class="banner banner--bottom">
-        <span  class="marquee">GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> GOOD MONKEYZ MINTING APRIL 21 2022 <img :src="star"> </span>
+        <span  class="marquee">PUBLIC MINTING COMPLETE <img :src="star"> PUBLIC MINTING COMPLETE <img :src="star"> PUBLIC MINTING COMPLETE <img :src="star"> PUBLIC MINTING COMPLETE <img :src="star"> </span>
       </div>
     </section>
     <section class="monkeyz" id="about">
