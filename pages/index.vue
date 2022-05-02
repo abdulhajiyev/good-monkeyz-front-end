@@ -4,17 +4,18 @@
     <div class="fade-bg"></div>
       <div class="nav">  
       <MinBanner :account="wallet" :active="true"/>
-    </div>
-    <section class="countdown" v-if="!openPublic">
+    </div>    
+    <section class="countdown" >
       <Countdown />
     </section>
-    <div v-else class="minting">
+    <section class="connect">
+      <SparkleBtn v-if="!wallet" @hit="connectWallet()" text="Connect WALLET"/>
+    </section>
+    <!-- <div v-else class="minting">
         <span class="zerozero" ref="zerozero">00</span>
         <div v-if="!ready || !wallet ">
           <h1>Minting in Progress</h1>
           <h3 class="remain">
-            <!-- <span class="num">{{amountMinted}}</span> -->
-            <!-- <span class="note">Remaining of 10,000</span> -->
             <span class="note">Ξ0.033 per mint</span>
           </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
@@ -23,7 +24,7 @@
         <div v-else>
           <Mint />
         </div>
-    </div>
+    </div> -->
     <MintPass v-if="mintPassReady && !mintPassHidden" @hide="mintPassHidden = true" class="mint-pass" />
     <BoosterPack v-if="boosterReady && !boosterHidden" @hide="boosterHidden = true" class="mint-pass" />
   </div>
@@ -33,7 +34,7 @@
 import { mapState } from 'vuex';
 import { ethers } from 'ethers';
 
-import Mint from '@/components/Mint.vue';
+// import Mint from '@/components/Mint.vue';
 import MintPass from '@/components/MintPass.vue';
 import BoosterPack from '@/components/BoosterPack.vue';
 import Countdown from '@/components/MainCountdown.vue'
@@ -60,7 +61,7 @@ export default {
   transition: 'index',
   name: 'Index',
   components: {
-    Mint,
+    // Mint,
     MinBanner,
     MintPass,
     BoosterPack,
@@ -185,6 +186,13 @@ $s: 660px;
 $m: 960px;
 $l: 1720px;
 
+.connect {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
 .remain{
   display: flex;
   flex-direction: column;
