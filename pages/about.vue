@@ -30,7 +30,7 @@
     <section class="monkeyz" id="about">
       <div class="fade-bg fade--monkey"></div> 
       <div class="lead">
-        <h2>Good Monkeyz are a collection of 10,000 generated NFTs living on the Ethereum blockchain</h2>
+        <h2>Good Monkeyz are a collection of 22,222 generated NFTs living on the Ethereum blockchain</h2>
         <p>Created from a combination of hundreds of different traits, all good! You’ll be able to find some very special 1/1 in the collection that we’ve collaborated on with our friends.</p>
       </div>
       <div></div>
