@@ -11,7 +11,7 @@
                 <nuxt-link :to="{path: '/about', hash: 'faq'}" >FAQ</nuxt-link> 
                 <nuxt-link :to="{path: '/about', hash: 'team'}" >Team</nuxt-link> 
                 <span @click="goToMerch()" >Merch</span>
-                <span @click="invite()" >Invite</span>
+                <span v-if="wallet" @click="invite()" >Invite</span>
             </nav>
 
             <div v-if="!wallet" class="social">
