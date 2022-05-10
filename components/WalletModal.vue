@@ -83,7 +83,7 @@
         width: 100vw;
         backdrop-filter: blur(8px);
         background: rgba(0,0,0,0.6);
-        z-index: 100;
+        z-index: 1000;
         display: flex;
         opacity: 0;
         pointer-events: none;

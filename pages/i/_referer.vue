@@ -75,6 +75,7 @@ export default {
       boosterHidden: false,
       boosterReady: false,
       ready: false,
+      referer: null,
     }
   },
   computed: mapState(['wallet']),
@@ -82,23 +83,16 @@ export default {
     const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
     const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
 
+    // this.referer = this.$route.params.referer
+
+    console.log('REFERER: ', this.referer)
     this.getcontractData() 
     if(this.wallet) {
       this.getLTDBalances()
-
-      setTimeout(() => {
-          this.$nuxt.$emit('invite')
-      }, 2000)
-
     }
     this.$nuxt.$on('web3-active', () => {
       this.getcontractData()
       this.getLTDBalances()
-
-       setTimeout(() => {
-          this.$nuxt.$emit('invite')
-      }, 2000)
-
     })
 
     this.countdownF();
@@ -128,6 +122,22 @@ export default {
     // }
   },
   methods: {
+    // async insertRefMint(){
+    //   const ref = this.referer 
+    //   const minter = this.wallet
+    //   console.log(ref, minter)
+    //   const response = await fetch('/.netlify/functions/add-ref-mint', {
+    //       method: 'POST',
+    //       cache: 'no-cache',
+    //       headers: {'Content-Type': 'application/json'},
+    //       body: JSON.stringify({
+    //         ref,
+    //         minter
+    //       }) 
+    //   })
+    //   console.log(response)
+    //   return await response.json();
+    // },
     connectWallet(){
       this.$nuxt.$emit('connect')
       this.$nuxt.$on('web3-active', () => {

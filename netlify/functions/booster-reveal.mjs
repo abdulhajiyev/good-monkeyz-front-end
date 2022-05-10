@@ -139,7 +139,6 @@ exports.handler = async (event, context, callback) => {
 
     const tokenIds = await getTokenIds(receipt)
     const toAddresses = await getTokenTransferAddress(receipt)
-    console.log(toAddresses)
     const burnEvent = await checkForBurnTx(receipt);
     const owners = await checkOwner(tokenIds)
     const sameOwner = owners.every( (x, i, arr) => x === arr[0]) 
