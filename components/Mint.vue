@@ -115,7 +115,8 @@
                 errorMessage: '',
                 confirmations: 0,
                 correctOwner: null,
-                removePlaceholder: null
+                removePlaceholder: null,
+                referer: null,
             }
         },
         components: {
@@ -189,6 +190,21 @@
                     image.src = `https://goodmonkeyz.mypinata.cloud/ipfs/${src}`
                 })
             },
+            async insertRefMint(ref, minter, amount){
+                console.log(ref, minter)
+                const response = await fetch('/.netlify/functions/add-ref-mint', {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        ref,
+                        minter,
+                        amount
+                    }) 
+                })
+                console.log(response)
+                return await response.json();
+            },
             async mintReveal(){
                 const response = await fetch('/.netlify/functions/minting-reveal', {
                     method: 'POST', 
@@ -218,6 +234,11 @@
                     const overrides = { value: TOTAL };
                     const nftTxn = await connectedContract.mint(AMOUNT, overrides)
 
+                    this.referer = this.$route.params.referer
+                    if(this.referer) {
+                        this.insertRefMint(this.referer, this.wallet, AMOUNT)
+                    }
+
                     this.txHash = nftTxn.hash
                     await nftTxn.wait();
                     this.confirmations = 1
@@ -227,15 +248,7 @@
                     this.confirmations = 3
                     const result = await nftTxn.wait(4);
                     this.confirmations = 4
-                     
-                    // const gmMinted = (result.events.filter( result => result.event === 'GMMinted'))[0]
-                    // const id = parseInt(ethers.utils.formatUnits(gmMinted.args[1],0))
-                    // const amount = parseInt(ethers.utils.formatUnits(gmMinted.args[2],0))
-                    // const tokens = []
-
-                    // for(let i=0; i < amount; i++) {
-                    //     tokens.push(id+i)
-                    // }
+                    
 
                     if(result.status === 1) {
                         const {data: mkzData} = (await this.mintReveal())

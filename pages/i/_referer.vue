@@ -5,26 +5,21 @@
       <div class="nav">  
       <MinBanner :account="wallet" :active="true"/>
     </div>    
-    <section class="countdown" >
-      <Countdown />
-    </section>
-    <section class="connect">
-      <SparkleBtn v-if="!wallet" @hit="connectWallet()" text="Connect WALLET"/>
-    </section>
-    <!-- <div v-else class="minting">
+    <div class="minting">
         <span class="zerozero" ref="zerozero">00</span>
         <div v-if="!ready || !wallet ">
           <h1>Minting in Progress</h1>
+          <span class="note">Ξ0.033 For Each Mint</span>
           <h3 class="remain">
-            <span class="note">Ξ0.033 per mint</span>
-          </h3>
+             <span class="num">{{amountMinted}} <img :src="divider"> 2,222</span>
+           </h3>
           <SparkleBtn class="continue" v-if="!wallet" @hit="connectWallet()" text="Connect WALLET to Mint"/>
           <SparkleBtn class="continue" v-else-if="wallet && !ready" @hit="setReady()" text="Continue to Mint"/>
         </div>
         <div v-else>
           <Mint />
         </div>
-    </div> -->
+    </div>
     <MintPass v-if="mintPassReady && !mintPassHidden" @hide="mintPassHidden = true" class="mint-pass" />
     <BoosterPack v-if="boosterReady && !boosterHidden" @hide="boosterHidden = true" class="mint-pass" />
   </div>
@@ -34,10 +29,9 @@
 import { mapState } from 'vuex';
 import { ethers } from 'ethers';
 
-// import Mint from '@/components/Mint.vue';
+import Mint from '@/components/Mint.vue';
 import MintPass from '@/components/MintPass.vue';
 import BoosterPack from '@/components/BoosterPack.vue';
-import Countdown from '@/components/MainCountdown.vue'
 import MinBanner from '@/components/MinBanner.vue';
 
 import monkey from "@/assets/video/mm-med.mp4";
@@ -61,11 +55,10 @@ export default {
   transition: 'index',
   name: 'Index',
   components: {
-    // Mint,
+    Mint,
     MinBanner,
     MintPass,
     BoosterPack,
-    Countdown,
   },
   data: () => {
     return {
@@ -82,6 +75,7 @@ export default {
       boosterHidden: false,
       boosterReady: false,
       ready: false,
+      referer: null,
     }
   },
   computed: mapState(['wallet']),
@@ -89,23 +83,16 @@ export default {
     const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
     const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
 
+    // this.referer = this.$route.params.referer
+
+    console.log('REFERER: ', this.referer)
     this.getcontractData() 
     if(this.wallet) {
       this.getLTDBalances()
-
-      setTimeout(() => {
-          this.$nuxt.$emit('invite')
-      }, 2000)
-
     }
     this.$nuxt.$on('web3-active', () => {
       this.getcontractData()
       this.getLTDBalances()
-
-       setTimeout(() => {
-          this.$nuxt.$emit('invite')
-      }, 2000)
-
     })
 
     this.countdownF();
@@ -135,6 +122,22 @@ export default {
     // }
   },
   methods: {
+    // async insertRefMint(){
+    //   const ref = this.referer 
+    //   const minter = this.wallet
+    //   console.log(ref, minter)
+    //   const response = await fetch('/.netlify/functions/add-ref-mint', {
+    //       method: 'POST',
+    //       cache: 'no-cache',
+    //       headers: {'Content-Type': 'application/json'},
+    //       body: JSON.stringify({
+    //         ref,
+    //         minter
+    //       }) 
+    //   })
+    //   console.log(response)
+    //   return await response.json();
+    // },
     connectWallet(){
       this.$nuxt.$emit('connect')
       this.$nuxt.$on('web3-active', () => {
@@ -145,8 +148,8 @@ export default {
       const provider = new ethers.providers.AlchemyProvider(NETWORK_NAME, ALCHEMY_API);
       const monkeyContract = new ethers.Contract(MONKEY_CONTRACT, GMPFP.abi, provider);
       const currentSupply = parseInt(ethers.utils.formatUnits(await monkeyContract.totalSupply(), 0));
-      const total = 9000 + parseInt( ethers.utils.formatUnits(await monkeyContract.mintPassUsed(), 0))
-      this.amountMinted = Number( total - currentSupply ).toLocaleString() 
+      // const total = 9000 + parseInt( ethers.utils.formatUnits(await monkeyContract.mintPassUsed(), 0))
+      this.amountMinted = Number( currentSupply ).toLocaleString() 
       this.open = await monkeyContract.ALLOW();
       this.openPublic = await monkeyContract.PUBLIC();
     },
@@ -222,6 +225,10 @@ $l: 1720px;
     font-size: 0.75rem;
     letter-spacing: 0.2rem;
   }
+
+      //
+    opacity: 0;
+    animation: enter-up-scale 1s 650ms 1 forwards ease ;
 }
 
 
@@ -318,10 +325,10 @@ $l: 1720px;
   position: relative;
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     text-transform: uppercase;
     letter-spacing: 0.25rem;
-    margin: 0 0 2rem;
+    margin: 0 0 1rem;
     
     //
     opacity: 0;
@@ -365,10 +372,10 @@ $l: 1720px;
 
   @media (min-width: $s) {
     h1 {
-      font-size: 2rem;
+      font-size: 1.7rem;
       text-transform: uppercase;
       letter-spacing: 0.25rem;
-      margin: 0 0 2rem;
+      margin: 0 0 1rem;
     }
     h3 {
       font-size: 4rem;
@@ -384,10 +391,10 @@ $l: 1720px;
   }
     @media (min-width: $s) {
     h1 {
-      font-size: 2rem;
+      font-size: 1.7rem;
       text-transform: uppercase;
       letter-spacing: 0.25rem;
-      margin: 0 0 2rem;
+      margin: 0 0 rem;
     }
     h3 {
       font-size: 6rem;

@@ -2,16 +2,19 @@
     <main>
         <Nuxt />
         <WalletModal/>
+        <InviteModal/>
     </main>
 </template>
 
 <script>
     import { mapMutations } from 'vuex'
     import WalletModal from '@/components/WalletModal.vue';
+    import InviteModal from '@/components/InviteModal.vue';
 
     export default {
         components: {
             WalletModal,
+            InviteModal
         },
         data: () => {
             return {}
